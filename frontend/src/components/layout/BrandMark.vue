@@ -1,34 +1,62 @@
 <script setup>
 /**
- * Abstract heat-transfer mark — an original placeholder, deliberately NOT the
- * OCHSNER logo. Replace with the licensed brand asset before launch.
+ * Two-line wordmark lockup: brand name over a letterspaced category descriptor.
+ *
+ * Set as type rather than an image so it stays crisp at any size and can be
+ * restyled from tokens. This is a PLACEHOLDER standing in for the licensed
+ * OCHSNER logo artwork — replace with the official asset before launch.
  */
+defineProps({
+  descriptor: { type: String, default: 'ТЕРМОПОМПИ' },
+  invert: { type: Boolean, default: false }
+})
 </script>
 
 <template>
-  <svg class="mark" viewBox="0 0 40 40" role="img" aria-label="OCHSNER България" focusable="false">
-    <rect width="40" height="40" rx="9" fill="var(--c-primary-800)" />
-    <path
-      d="M11 26.5c3.2 0 3.2-5 6.4-5s3.2 5 6.4 5 3.2-5 6.4-5"
-      fill="none"
-      stroke="var(--c-primary-300)"
-      stroke-width="2.4"
-      stroke-linecap="round"
-    />
-    <path
-      d="M11 18c3.2 0 3.2-5 6.4-5s3.2 5 6.4 5 3.2-5 6.4-5"
-      fill="none"
-      stroke="var(--c-accent-500)"
-      stroke-width="2.4"
-      stroke-linecap="round"
-    />
-  </svg>
+  <span class="mark" :class="{ 'mark--invert': invert }">
+    <span class="mark__name">OCHSNER</span>
+    <span class="mark__descriptor">{{ descriptor }}</span>
+  </span>
 </template>
 
 <style scoped>
 .mark {
-  width: 40px;
-  height: 40px;
-  flex-shrink: 0;
+  display: inline-flex;
+  flex-direction: column;
+  line-height: 1;
+  /* Optical alignment: the descriptor sits flush under the wordmark. */
+  gap: 3px;
+}
+
+.mark__name {
+  font-family: var(--font-heading);
+  font-weight: var(--fw-bold);
+  font-size: 1.5rem;
+  letter-spacing: 0.01em;
+  color: var(--c-accent-600);
+}
+
+.mark__descriptor {
+  font-family: var(--font-heading);
+  font-weight: var(--fw-regular);
+  font-size: 0.5625rem;
+  /* Tracked out so the descriptor spans the width of the wordmark above it. */
+  letter-spacing: 0.34em;
+  color: var(--c-primary-800);
+  white-space: nowrap;
+}
+
+.mark--invert .mark__descriptor {
+  color: rgba(255, 255, 255, 0.75);
+}
+
+@media (min-width: 1080px) {
+  .mark__name {
+    font-size: 1.65rem;
+  }
+
+  .mark__descriptor {
+    font-size: 0.625rem;
+  }
 }
 </style>

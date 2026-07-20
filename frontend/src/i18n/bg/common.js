@@ -4,6 +4,8 @@ export const common = {
   brandTagline: 'Официален представител',
 
   ctaPrimary: 'Заяви безплатна консултация',
+  /* Shorter label for the header, where the full CTA wraps to two lines. */
+  ctaHeader: 'Консултация',
   ctaSecondary: 'Разгледай продуктите',
   ctaPrice: 'Питай за цена',
   ctaMore: 'Научи повече',
@@ -22,7 +24,6 @@ export const common = {
   skipToContent: 'Към основното съдържание',
   openMenu: 'Отвори менюто',
   closeMenu: 'Затвори менюто',
-  backToTop: 'Нагоре',
   required: 'задължително поле',
   downloadSpec: 'Изтегли техническа спецификация (PDF)',
   imagePlaceholder: 'Тук ще бъде добавена реална продуктова снимка.'

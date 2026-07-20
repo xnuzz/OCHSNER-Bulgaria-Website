@@ -3,11 +3,11 @@ import { onMounted } from 'vue'
 import HomeHero from '@/components/home/HomeHero.vue'
 import QuickActions from '@/components/home/QuickActions.vue'
 import BrandStatement from '@/components/home/BrandStatement.vue'
-import TrustBar from '@/components/home/TrustBar.vue'
 import TestimonialSlider from '@/components/home/TestimonialSlider.vue'
 import ProductTile from '@/components/products/ProductTile.vue'
 import SectionHeading from '@/components/ui/SectionHeading.vue'
 import AccordionList from '@/components/ui/AccordionList.vue'
+import AppIcon from '@/components/ui/AppIcon.vue'
 import BaseButton from '@/components/ui/BaseButton.vue'
 import CtaBand from '@/components/ui/CtaBand.vue'
 import { fetchProducts, useAsyncData } from '@/api/catalog.js'
@@ -19,6 +19,9 @@ const { common, home } = useI18n()
 const { data: products, loading, failed, load } = useAsyncData(fetchProducts)
 
 const tones = ['blue', 'teal', 'deep', 'warm']
+
+// Matches the order of home.whyTeaser.items: savings, independence, ecology.
+const teaserIcons = ['savings', 'independence', 'ecology']
 
 useSeo({ title: home.meta.title, description: home.meta.description, path: '/' })
 
@@ -34,6 +37,27 @@ onMounted(load)
 
     <!-- Brand statement band -->
     <BrandStatement :title="home.statement.title" :body="home.statement.body" />
+
+    <!-- What a heat pump is, and why this manufacturer -->
+    <section class="section">
+      <div class="container intro">
+        <div>
+          <SectionHeading :eyebrow="home.intro.eyebrow" :title="home.intro.title" />
+          <p v-for="paragraph in home.intro.body" :key="paragraph" class="intro__paragraph">
+            {{ paragraph }}
+          </p>
+          <BaseButton :to="{ name: 'why' }" variant="secondary" class="intro__cta">
+            {{ home.whyTeaser.cta }}
+          </BaseButton>
+        </div>
+        <ul class="intro__facts">
+          <li v-for="fact in home.trust.items" :key="fact.label">
+            <span class="intro__fact-value">{{ fact.value }}</span>
+            <span class="intro__fact-label">{{ fact.label }}</span>
+          </li>
+        </ul>
+      </div>
+    </section>
 
     <!-- Product categories, from GET /api/v1/products -->
     <section class="section section--alt">
@@ -74,8 +98,6 @@ onMounted(load)
       </div>
     </section>
 
-    <TrustBar />
-
     <!-- Why a heat pump — teaser -->
     <section class="section">
       <div class="container">
@@ -85,7 +107,10 @@ onMounted(load)
           align="center"
         />
         <ul class="teaser">
-          <li v-for="item in home.whyTeaser.items" :key="item.title" class="teaser__item">
+          <li v-for="(item, i) in home.whyTeaser.items" :key="item.title" class="teaser__item">
+            <span class="teaser__icon">
+              <AppIcon :name="teaserIcons[i % teaserIcons.length]" :size="28" />
+            </span>
             <h3 class="teaser__title">{{ item.title }}</h3>
             <p class="teaser__text">{{ item.text }}</p>
           </li>
@@ -158,6 +183,62 @@ onMounted(load)
   border-left: 3px solid var(--c-accent-600);
 }
 
+.teaser__icon {
+  display: block;
+  margin-bottom: var(--sp-3);
+  color: var(--c-accent-600);
+}
+
+/* Intro: copy alongside the trust figures */
+.intro {
+  display: grid;
+  gap: var(--sp-6);
+}
+
+.intro__paragraph {
+  color: var(--c-ink-soft);
+  max-width: 62ch;
+}
+
+.intro__paragraph + .intro__paragraph {
+  margin-top: var(--sp-4);
+}
+
+.intro__cta {
+  margin-top: var(--sp-5);
+}
+
+.intro__facts {
+  align-self: start;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: grid;
+  gap: var(--sp-4);
+}
+
+.intro__facts li {
+  padding: var(--sp-4) var(--sp-5);
+  background: var(--c-surface-alt);
+  border-left: 3px solid var(--c-accent-600);
+}
+
+.intro__fact-value {
+  display: block;
+  font-family: var(--font-heading);
+  font-size: 1.6rem;
+  font-weight: var(--fw-bold);
+  color: var(--c-primary-900);
+  line-height: 1.1;
+}
+
+.intro__fact-label {
+  display: block;
+  margin-top: var(--sp-1);
+  font-size: var(--fs-small);
+  color: var(--c-ink-muted);
+}
+
 .teaser__title {
   color: var(--c-primary-900);
 }
@@ -183,6 +264,11 @@ onMounted(load)
 @media (min-width: 1000px) {
   .tiles {
     grid-template-columns: repeat(4, 1fr);
+  }
+
+  .intro {
+    grid-template-columns: 1.6fr 1fr;
+    gap: var(--sp-8);
   }
 }
 </style>

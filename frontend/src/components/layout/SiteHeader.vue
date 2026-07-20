@@ -98,12 +98,16 @@ onBeforeUnmount(() => {
     <!-- Thin utility bar above the main nav, as on the corporate site. -->
     <div class="utility">
       <div class="container utility__inner">
+        <p class="utility__role">{{ common.brandTagline }}</p>
         <nav class="utility__nav" :aria-label="nav.utilityLabel">
           <!-- Destinations to be confirmed with OCHSNER Austria. -->
           <a href="#">{{ nav.utility.service }}</a>
           <a href="#">{{ nav.utility.downloads }}</a>
           <a href="#">{{ nav.utility.partnerPortal }}</a>
-          <RouterLink :to="{ name: 'partner' }">{{ nav.utility.becomePartner }}</RouterLink>
+          <a class="utility__phone" :href="contactDetails.phoneHref">
+            <AppIcon name="phone" :size="15" />
+            <span>{{ contactDetails.phone }}</span>
+          </a>
         </nav>
       </div>
     </div>
@@ -111,10 +115,6 @@ onBeforeUnmount(() => {
     <div class="container header__inner">
       <RouterLink :to="{ name: 'home' }" class="header__brand" @click="closeMenu">
         <BrandMark />
-        <span class="header__brand-text">
-          <span class="header__brand-name">{{ common.brand }}</span>
-          <span class="header__brand-sub">{{ common.brandSuffix }}</span>
-        </span>
       </RouterLink>
 
       <nav class="header__nav" :aria-label="nav.mainLabel" @mouseleave="scheduleCloseMega">
@@ -142,12 +142,8 @@ onBeforeUnmount(() => {
       </nav>
 
       <div class="header__actions">
-        <a class="header__phone" :href="contactDetails.phoneHref">
-          <AppIcon name="phone" :size="18" />
-          <span>{{ contactDetails.phone }}</span>
-        </a>
         <BaseButton :to="{ name: 'contact' }" size="sm" class="header__cta">
-          {{ common.ctaPrimary }}
+          {{ common.ctaHeader }}
         </BaseButton>
       </div>
 
@@ -254,14 +250,29 @@ onBeforeUnmount(() => {
 
 .utility__inner {
   display: flex;
-  justify-content: flex-end;
+  justify-content: space-between;
   align-items: center;
+  gap: var(--sp-5);
   height: 100%;
+}
+
+.utility__role {
+  font-size: 0.8125rem;
+  color: var(--c-ink-muted);
 }
 
 .utility__nav {
   display: flex;
+  align-items: center;
   gap: var(--sp-5);
+}
+
+.utility__phone {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--sp-2);
+  font-weight: var(--fw-semibold);
+  color: var(--c-primary-800);
 }
 
 .utility__nav a {
@@ -284,32 +295,9 @@ onBeforeUnmount(() => {
 .header__brand {
   display: flex;
   align-items: center;
-  gap: var(--sp-3);
   text-decoration: none;
   color: var(--c-ink);
   margin-right: auto;
-}
-
-.header__brand-text {
-  display: flex;
-  flex-direction: column;
-  line-height: 1.1;
-}
-
-.header__brand-name {
-  font-family: var(--font-heading);
-  font-weight: var(--fw-bold);
-  font-size: 1.35rem;
-  letter-spacing: 0.04em;
-  color: var(--c-accent-600);
-}
-
-.header__brand-sub {
-  font-size: 0.65rem;
-  font-weight: var(--fw-regular);
-  letter-spacing: 0.22em;
-  text-transform: uppercase;
-  color: var(--c-ink-muted);
 }
 
 /* Desktop nav and inline actions are hidden below 1080px. */
@@ -318,14 +306,16 @@ onBeforeUnmount(() => {
   display: none;
 }
 
-/* Uppercase, bold main nav — the corporate treatment. */
+/* Uppercase, bold main nav — the corporate treatment sets this noticeably
+   larger than a typical nav (18px on the reference); 1rem reads right here
+   with six Bulgarian labels to fit. */
 .header__link {
   position: relative;
   padding-block: var(--sp-2);
-  font-size: 0.875rem;
+  font-size: 1rem;
   font-weight: var(--fw-bold);
   text-transform: uppercase;
-  color: var(--c-primary-800);
+  color: var(--c-primary-900);
   text-decoration: none;
   white-space: nowrap;
 }
@@ -353,16 +343,6 @@ onBeforeUnmount(() => {
   transform: scaleX(1);
 }
 
-.header__phone {
-  display: inline-flex;
-  align-items: center;
-  gap: var(--sp-2);
-  font-weight: 600;
-  font-size: 0.95rem;
-  color: var(--c-primary-800);
-  text-decoration: none;
-  white-space: nowrap;
-}
 
 /* ---------- Mega panel -------------------------------------------------- */
 
