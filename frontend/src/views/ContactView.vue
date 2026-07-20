@@ -6,7 +6,6 @@ import FormField from '@/components/form/FormField.vue'
 import FormStatus from '@/components/form/FormStatus.vue'
 import { submitContact } from '@/api/catalog.js'
 import { toFormError } from '@/api/client.js'
-import { useReveal } from '@/composables/useReveal.js'
 import { useSeo } from '@/composables/useSeo.js'
 import { useI18n } from '@/i18n'
 
@@ -67,7 +66,6 @@ async function onSubmit() {
 }
 
 useSeo({ title: copy.meta.title, description: copy.meta.description, path: '/kontakti' })
-useReveal(page)
 </script>
 
 <template>
@@ -223,7 +221,7 @@ useReveal(page)
         </div>
 
         <!-- Details column -->
-        <aside class="contact__details" data-reveal>
+        <aside class="contact__details">
           <h2 class="contact__title">{{ copy.details.title }}</h2>
           <dl class="details">
             <div class="details__row">

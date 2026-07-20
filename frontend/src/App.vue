@@ -10,19 +10,20 @@ const { common } = useI18n()
   <a class="skip-link" href="#main">{{ common.skipToContent }}</a>
   <SiteHeader />
   <main id="main" tabindex="-1">
-    <RouterView v-slot="{ Component }">
-      <Transition name="route-fade" mode="out-in">
-        <component :is="Component" />
-      </Transition>
-    </RouterView>
+    <!--
+      Deliberately no route transition. An entrance fade here was leaving page
+      content stuck at partial opacity, which on a lead-generation site means
+      unreadable copy. Not worth the risk for the visual gain.
+    -->
+    <RouterView />
   </main>
   <SiteFooter />
 </template>
 
 <style scoped>
 main {
-  /* The header is fixed, so the page content starts below it. */
-  padding-top: var(--header-h);
+  /* The header is fixed; on desktop it also carries the utility bar. */
+  padding-top: calc(var(--header-h) + var(--utility-h));
   outline: none;
 }
 </style>

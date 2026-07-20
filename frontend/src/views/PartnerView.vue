@@ -7,7 +7,6 @@ import FormField from '@/components/form/FormField.vue'
 import FormStatus from '@/components/form/FormStatus.vue'
 import { submitPartnerApplication } from '@/api/catalog.js'
 import { toFormError } from '@/api/client.js'
-import { useReveal } from '@/composables/useReveal.js'
 import { useSeo } from '@/composables/useSeo.js'
 import { useI18n } from '@/i18n'
 
@@ -69,7 +68,6 @@ async function onSubmit() {
 }
 
 useSeo({ title: partner.meta.title, description: partner.meta.description, path: '/stani-partnyor' })
-useReveal(page)
 </script>
 
 <template>
@@ -84,7 +82,7 @@ useReveal(page)
       <div class="container">
         <SectionHeading :eyebrow="partner.looking.eyebrow" :title="partner.looking.title" />
         <ul class="who">
-          <li v-for="item in partner.looking.items" :key="item.title" class="who__item" data-reveal>
+          <li v-for="item in partner.looking.items" :key="item.title" class="who__item">
             <h3 class="who__title">{{ item.title }}</h3>
             <p class="who__text">{{ item.text }}</p>
           </li>
@@ -96,7 +94,7 @@ useReveal(page)
       <div class="container">
         <SectionHeading :eyebrow="partner.offer.eyebrow" :title="partner.offer.title" />
         <ul class="offer">
-          <li v-for="item in partner.offer.items" :key="item.title" class="offer__item" data-reveal>
+          <li v-for="item in partner.offer.items" :key="item.title" class="offer__item">
             <h3 class="offer__title">{{ item.title }}</h3>
             <p class="offer__text">{{ item.text }}</p>
           </li>

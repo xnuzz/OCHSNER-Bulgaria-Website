@@ -22,8 +22,11 @@ public class InstallationReference {
     @Column(nullable = false, length = 120)
     private String location;
 
-    /** Free-text so it can hold "2023", "Пролет 2024" etc. */
-    @Column(length = 40)
+    /**
+     * Free-text so it can hold "2023", "Пролет 2024" etc.
+     * Mapped away from "year", which is a reserved word in H2 and PostgreSQL.
+     */
+    @Column(name = "installation_year", length = 40)
     private String year;
 
     /** Slug of the product category used, e.g. {@code vazduh-voda}. */

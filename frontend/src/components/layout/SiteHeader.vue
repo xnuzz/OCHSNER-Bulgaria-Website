@@ -55,6 +55,19 @@ onBeforeUnmount(() => {
 
 <template>
   <header class="header" :class="{ 'header--scrolled': scrolled }">
+    <!-- Thin utility bar above the main nav, as on the corporate site. -->
+    <div class="utility">
+      <div class="container utility__inner">
+        <nav class="utility__nav" :aria-label="nav.utilityLabel">
+          <!-- Destinations to be confirmed with OCHSNER Austria. -->
+          <a href="#">{{ nav.utility.service }}</a>
+          <a href="#">{{ nav.utility.downloads }}</a>
+          <a href="#">{{ nav.utility.partnerPortal }}</a>
+          <RouterLink :to="{ name: 'partner' }">{{ nav.utility.becomePartner }}</RouterLink>
+        </nav>
+      </div>
+    </div>
+
     <div class="container header__inner">
       <RouterLink :to="{ name: 'home' }" class="header__brand" @click="closeMenu">
         <BrandMark />
@@ -121,23 +134,49 @@ onBeforeUnmount(() => {
   inset-inline: 0;
   top: 0;
   z-index: 100;
-  height: var(--header-h);
-  background: rgba(255, 255, 255, 0.94);
-  backdrop-filter: blur(8px);
-  border-bottom: 1px solid transparent;
-  transition: border-color var(--dur) var(--ease), box-shadow var(--dur) var(--ease);
+  background: #fff;
+  box-shadow: var(--shadow-sm);
 }
 
 .header--scrolled {
-  border-bottom-color: var(--c-line);
-  box-shadow: var(--shadow-sm);
+  box-shadow: var(--shadow);
+}
+
+/* Utility bar: desktop only — on phones these links live in the drawer. */
+.utility {
+  display: none;
+  background: var(--c-surface-alt);
+  border-bottom: 1px solid var(--c-line);
+  height: var(--utility-h);
+}
+
+.utility__inner {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  height: 100%;
+}
+
+.utility__nav {
+  display: flex;
+  gap: var(--sp-5);
+}
+
+.utility__nav a {
+  font-size: 0.8125rem;
+  color: var(--c-ink-muted);
+  text-decoration: none;
+}
+
+.utility__nav a:hover {
+  color: var(--c-accent-600);
 }
 
 .header__inner {
   display: flex;
   align-items: center;
   gap: var(--sp-4);
-  height: 100%;
+  height: var(--header-h);
 }
 
 .header__brand {
@@ -157,15 +196,16 @@ onBeforeUnmount(() => {
 
 .header__brand-name {
   font-family: var(--font-heading);
-  font-weight: 700;
-  font-size: 1.15rem;
-  letter-spacing: 0.06em;
-  color: var(--c-primary-800);
+  font-weight: var(--fw-bold);
+  font-size: 1.35rem;
+  letter-spacing: 0.04em;
+  color: var(--c-accent-600);
 }
 
 .header__brand-sub {
-  font-size: 0.7rem;
-  letter-spacing: 0.14em;
+  font-size: 0.65rem;
+  font-weight: var(--fw-regular);
+  letter-spacing: 0.22em;
   text-transform: uppercase;
   color: var(--c-ink-muted);
 }
@@ -176,13 +216,16 @@ onBeforeUnmount(() => {
   display: none;
 }
 
+/* Uppercase, bold main nav — the corporate treatment. */
 .header__link {
   position: relative;
   padding-block: var(--sp-2);
-  font-size: 0.95rem;
-  font-weight: 500;
-  color: var(--c-ink-soft);
+  font-size: 0.875rem;
+  font-weight: var(--fw-bold);
+  text-transform: uppercase;
+  color: var(--c-primary-800);
   text-decoration: none;
+  white-space: nowrap;
 }
 
 .header__link::after {
@@ -191,8 +234,8 @@ onBeforeUnmount(() => {
   left: 0;
   right: 0;
   bottom: 0;
-  height: 2px;
-  background: var(--c-accent-500);
+  height: 3px;
+  background: var(--c-accent-600);
   transform: scaleX(0);
   transform-origin: left;
   transition: transform var(--dur) var(--ease);
@@ -200,7 +243,7 @@ onBeforeUnmount(() => {
 
 .header__link:hover,
 .header__link.router-link-active {
-  color: var(--c-primary-800);
+  color: var(--c-accent-600);
 }
 
 .header__link:hover::after,
@@ -328,6 +371,10 @@ onBeforeUnmount(() => {
 /* ---------- Desktop ----------------------------------------------------- */
 
 @media (min-width: 1080px) {
+  .utility {
+    display: block;
+  }
+
   .header__nav {
     display: flex;
     align-items: center;

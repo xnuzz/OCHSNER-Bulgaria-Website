@@ -6,7 +6,7 @@ defineProps({
 
 <template>
   <ul class="quotes">
-    <li v-for="item in items" :key="item.author" class="quote" data-reveal>
+    <li v-for="item in items" :key="item.author" class="quote">
       <blockquote class="quote__text">
         <p>{{ item.quote }}</p>
       </blockquote>

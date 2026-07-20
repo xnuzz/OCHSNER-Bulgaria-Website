@@ -5,7 +5,6 @@ import SectionHeading from '@/components/ui/SectionHeading.vue'
 import BaseButton from '@/components/ui/BaseButton.vue'
 import CtaBand from '@/components/ui/CtaBand.vue'
 import HeatPumpDiagram from '@/components/why/HeatPumpDiagram.vue'
-import { useReveal } from '@/composables/useReveal.js'
 import { useSeo } from '@/composables/useSeo.js'
 import { useI18n } from '@/i18n'
 
@@ -13,7 +12,6 @@ const { why } = useI18n()
 const page = ref(null)
 
 useSeo({ title: why.meta.title, description: why.meta.description, path: '/zashto-termopompa' })
-useReveal(page)
 </script>
 
 <template>
@@ -32,7 +30,7 @@ useReveal(page)
         <HeatPumpDiagram />
 
         <ol class="steps">
-          <li v-for="step in why.cycle.steps" :key="step.number" class="step" data-reveal>
+          <li v-for="step in why.cycle.steps" :key="step.number" class="step">
             <span class="step__num" aria-hidden="true">{{ step.number }}</span>
             <h3 class="step__title">{{ step.title }}</h3>
             <p class="step__text">{{ step.text }}</p>
@@ -50,7 +48,7 @@ useReveal(page)
           :subtitle="why.threeInOne.intro"
         />
         <ul class="triple">
-          <li v-for="item in why.threeInOne.items" :key="item.title" class="triple__item" data-reveal>
+          <li v-for="item in why.threeInOne.items" :key="item.title" class="triple__item">
             <h3 class="triple__title">{{ item.title }}</h3>
             <p class="triple__text">{{ item.text }}</p>
           </li>
@@ -67,7 +65,7 @@ useReveal(page)
             {{ paragraph }}
           </p>
         </div>
-        <ul class="pv__points" data-reveal>
+        <ul class="pv__points">
           <li v-for="point in why.pv.points" :key="point">{{ point }}</li>
         </ul>
       </div>
@@ -82,7 +80,7 @@ useReveal(page)
             v-for="entry in [why.buildings.newBuild, why.buildings.retrofit]"
             :key="entry.title"
             class="case"
-            data-reveal
+           
           >
             <h3 class="case__title">{{ entry.title }}</h3>
             <p class="case__text">{{ entry.text }}</p>

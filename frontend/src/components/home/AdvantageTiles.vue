@@ -9,7 +9,7 @@ const glyphs = ['◆', '◐', '✓', '⏱', '⚙', '⇄']
 
 <template>
   <ul class="tiles">
-    <li v-for="(item, index) in items" :key="item.title" class="tile" data-reveal>
+    <li v-for="(item, index) in items" :key="item.title" class="tile">
       <span class="tile__glyph" aria-hidden="true">{{ glyphs[index % glyphs.length] }}</span>
       <h3 class="tile__title">{{ item.title }}</h3>
       <p class="tile__text">{{ item.text }}</p>

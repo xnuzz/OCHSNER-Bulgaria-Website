@@ -9,7 +9,7 @@ const { home } = useI18n()
     <div class="container">
       <h2 class="visually-hidden">{{ home.trust.title }}</h2>
       <dl class="trust__grid">
-        <div v-for="item in home.trust.items" :key="item.label" class="trust__item" data-reveal>
+        <div v-for="item in home.trust.items" :key="item.label" class="trust__item">
           <dt class="trust__value">{{ item.value }}</dt>
           <dd class="trust__label">{{ item.label }}</dd>
         </div>

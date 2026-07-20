@@ -57,20 +57,24 @@ const props = defineProps({
   pointer-events: none;
 }
 
+/*
+ * Neutral greys with a single red variant, matching the corporate palette.
+ * The tone names are kept so call sites did not have to change.
+ */
 .ph--blue {
-  background: linear-gradient(140deg, var(--c-primary-600), var(--c-primary-800));
+  background: linear-gradient(140deg, var(--c-primary-700), var(--c-primary-900));
 }
 
 .ph--teal {
-  background: linear-gradient(140deg, var(--c-primary-500), var(--c-primary-700));
+  background: linear-gradient(140deg, var(--c-primary-600), var(--c-primary-800));
 }
 
 .ph--deep {
-  background: linear-gradient(140deg, var(--c-primary-800), var(--c-primary-900));
+  background: linear-gradient(140deg, var(--c-primary-800), #171615);
 }
 
 .ph--warm {
-  background: linear-gradient(140deg, var(--c-accent-500), var(--c-accent-700));
+  background: linear-gradient(140deg, var(--c-accent-600), var(--c-accent-900));
 }
 
 .ph__icon {

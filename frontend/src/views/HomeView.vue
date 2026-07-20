@@ -10,7 +10,6 @@ import BaseButton from '@/components/ui/BaseButton.vue'
 import CtaBand from '@/components/ui/CtaBand.vue'
 import PlaceholderImage from '@/components/ui/PlaceholderImage.vue'
 import { fetchProducts, useAsyncData } from '@/api/catalog.js'
-import { useReveal } from '@/composables/useReveal.js'
 import { useSeo } from '@/composables/useSeo.js'
 import { useI18n } from '@/i18n'
 
@@ -23,11 +22,10 @@ const { data: products, loading, failed, load } = useAsyncData(fetchProducts)
 const tones = ['blue', 'teal', 'deep', 'warm']
 
 useSeo({ title: home.meta.title, description: home.meta.description, path: '/' })
-const { refresh } = useReveal(page)
 
 // Product cards arrive after the first paint, so they need to be registered
 // with the reveal observer once they exist.
-onMounted(() => load().then(refresh))
+onMounted(() => load())
 </script>
 
 <template>
@@ -46,7 +44,7 @@ onMounted(() => load().then(refresh))
             {{ home.whyTeaser.cta }}
           </BaseButton>
         </div>
-        <div class="intro__media" data-reveal>
+        <div class="intro__media">
           <PlaceholderImage
             :label="common.imagePlaceholder"
             tone="teal"
@@ -113,7 +111,7 @@ onMounted(() => load().then(refresh))
           align="center"
         />
         <ul class="teaser">
-          <li v-for="item in home.whyTeaser.items" :key="item.title" class="teaser__item" data-reveal>
+          <li v-for="item in home.whyTeaser.items" :key="item.title" class="teaser__item">
             <h3 class="teaser__title">{{ item.title }}</h3>
             <p class="teaser__text">{{ item.text }}</p>
           </li>

@@ -11,7 +11,7 @@ const { common } = useI18n()
 </script>
 
 <template>
-  <article class="card" data-reveal>
+  <article class="card">
     <PlaceholderImage :label="product.title" :tone="tone" ratio="16 / 10" />
     <div class="card__body">
       <h3 class="card__title">{{ product.title }}</h3>

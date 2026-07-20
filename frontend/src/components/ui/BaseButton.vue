@@ -53,22 +53,28 @@ defineProps({
 </template>
 
 <style scoped>
+/*
+ * Pill-shaped, uppercase and bold — the OCHSNER button treatment.
+ * Content tiles stay square (--radius: 0); only buttons use --radius-pill.
+ */
 .btn {
   display: inline-flex;
   align-items: center;
   justify-content: center;
   gap: var(--sp-2);
   font-family: var(--font-heading);
-  font-weight: 600;
-  letter-spacing: 0.01em;
+  font-weight: var(--fw-bold);
+  font-size: 0.9375rem;
+  text-transform: uppercase;
+  letter-spacing: normal;
   text-align: center;
   text-decoration: none;
-  border: 2px solid transparent;
-  border-radius: var(--radius);
+  border: 1px solid transparent;
+  border-radius: var(--radius-pill);
   cursor: pointer;
   /* 48px min target — comfortable on phones. */
   min-height: 48px;
-  padding: var(--sp-3) var(--sp-5);
+  padding: 12px 28px;
   transition: background-color var(--dur-fast) var(--ease),
     border-color var(--dur-fast) var(--ease), color var(--dur-fast) var(--ease),
     transform var(--dur-fast) var(--ease), box-shadow var(--dur-fast) var(--ease);
@@ -85,14 +91,14 @@ defineProps({
 
 .btn--sm {
   min-height: 40px;
-  padding: var(--sp-2) var(--sp-4);
-  font-size: var(--fs-small);
+  padding: 8px 20px;
+  font-size: 0.8125rem;
 }
 
 .btn--lg {
   min-height: 56px;
-  padding: var(--sp-4) var(--sp-6);
-  font-size: 1.05rem;
+  padding: 16px 30px;
+  font-size: 1.125rem;
 }
 
 .btn--block {
@@ -100,38 +106,38 @@ defineProps({
   width: 100%;
 }
 
-/* Amber is reserved for the primary action on a page. */
+/* OCHSNER red — the standard call to action. */
 .btn--primary {
   background: var(--c-accent-600);
+  border-color: var(--c-accent-600);
   color: #fff;
-  box-shadow: var(--shadow-sm);
 }
 
 .btn--primary:hover:not(:disabled) {
   background: var(--c-accent-700);
+  border-color: var(--c-accent-700);
   color: #fff;
-  box-shadow: var(--shadow);
 }
 
 .btn--secondary {
   background: transparent;
-  border-color: var(--c-primary-700);
-  color: var(--c-primary-700);
+  border-color: var(--c-primary-800);
+  color: var(--c-primary-800);
 }
 
 .btn--secondary:hover:not(:disabled) {
-  background: var(--c-primary-700);
+  background: var(--c-primary-800);
   color: #fff;
 }
 
 .btn--ghost {
   background: transparent;
-  color: var(--c-primary-700);
+  color: var(--c-accent-600);
   padding-inline: var(--sp-2);
 }
 
 .btn--ghost:hover:not(:disabled) {
-  color: var(--c-primary-500);
+  color: var(--c-accent-700);
 }
 
 /* For use on dark backgrounds. */
@@ -144,6 +150,6 @@ defineProps({
 .btn--light:hover:not(:disabled) {
   background: #fff;
   border-color: #fff;
-  color: var(--c-primary-800);
+  color: var(--c-primary-900);
 }
 </style>

@@ -4,7 +4,6 @@ import PageHero from '@/components/ui/PageHero.vue'
 import SectionHeading from '@/components/ui/SectionHeading.vue'
 import CtaBand from '@/components/ui/CtaBand.vue'
 import PlaceholderImage from '@/components/ui/PlaceholderImage.vue'
-import { useReveal } from '@/composables/useReveal.js'
 import { useSeo } from '@/composables/useSeo.js'
 import { useI18n } from '@/i18n'
 
@@ -12,7 +11,6 @@ const { about } = useI18n()
 const page = ref(null)
 
 useSeo({ title: about.meta.title, description: about.meta.description, path: '/za-nas' })
-useReveal(page)
 </script>
 
 <template>
@@ -26,7 +24,7 @@ useReveal(page)
     <!-- The local representative — placeholder bio for the client to complete -->
     <section class="section">
       <div class="container rep">
-        <div class="rep__media" data-reveal>
+        <div class="rep__media">
           <PlaceholderImage label="Портретна снимка" tone="deep" ratio="3 / 4" icon="◯" />
         </div>
         <div>
@@ -61,7 +59,7 @@ useReveal(page)
               {{ paragraph }}
             </p>
           </div>
-          <dl class="facts" data-reveal>
+          <dl class="facts">
             <div v-for="fact in about.partnership.facts" :key="fact.label" class="fact">
               <dt class="fact__value">{{ fact.value }}</dt>
               <dd class="fact__label">{{ fact.label }}</dd>
@@ -76,7 +74,7 @@ useReveal(page)
       <div class="container">
         <SectionHeading :eyebrow="about.services.eyebrow" :title="about.services.title" />
         <ol class="services">
-          <li v-for="(service, index) in about.services.items" :key="service.title" class="service" data-reveal>
+          <li v-for="(service, index) in about.services.items" :key="service.title" class="service">
             <span class="service__num" aria-hidden="true">{{ String(index + 1).padStart(2, '0') }}</span>
             <h3 class="service__title">{{ service.title }}</h3>
             <p class="service__text">{{ service.text }}</p>
@@ -94,7 +92,7 @@ useReveal(page)
           :subtitle="about.whyLocal.intro"
         />
         <div class="compare">
-          <article class="compare__col compare__col--good" data-reveal>
+          <article class="compare__col compare__col--good">
             <h3 class="compare__title">{{ about.whyLocal.columns.local.title }}</h3>
             <ul class="compare__list">
               <li v-for="item in about.whyLocal.columns.local.items" :key="item">
@@ -103,7 +101,7 @@ useReveal(page)
               </li>
             </ul>
           </article>
-          <article class="compare__col" data-reveal>
+          <article class="compare__col">
             <h3 class="compare__title">{{ about.whyLocal.columns.import.title }}</h3>
             <ul class="compare__list">
               <li v-for="item in about.whyLocal.columns.import.items" :key="item">

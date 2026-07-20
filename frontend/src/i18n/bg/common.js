@@ -32,13 +32,23 @@ export const nav = {
   mainLabel: 'Основна навигация',
   mobileLabel: 'Мобилно меню',
   footerLabel: 'Навигация в долния колонтитул',
+  utilityLabel: 'Допълнителни връзки',
   home: 'Начало',
   products: 'Продукти',
   why: 'Защо термопомпа?',
   about: 'За нас',
   references: 'Референции',
   partner: 'Стани партньор',
-  contact: 'Контакти'
+  contact: 'Контакти',
+
+  /* Secondary links in the thin bar above the main nav. The external portals are
+     run by OCHSNER Austria; the client must confirm which apply to Bulgaria. */
+  utility: {
+    service: 'Сервиз',
+    downloads: 'Документи за изтегляне',
+    partnerPortal: 'Партньорски портал',
+    becomePartner: 'Стани партньор'
+  }
 }
 
 /** Real address, phone and hours to be confirmed by the client before launch. */

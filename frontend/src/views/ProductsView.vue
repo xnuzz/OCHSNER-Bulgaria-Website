@@ -6,7 +6,6 @@ import BaseButton from '@/components/ui/BaseButton.vue'
 import CtaBand from '@/components/ui/CtaBand.vue'
 import PlaceholderImage from '@/components/ui/PlaceholderImage.vue'
 import { fetchProducts, useAsyncData } from '@/api/catalog.js'
-import { useReveal } from '@/composables/useReveal.js'
 import { useSeo } from '@/composables/useSeo.js'
 import { useI18n } from '@/i18n'
 
@@ -17,11 +16,9 @@ const { data: items, loading, failed, load } = useAsyncData(fetchProducts)
 const tones = ['blue', 'teal', 'deep', 'warm']
 
 useSeo({ title: copy.meta.title, description: copy.meta.description, path: '/produkti' })
-const { refresh } = useReveal(page)
 
 onMounted(() =>
   load().then(() => {
-    refresh()
     // Deep links like /produkti#zemya-voda only resolve after the sections exist.
     if (window.location.hash) {
       document.querySelector(window.location.hash)?.scrollIntoView({ behavior: 'smooth' })
@@ -66,7 +63,7 @@ onMounted(() =>
         :class="{ 'section--alt': index % 2 === 1 }"
       >
         <div class="container product" :class="{ 'product--flip': index % 2 === 1 }">
-          <div class="product__media" data-reveal>
+          <div class="product__media">
             <PlaceholderImage :label="item.title" :tone="tones[index % tones.length]" ratio="4 / 3" />
           </div>
 

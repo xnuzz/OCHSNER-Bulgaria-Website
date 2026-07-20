@@ -43,10 +43,11 @@ const { common, home } = useI18n()
   position: absolute;
   inset: 0;
   z-index: -1;
+  /* Stands in for the full-bleed hero photograph: near-black with a subtle
+     red wash, matching the corporate hero treatment. */
   background:
-    radial-gradient(60% 80% at 82% 18%, rgba(240, 140, 26, 0.28), transparent 62%),
-    radial-gradient(70% 90% at 12% 88%, rgba(26, 141, 174, 0.45), transparent 60%),
-    linear-gradient(150deg, var(--c-primary-800) 0%, var(--c-primary-900) 62%);
+    radial-gradient(65% 85% at 78% 22%, rgba(220, 38, 26, 0.22), transparent 60%),
+    linear-gradient(155deg, #2f2d2b 0%, #171615 70%);
 }
 
 .hero__bg::after {
@@ -62,15 +63,17 @@ const { common, home } = useI18n()
 .hero__eyebrow {
   font-family: var(--font-heading);
   font-size: var(--fs-eyebrow);
-  font-weight: 600;
+  font-weight: var(--fw-bold);
   letter-spacing: 0.14em;
   text-transform: uppercase;
-  color: var(--c-primary-300);
+  color: var(--c-accent-500);
   margin-bottom: var(--sp-4);
 }
 
 .hero__title {
   font-size: var(--fs-hero);
+  font-weight: var(--fw-bold);
+  line-height: var(--lh-tight);
   max-width: 17ch;
   color: #fff;
 }

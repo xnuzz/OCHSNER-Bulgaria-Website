@@ -44,7 +44,7 @@ public class ProductCategory {
 
     @ElementCollection(fetch = FetchType.EAGER)
     @CollectionTable(name = "product_category_advantage", joinColumns = @JoinColumn(name = "category_id"))
-    @OrderColumn(name = "position")
+    @OrderColumn(name = "sort_order")
     @Column(name = "advantage", length = 400)
     private List<String> advantages = new ArrayList<>();
 
