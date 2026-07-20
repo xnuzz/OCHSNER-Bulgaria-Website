@@ -64,7 +64,7 @@ onBeforeUnmount(() => {
         </span>
       </RouterLink>
 
-      <nav class="header__nav" :aria-label="nav.home">
+      <nav class="header__nav" :aria-label="nav.mainLabel">
         <RouterLink v-for="link in links" :key="link.name" :to="{ name: link.name }" class="header__link">
           {{ link.label }}
         </RouterLink>
@@ -94,7 +94,7 @@ onBeforeUnmount(() => {
 
     <Transition name="drawer">
       <div v-if="menuOpen" id="mobile-nav" class="drawer">
-        <nav class="drawer__nav" :aria-label="nav.home">
+        <nav class="drawer__nav" :aria-label="nav.mobileLabel">
           <RouterLink
             v-for="link in links"
             :key="link.name"

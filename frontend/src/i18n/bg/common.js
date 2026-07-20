@@ -29,6 +29,9 @@ export const common = {
 }
 
 export const nav = {
+  mainLabel: 'Основна навигация',
+  mobileLabel: 'Мобилно меню',
+  footerLabel: 'Навигация в долния колонтитул',
   home: 'Начало',
   products: 'Продукти',
   why: 'Защо термопомпа?',

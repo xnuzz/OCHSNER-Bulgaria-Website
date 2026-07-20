@@ -30,7 +30,7 @@ const year = new Date().getFullYear()
         <p class="footer__about">{{ footer.about }}</p>
       </div>
 
-      <nav class="footer__col" :aria-label="footer.navHeading">
+      <nav class="footer__col" :aria-label="nav.footerLabel">
         <h2 class="footer__heading">{{ footer.navHeading }}</h2>
         <ul class="footer__list">
           <li v-for="link in links" :key="link.name">

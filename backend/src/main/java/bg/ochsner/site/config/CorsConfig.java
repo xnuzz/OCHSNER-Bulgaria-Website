@@ -1,16 +1,14 @@
 package bg.ochsner.site.config;
 
-import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
-import java.util.List;
-
 /**
  * CORS for the split dev setup (Vite on :5173, API on :8080).
- * Allowed origins come from {@code site.cors.allowed-origins} so production can lock this down.
+ * Vite also proxies /api in dev, so this mainly covers deployments where the SPA
+ * is served from a different host than the API.
  */
 @Configuration
 public class CorsConfig {
@@ -27,15 +25,5 @@ public class CorsConfig {
                         .maxAge(3600);
             }
         };
-    }
-
-    @ConfigurationProperties(prefix = "site.cors")
-    public record CorsSettings(List<String> allowedOrigins) {
-
-        public CorsSettings {
-            allowedOrigins = (allowedOrigins == null || allowedOrigins.isEmpty())
-                    ? List.of("http://localhost:5173", "http://127.0.0.1:5173")
-                    : List.copyOf(allowedOrigins);
-        }
     }
 }
