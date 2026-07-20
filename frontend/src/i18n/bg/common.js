@@ -41,6 +41,17 @@ export const nav = {
   partner: 'Стани партньор',
   contact: 'Контакти',
 
+  megaToggle: 'отвори подменюто',
+  megaAllProducts: 'Всички продукти',
+  megaWhy: {
+    overview: 'Обща информация',
+    how: 'Как работи термопомпата',
+    threeInOne: 'Отопление, топла вода и охлаждане',
+    pv: 'Комбинация с фотоволтаици',
+    when: 'Ново строителство или реновация',
+    subsidies: 'Програми за финансиране'
+  },
+
   /* Secondary links in the thin bar above the main nav. The external portals are
      run by OCHSNER Austria; the client must confirm which apply to Bulgaria. */
   utility: {

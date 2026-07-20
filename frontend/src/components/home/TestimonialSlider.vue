@@ -1,5 +1,6 @@
 <script setup>
 import { ref } from 'vue'
+import AppIcon from '@/components/ui/AppIcon.vue'
 
 /**
  * Horizontal testimonial slider, matching the corporate treatment.
@@ -39,10 +40,10 @@ function scrollByCards(direction) {
 
     <div class="slider__controls">
       <button type="button" class="slider__btn" aria-label="Предишен отзив" @click="scrollByCards(-1)">
-        <span aria-hidden="true">‹</span>
+        <AppIcon name="arrowLeft" :size="20" />
       </button>
       <button type="button" class="slider__btn" aria-label="Следващ отзив" @click="scrollByCards(1)">
-        <span aria-hidden="true">›</span>
+        <AppIcon name="arrowRight" :size="20" />
       </button>
     </div>
   </div>

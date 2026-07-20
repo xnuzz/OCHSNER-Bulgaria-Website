@@ -1,0 +1,62 @@
+<script setup>
+/**
+ * Inline line-icon set. Drawn here rather than pulled from an icon font or
+ * library so the icons inherit currentColor, cost nothing at runtime, and keep
+ * a single consistent stroke weight across the site.
+ *
+ * All paths are on a 24x24 grid, 1.5px stroke, round caps/joins.
+ */
+defineProps({
+  name: { type: String, required: true },
+  size: { type: [Number, String], default: 24 }
+})
+
+const paths = {
+  // Efficiency — bolt inside a circle
+  efficiency: ['M13 3 6.5 13.2H11l-.8 7.8L17.5 10.6H13z'],
+  // Quiet operation — speaker with muted waves
+  quiet: ['M4 9.5v5h3.2L12 19V5L7.2 9.5z', 'M16 9.6a3.4 3.4 0 0 1 0 4.8', 'M19 16.5 21.5 19', 'M21.5 16.5 19 19'],
+  // Certified quality — shield with a check
+  quality: ['M12 3 5 5.7v5.6c0 4.2 2.9 7.6 7 9.1 4.1-1.5 7-4.9 7-9.1V5.7z', 'm9 12 2.2 2.3L15.4 10'],
+  // Durability — hourglass
+  durability: ['M7 3h10M7 21h10', 'M8 3v3.6c0 1.9 1.4 3.4 3 4.6-1.6 1.2-3 2.7-3 4.6V21', 'M16 3v3.6c0 1.9-1.4 3.4-3 4.6 1.6 1.2 3 2.7 3 4.6V21'],
+  // Technology — processor
+  technology: ['M8.5 8.5h7v7h-7z', 'M6 6h12v12H6z', 'M10 3v3M14 3v3M10 18v3M14 18v3M3 10h3M3 14h3M18 10h3M18 14h3'],
+  // Price/performance — price tag
+  value: ['M11.4 3.5 3.5 11.4a1.5 1.5 0 0 0 0 2.1l7 7a1.5 1.5 0 0 0 2.1 0l7.9-7.9V3.5z', 'M16.2 7.8h.01'],
+
+  // Interface
+  phone: ['M6.2 3.5h3l1.6 4-2 1.3a11.5 11.5 0 0 0 5.4 5.4l1.3-2 4 1.6v3a1.6 1.6 0 0 1-1.7 1.6A16.5 16.5 0 0 1 4.6 5.2 1.6 1.6 0 0 1 6.2 3.5z'],
+  chevron: ['m6 9 6 6 6-6'],
+  arrowLeft: ['m14 5-7 7 7 7'],
+  arrowRight: ['m10 5 7 7-7 7'],
+  check: ['m5 12.5 4.5 4.5L19 7'],
+  minus: ['M5 12h14'],
+  plus: ['M12 5v14M5 12h14']
+}
+</script>
+
+<template>
+  <svg
+    class="icon"
+    :width="size"
+    :height="size"
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    stroke-width="1.5"
+    stroke-linecap="round"
+    stroke-linejoin="round"
+    aria-hidden="true"
+    focusable="false"
+  >
+    <path v-for="(d, i) in paths[name] || []" :key="i" :d="d" />
+  </svg>
+</template>
+
+<style scoped>
+.icon {
+  display: block;
+  flex-shrink: 0;
+}
+</style>

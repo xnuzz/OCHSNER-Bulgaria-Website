@@ -1,5 +1,6 @@
 <script setup>
 import { ref } from 'vue'
+import AppIcon from './AppIcon.vue'
 
 /**
  * Accessible disclosure list — the corporate site presents "Why OCHSNER" as a
@@ -37,8 +38,8 @@ function toggle(index) {
           @click="toggle(index)"
         >
           <span>{{ item.title }}</span>
-          <span class="accordion__icon" aria-hidden="true">
-            {{ isOpen(index) ? '−' : '+' }}
+          <span class="accordion__icon" :class="{ 'accordion__icon--open': isOpen(index) }">
+            <AppIcon name="chevron" :size="18" />
           </span>
         </button>
       </h3>
@@ -100,8 +101,11 @@ function toggle(index) {
   border-radius: 50%;
   background: var(--c-accent-600);
   color: #fff;
-  font-size: 1.1rem;
-  line-height: 1;
+  transition: transform var(--dur) var(--ease);
+}
+
+.accordion__icon--open {
+  transform: rotate(180deg);
 }
 
 .accordion__panel {

@@ -25,7 +25,7 @@ useSeo({ title: about.meta.title, description: about.meta.description, path: '/z
     <section class="section">
       <div class="container rep">
         <div class="rep__media">
-          <PlaceholderImage label="Портретна снимка" tone="deep" ratio="3 / 4" icon="◯" />
+          <PlaceholderImage label="Портретна снимка" tone="deep" ratio="3 / 4" />
         </div>
         <div>
           <SectionHeading

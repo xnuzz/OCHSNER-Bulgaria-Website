@@ -1,16 +1,20 @@
 <script setup>
+import AppIcon from '@/components/ui/AppIcon.vue'
+
 defineProps({
   items: { type: Array, required: true }
 })
 
-// Line-art glyphs keep the tiles technical without shipping an icon library.
-const glyphs = ['◆', '◐', '✓', '⏱', '⚙', '⇄']
+// Aligned to the six advantages in i18n/bg/home.js, in order.
+const icons = ['efficiency', 'quiet', 'quality', 'durability', 'technology', 'value']
 </script>
 
 <template>
   <ul class="tiles">
     <li v-for="(item, index) in items" :key="item.title" class="tile">
-      <span class="tile__glyph" aria-hidden="true">{{ glyphs[index % glyphs.length] }}</span>
+      <span class="tile__icon">
+        <AppIcon :name="icons[index % icons.length]" :size="26" />
+      </span>
       <h3 class="tile__title">{{ item.title }}</h3>
       <p class="tile__text">{{ item.text }}</p>
     </li>
@@ -22,42 +26,22 @@ const glyphs = ['◆', '◐', '✓', '⏱', '⚙', '⇄']
   list-style: none;
   padding: 0;
   display: grid;
-  gap: var(--sp-5);
+  gap: var(--sp-6) var(--sp-5);
 }
 
-.tile {
-  padding: var(--sp-5);
-  background: var(--c-surface);
-  border: 1px solid var(--c-line);
-  border-radius: var(--radius-lg);
-  border-top: 3px solid var(--c-primary-500);
-  transition: box-shadow var(--dur) var(--ease), transform var(--dur) var(--ease);
-}
-
-.tile:hover {
-  transform: translateY(-3px);
-  box-shadow: var(--shadow);
-}
-
-.tile__glyph {
-  display: grid;
-  place-items: center;
-  width: 40px;
-  height: 40px;
+.tile__icon {
+  display: block;
   margin-bottom: var(--sp-4);
-  border-radius: var(--radius);
-  background: var(--c-primary-50);
-  color: var(--c-primary-600);
-  font-size: 1.1rem;
+  color: var(--c-accent-600);
 }
 
 .tile__title {
-  color: var(--c-primary-800);
+  color: var(--c-primary-900);
 }
 
 .tile__text {
-  margin-top: var(--sp-3);
-  font-size: 0.95rem;
+  margin-top: var(--sp-2);
+  font-size: 0.9375rem;
   color: var(--c-ink-soft);
 }
 

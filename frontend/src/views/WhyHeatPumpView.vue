@@ -19,7 +19,7 @@ useSeo({ title: why.meta.title, description: why.meta.description, path: '/zasht
     <PageHero :eyebrow="why.hero.eyebrow" :title="why.hero.title" :subtitle="why.hero.subtitle" />
 
     <!-- How it works -->
-    <section class="section">
+    <section id="kak-raboti" class="section">
       <div class="container">
         <SectionHeading
           :eyebrow="why.cycle.eyebrow"
@@ -40,7 +40,7 @@ useSeo({ title: why.meta.title, description: why.meta.description, path: '/zasht
     </section>
 
     <!-- 3-in-1 -->
-    <section class="section section--alt">
+    <section id="tri-v-edno" class="section section--alt">
       <div class="container">
         <SectionHeading
           :eyebrow="why.threeInOne.eyebrow"
@@ -57,7 +57,7 @@ useSeo({ title: why.meta.title, description: why.meta.description, path: '/zasht
     </section>
 
     <!-- Heat pump + PV -->
-    <section class="section">
+    <section id="fotovoltaici" class="section">
       <div class="container pv">
         <div>
           <SectionHeading :eyebrow="why.pv.eyebrow" :title="why.pv.title" />
@@ -72,7 +72,7 @@ useSeo({ title: why.meta.title, description: why.meta.description, path: '/zasht
     </section>
 
     <!-- New build vs retrofit -->
-    <section class="section section--alt">
+    <section id="koga-si-struva" class="section section--alt">
       <div class="container">
         <SectionHeading :eyebrow="why.buildings.eyebrow" :title="why.buildings.title" />
         <div class="cases">
@@ -93,7 +93,7 @@ useSeo({ title: why.meta.title, description: why.meta.description, path: '/zasht
     </section>
 
     <!-- State subsidy programmes: intentionally free of concrete figures -->
-    <section class="section">
+    <section id="finansirane" class="section">
       <div class="container container--narrow">
         <SectionHeading :eyebrow="why.subsidies.eyebrow" :title="why.subsidies.title" />
         <p v-for="paragraph in why.subsidies.body" :key="paragraph" class="subsidy__paragraph">

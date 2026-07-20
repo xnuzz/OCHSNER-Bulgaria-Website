@@ -2,7 +2,9 @@
 import { onBeforeUnmount, onMounted, ref, watch } from 'vue'
 import { useRoute } from 'vue-router'
 import BaseButton from '@/components/ui/BaseButton.vue'
+import AppIcon from '@/components/ui/AppIcon.vue'
 import BrandMark from './BrandMark.vue'
+import { fetchProducts, useAsyncData } from '@/api/catalog.js'
 import { useI18n } from '@/i18n'
 
 const { common, nav, contactDetails } = useI18n()
@@ -11,13 +13,30 @@ const route = useRoute()
 const menuOpen = ref(false)
 const scrolled = ref(false)
 
+/** Slug of the nav item whose mega panel is open, or null. */
+const openPanel = ref(null)
+let closeTimer = null
+
 const links = [
-  { name: 'products', label: nav.products },
-  { name: 'why', label: nav.why },
+  { name: 'products', label: nav.products, panel: 'products' },
+  { name: 'why', label: nav.why, panel: 'why' },
   { name: 'about', label: nav.about },
   { name: 'references', label: nav.references },
   { name: 'partner', label: nav.partner },
   { name: 'contact', label: nav.contact }
+]
+
+// Product categories come from the API so the menu never drifts from the catalog.
+const { data: products, load } = useAsyncData(fetchProducts)
+
+// Anchors into the "Защо термопомпа" page.
+const whyLinks = [
+  { hash: '', label: nav.megaWhy.overview },
+  { hash: '#kak-raboti', label: nav.megaWhy.how },
+  { hash: '#tri-v-edno', label: nav.megaWhy.threeInOne },
+  { hash: '#fotovoltaici', label: nav.megaWhy.pv },
+  { hash: '#koga-si-struva', label: nav.megaWhy.when },
+  { hash: '#finansirane', label: nav.megaWhy.subsidies }
 ]
 
 function onScroll() {
@@ -26,6 +45,25 @@ function onScroll() {
 
 function closeMenu() {
   menuOpen.value = false
+  openPanel.value = null
+}
+
+/** Small delay on close so moving the pointer into the panel doesn't dismiss it. */
+function openMega(panel) {
+  clearTimeout(closeTimer)
+  openPanel.value = panel
+}
+
+function scheduleCloseMega() {
+  clearTimeout(closeTimer)
+  closeTimer = setTimeout(() => {
+    openPanel.value = null
+  }, 140)
+}
+
+function toggleMega(panel) {
+  clearTimeout(closeTimer)
+  openPanel.value = openPanel.value === panel ? null : panel
 }
 
 function onKeydown(event) {
@@ -44,6 +82,8 @@ onMounted(() => {
   window.addEventListener('scroll', onScroll, { passive: true })
   window.addEventListener('keydown', onKeydown)
   onScroll()
+  // Cached in api/catalog.js, so this costs nothing on later pages.
+  load()
 })
 
 onBeforeUnmount(() => {
@@ -77,15 +117,33 @@ onBeforeUnmount(() => {
         </span>
       </RouterLink>
 
-      <nav class="header__nav" :aria-label="nav.mainLabel">
-        <RouterLink v-for="link in links" :key="link.name" :to="{ name: link.name }" class="header__link">
-          {{ link.label }}
-        </RouterLink>
+      <nav class="header__nav" :aria-label="nav.mainLabel" @mouseleave="scheduleCloseMega">
+        <template v-for="link in links" :key="link.name">
+          <!-- Items with a mega panel: the label is still a link, with a
+               separate disclosure button so keyboard users can open the panel
+               without being forced to navigate. -->
+          <span v-if="link.panel" class="header__item" @mouseenter="openMega(link.panel)">
+            <RouterLink :to="{ name: link.name }" class="header__link">{{ link.label }}</RouterLink>
+            <button
+              type="button"
+              class="header__disclosure"
+              :aria-expanded="openPanel === link.panel"
+              :aria-label="`${link.label} — ${nav.megaToggle}`"
+              @click="toggleMega(link.panel)"
+            >
+              <AppIcon name="chevron" :size="14" />
+            </button>
+          </span>
+
+          <RouterLink v-else :to="{ name: link.name }" class="header__link">
+            {{ link.label }}
+          </RouterLink>
+        </template>
       </nav>
 
       <div class="header__actions">
         <a class="header__phone" :href="contactDetails.phoneHref">
-          <span aria-hidden="true">☎</span>
+          <AppIcon name="phone" :size="18" />
           <span>{{ contactDetails.phone }}</span>
         </a>
         <BaseButton :to="{ name: 'contact' }" size="sm" class="header__cta">
@@ -103,6 +161,50 @@ onBeforeUnmount(() => {
       >
         <span class="header__toggle-bar" :class="{ 'is-open': menuOpen }"></span>
       </button>
+    </div>
+
+    <!-- Mega panels: full-width, flush under the header bar. -->
+    <div
+      v-if="openPanel"
+      class="mega"
+      @mouseenter="openMega(openPanel)"
+      @mouseleave="scheduleCloseMega"
+    >
+      <div class="container mega__inner">
+        <template v-if="openPanel === 'products'">
+          <p class="mega__label">{{ nav.products }}</p>
+          <ul class="mega__grid">
+            <li v-for="item in products" :key="item.slug">
+              <RouterLink
+                class="mega__card"
+                :to="{ name: 'products', hash: `#${item.slug}` }"
+                @click="closeMenu"
+              >
+                <span class="mega__card-title">{{ item.title }}</span>
+                <span class="mega__card-text">{{ item.shortDescription }}</span>
+              </RouterLink>
+            </li>
+          </ul>
+          <RouterLink class="mega__all" :to="{ name: 'products' }" @click="closeMenu">
+            {{ nav.megaAllProducts }}
+            <AppIcon name="arrowRight" :size="16" />
+          </RouterLink>
+        </template>
+
+        <template v-else-if="openPanel === 'why'">
+          <p class="mega__label">{{ nav.why }}</p>
+          <ul class="mega__links">
+            <li v-for="item in whyLinks" :key="item.label">
+              <RouterLink
+                :to="{ name: 'why', hash: item.hash || undefined }"
+                @click="closeMenu"
+              >
+                {{ item.label }}
+              </RouterLink>
+            </li>
+          </ul>
+        </template>
+      </div>
     </div>
 
     <Transition name="drawer">
@@ -262,6 +364,122 @@ onBeforeUnmount(() => {
   white-space: nowrap;
 }
 
+/* ---------- Mega panel -------------------------------------------------- */
+
+.header__item {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--sp-1);
+}
+
+.header__disclosure {
+  display: grid;
+  place-items: center;
+  padding: 2px;
+  background: transparent;
+  border: 0;
+  color: var(--c-ink-muted);
+  cursor: pointer;
+}
+
+.header__disclosure[aria-expanded='true'] {
+  color: var(--c-accent-600);
+  transform: rotate(180deg);
+}
+
+/* The mega panel belongs to the desktop nav, which is hidden below 1080px. */
+.mega {
+  display: none;
+  position: absolute;
+  inset-inline: 0;
+  top: 100%;
+  background: #fff;
+  border-top: 1px solid var(--c-line);
+  box-shadow: var(--shadow);
+  padding-block: var(--sp-6);
+}
+
+.mega__label {
+  font-size: var(--fs-eyebrow);
+  font-weight: var(--fw-bold);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--c-ink-muted);
+  margin-bottom: var(--sp-4);
+}
+
+.mega__grid {
+  list-style: none;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: var(--sp-4);
+}
+
+.mega__card {
+  display: flex;
+  flex-direction: column;
+  gap: var(--sp-2);
+  height: 100%;
+  padding: var(--sp-4);
+  background: var(--c-surface-alt);
+  text-decoration: none;
+  color: var(--c-ink);
+  border-bottom: 3px solid transparent;
+  transition: border-color var(--dur-fast) var(--ease),
+    background-color var(--dur-fast) var(--ease);
+}
+
+.mega__card:hover {
+  background: var(--c-primary-100);
+  border-bottom-color: var(--c-accent-600);
+  color: var(--c-ink);
+}
+
+.mega__card-title {
+  font-family: var(--font-heading);
+  font-weight: var(--fw-bold);
+  font-size: 0.9375rem;
+  color: var(--c-primary-900);
+}
+
+.mega__card-text {
+  font-size: 0.8125rem;
+  color: var(--c-ink-muted);
+  line-height: 1.45;
+}
+
+.mega__all {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--sp-2);
+  margin-top: var(--sp-5);
+  font-weight: var(--fw-bold);
+  font-size: 0.875rem;
+  text-transform: uppercase;
+  text-decoration: none;
+}
+
+.mega__links {
+  list-style: none;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--sp-3) var(--sp-5);
+}
+
+.mega__links a {
+  display: block;
+  padding: var(--sp-2) 0;
+  color: var(--c-ink);
+  text-decoration: none;
+  border-bottom: 1px solid var(--c-line-soft);
+}
+
+.mega__links a:hover {
+  color: var(--c-accent-600);
+}
+
 /* ---------- Hamburger --------------------------------------------------- */
 
 .header__toggle {
@@ -372,6 +590,10 @@ onBeforeUnmount(() => {
 
 @media (min-width: 1080px) {
   .utility {
+    display: block;
+  }
+
+  .mega {
     display: block;
   }
 
