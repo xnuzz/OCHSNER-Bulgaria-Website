@@ -21,9 +21,12 @@ spring:
       enabled: true
       path: /h2-console
 
-  # No host configured -> the app falls back to the logging mailer (see MailConfig).
+  # spring.mail.host is intentionally absent in dev. Setting it to an empty string
+  # still triggers MailSenderAutoConfiguration, and the resulting health indicator
+  # cannot reach a server, which takes /actuator/health DOWN (503). With the key
+  # missing, no JavaMailSender is created and MailConfig falls back to the logging
+  # mailer. The prod profile supplies a real host.
   mail:
-    host: ""
     properties:
       mail.smtp.auth: true
       mail.smtp.starttls.enable: true

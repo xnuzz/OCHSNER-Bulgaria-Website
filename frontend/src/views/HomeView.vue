@@ -1,67 +1,48 @@
 <script setup>
-import { onMounted, ref } from 'vue'
+import { onMounted } from 'vue'
 import HomeHero from '@/components/home/HomeHero.vue'
-import AdvantageTiles from '@/components/home/AdvantageTiles.vue'
+import QuickActions from '@/components/home/QuickActions.vue'
+import BrandStatement from '@/components/home/BrandStatement.vue'
 import TrustBar from '@/components/home/TrustBar.vue'
-import TestimonialGrid from '@/components/home/TestimonialGrid.vue'
-import ProductCard from '@/components/products/ProductCard.vue'
+import TestimonialSlider from '@/components/home/TestimonialSlider.vue'
+import ProductTile from '@/components/products/ProductTile.vue'
 import SectionHeading from '@/components/ui/SectionHeading.vue'
+import AccordionList from '@/components/ui/AccordionList.vue'
 import BaseButton from '@/components/ui/BaseButton.vue'
 import CtaBand from '@/components/ui/CtaBand.vue'
-import PlaceholderImage from '@/components/ui/PlaceholderImage.vue'
 import { fetchProducts, useAsyncData } from '@/api/catalog.js'
 import { useSeo } from '@/composables/useSeo.js'
 import { useI18n } from '@/i18n'
 
-const { common, home, contactDetails } = useI18n()
-const page = ref(null)
+const { common, home } = useI18n()
 
 const { data: products, loading, failed, load } = useAsyncData(fetchProducts)
 
-// Product cards alternate tone so the four-card grid reads as a set, not a wall.
 const tones = ['blue', 'teal', 'deep', 'warm']
 
 useSeo({ title: home.meta.title, description: home.meta.description, path: '/' })
 
-// Product cards arrive after the first paint, so they need to be registered
-// with the reveal observer once they exist.
-onMounted(() => load())
+onMounted(load)
 </script>
 
 <template>
-  <div ref="page">
+  <div>
     <HomeHero />
 
-    <!-- Intro: what a heat pump is and why OCHSNER -->
-    <section class="section">
-      <div class="container intro">
-        <div class="intro__copy">
-          <SectionHeading :eyebrow="home.intro.eyebrow" :title="home.intro.title" />
-          <p v-for="paragraph in home.intro.body" :key="paragraph" class="intro__paragraph">
-            {{ paragraph }}
-          </p>
-          <BaseButton :to="{ name: 'why' }" variant="secondary" class="intro__cta">
-            {{ home.whyTeaser.cta }}
-          </BaseButton>
-        </div>
-        <div class="intro__media">
-          <PlaceholderImage
-            :label="common.imagePlaceholder"
-            tone="teal"
-            ratio="3 / 4"
-            icon="⌂"
-          />
-        </div>
-      </div>
-    </section>
+    <!-- Paired action cards directly under the hero -->
+    <QuickActions :items="home.quickActions" />
 
-    <!-- Product categories, sourced from GET /api/v1/products -->
+    <!-- Brand statement band -->
+    <BrandStatement :title="home.statement.title" :body="home.statement.body" />
+
+    <!-- Product categories, from GET /api/v1/products -->
     <section class="section section--alt">
       <div class="container">
         <SectionHeading
           :eyebrow="home.products.eyebrow"
           :title="home.products.title"
           :subtitle="home.products.subtitle"
+          align="center"
         />
 
         <p v-if="loading" class="state muted">{{ common.loading }}</p>
@@ -71,14 +52,11 @@ onMounted(() => load())
           <BaseButton variant="secondary" size="sm" @click="load">{{ common.retry }}</BaseButton>
         </div>
 
-        <div v-else class="grid grid--cards">
-          <ProductCard
-            v-for="(product, index) in products"
-            :key="product.slug"
-            :product="product"
-            :tone="tones[index % tones.length]"
-          />
-        </div>
+        <ul v-else class="tiles">
+          <li v-for="(product, index) in products" :key="product.slug">
+            <ProductTile :product="product" :tone="tones[index % tones.length]" />
+          </li>
+        </ul>
 
         <div class="section__footer">
           <BaseButton :to="{ name: 'products' }" variant="secondary">
@@ -88,22 +66,18 @@ onMounted(() => load())
       </div>
     </section>
 
-    <!-- Why OCHSNER -->
+    <!-- Why OCHSNER — presented as a disclosure list, as on the corporate site -->
     <section class="section">
       <div class="container">
-        <SectionHeading
-          :eyebrow="home.advantages.eyebrow"
-          :title="home.advantages.title"
-          align="center"
-        />
-        <AdvantageTiles :items="home.advantages.items" />
+        <SectionHeading :eyebrow="home.advantages.eyebrow" :title="home.advantages.title" />
+        <AccordionList :items="home.advantages.items" />
       </div>
     </section>
 
     <TrustBar />
 
     <!-- Why a heat pump — teaser -->
-    <section class="section section--alt">
+    <section class="section">
       <div class="container">
         <SectionHeading
           :eyebrow="home.whyTeaser.eyebrow"
@@ -123,43 +97,19 @@ onMounted(() => load())
     </section>
 
     <!-- Testimonials (placeholder content, see i18n/bg/home.js) -->
-    <section class="section">
+    <section class="section section--alt">
       <div class="container">
-        <SectionHeading
-          :eyebrow="home.testimonials.eyebrow"
-          :title="home.testimonials.title"
-          align="center"
-        />
-        <TestimonialGrid :items="home.testimonials.items" />
+        <SectionHeading :eyebrow="home.testimonials.eyebrow" :title="home.testimonials.title" />
+        <TestimonialSlider :items="home.testimonials.items" />
         <p class="disclaimer">{{ home.testimonials.disclaimer }}</p>
       </div>
     </section>
 
     <CtaBand :title="home.finalCta.title" :text="home.finalCta.text" />
-
-    <p class="visually-hidden">{{ home.finalCta.secondary }}: {{ contactDetails.phone }}</p>
   </div>
 </template>
 
 <style scoped>
-.intro {
-  display: grid;
-  gap: var(--sp-6);
-}
-
-.intro__paragraph + .intro__paragraph {
-  margin-top: var(--sp-4);
-}
-
-.intro__paragraph {
-  color: var(--c-ink-soft);
-  max-width: 62ch;
-}
-
-.intro__cta {
-  margin-top: var(--sp-5);
-}
-
 .state {
   padding: var(--sp-5) 0;
 }
@@ -169,10 +119,25 @@ onMounted(() => load())
   gap: var(--sp-4);
   justify-items: start;
   padding: var(--sp-5);
-  border: 1px solid var(--c-line);
   border-left: 3px solid var(--c-error);
-  border-radius: var(--radius);
   background: var(--c-surface);
+}
+
+/* Category tiles: two up on phones, four across on desktop. */
+.tiles {
+  list-style: none;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: var(--sp-4);
+}
+
+.tiles > li {
+  display: flex;
+}
+
+.tiles > li > * {
+  width: 100%;
 }
 
 .section__footer {
@@ -190,22 +155,21 @@ onMounted(() => load())
 
 .teaser__item {
   padding-left: var(--sp-5);
-  border-left: 3px solid var(--c-accent-500);
+  border-left: 3px solid var(--c-accent-600);
 }
 
 .teaser__title {
-  color: var(--c-primary-800);
+  color: var(--c-primary-900);
 }
 
 .teaser__text {
   margin-top: var(--sp-2);
   color: var(--c-ink-soft);
-  font-size: 0.95rem;
+  font-size: 0.9375rem;
 }
 
 .disclaimer {
   margin-top: var(--sp-5);
-  text-align: center;
   font-size: 0.78rem;
   color: var(--c-ink-muted);
 }
@@ -216,11 +180,9 @@ onMounted(() => load())
   }
 }
 
-@media (min-width: 960px) {
-  .intro {
-    grid-template-columns: 1.5fr 1fr;
-    align-items: center;
-    gap: var(--sp-7);
+@media (min-width: 1000px) {
+  .tiles {
+    grid-template-columns: repeat(4, 1fr);
   }
 }
 </style>
