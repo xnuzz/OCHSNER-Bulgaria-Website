@@ -10,24 +10,52 @@ export const home = {
     title: 'Топлина, която не зависи от цената на горивата',
     subtitle:
       'Термопомпите OCHSNER превръщат енергията от въздуха, земята или водата в отопление, топла вода и охлаждане — с до четири пъти по-малко електроенергия от конвенционалните решения.',
-    ctaNote: 'Безплатен оглед и оферта, без ангажимент.'
-  },
+    ctaNote: 'Безплатен оглед и оферта, без ангажимент.',
+    moreAbout: 'Повече за OCHSNER',
 
-  /* Paired action cards directly under the hero, mirroring the corporate layout. */
-  quickActions: [
-    {
-      title: 'Технически документи',
-      text: 'Спецификации, схеми на свързване и ръководства за монтаж на всички серии.',
-      cta: 'Виж документите',
-      to: 'products'
-    },
-    {
-      title: 'Заяви консултация',
-      text: 'Безплатен оглед и ориентировъчна оферта за вашия обект, без ангажимент.',
-      cta: 'Заяви консултация',
-      to: 'contact'
-    }
-  ],
+    /* Rotating feature panel, top-right of the hero mosaic. Each slide echoes the
+       corporate pattern: kicker, one-line promise, and a "learn more" link into
+       the matching product category. Tones map to PlaceholderImage. */
+    slides: [
+      {
+        kicker: 'OCHSNER · Въздух-вода',
+        title: 'Енергия от въздуха',
+        cta: 'Научи повече',
+        hash: 'vazduh-voda',
+        tone: 'deep'
+      },
+      {
+        kicker: 'OCHSNER · Земя-вода',
+        title: 'Геотермална стабилност',
+        cta: 'Научи повече',
+        hash: 'zemya-voda',
+        tone: 'warm'
+      },
+      {
+        kicker: 'OCHSNER · Вода-вода',
+        title: 'Най-висока ефективност',
+        cta: 'Научи повече',
+        hash: 'voda-voda',
+        tone: 'teal'
+      }
+    ],
+
+    /* The two colour tiles bottom-right of the mosaic. */
+    tiles: [
+      {
+        variant: 'gold',
+        title: 'Технически документи',
+        cta: 'Виж документите',
+        to: 'products'
+      },
+      {
+        variant: 'teal',
+        title: 'Заяви консултация',
+        cta: 'Заяви сега',
+        to: 'contact'
+      }
+    ]
+  },
 
   /* Full-width brand statement band. */
   statement: {

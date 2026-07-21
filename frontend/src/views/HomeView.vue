@@ -1,7 +1,6 @@
 <script setup>
 import { onMounted } from 'vue'
 import HomeHero from '@/components/home/HomeHero.vue'
-import QuickActions from '@/components/home/QuickActions.vue'
 import BrandStatement from '@/components/home/BrandStatement.vue'
 import TestimonialSlider from '@/components/home/TestimonialSlider.vue'
 import ProductTile from '@/components/products/ProductTile.vue'
@@ -31,9 +30,6 @@ onMounted(load)
 <template>
   <div>
     <HomeHero />
-
-    <!-- Paired action cards directly under the hero -->
-    <QuickActions :items="home.quickActions" />
 
     <!-- Brand statement band -->
     <BrandStatement :title="home.statement.title" :body="home.statement.body" />

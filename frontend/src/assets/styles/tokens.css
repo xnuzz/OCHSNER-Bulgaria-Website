@@ -39,6 +39,12 @@
   --c-surface-alt: #f8f7f7;
   --c-surface-deep: #262523;
 
+  /* --- Hero mosaic accent tiles (from the corporate home layout) -------- */
+  --c-tile-gold: #e6b34a;
+  --c-tile-gold-ink: #3a2c07;
+  --c-tile-teal: #86b0b7;
+  --c-tile-teal-ink: #16302f;
+
   /* --- Feedback --------------------------------------------------------- */
   --c-error: #bb5465;
   --c-error-bg: #fbeef0;
