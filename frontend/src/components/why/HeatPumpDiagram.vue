@@ -92,19 +92,30 @@ const cycle = why.cycle
 </template>
 
 <style scoped>
+/*
+ * The cycle diagram is a wide landscape figure. It cannot scale below ~560px
+ * without its labels becoming unreadable, so on phones it is hidden and the
+ * numbered step list beneath it (same four stages, fully responsive) carries
+ * the explanation instead. Tablet and up show the diagram.
+ */
 .diagram {
+  display: none;
   margin: 0;
   padding: var(--sp-5);
   background: var(--c-surface);
   border: 1px solid var(--c-line);
   border-radius: var(--radius-lg);
-  overflow-x: auto;
 }
 
 .diagram__svg {
   width: 100%;
-  min-width: 560px;
   height: auto;
+}
+
+@media (min-width: 620px) {
+  .diagram {
+    display: block;
+  }
 }
 
 .diagram__caption {

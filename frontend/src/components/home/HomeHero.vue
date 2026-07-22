@@ -296,17 +296,31 @@ onBeforeUnmount(stop)
   gap: var(--sp-2);
 }
 
+/*
+ * The visible indicator is a thin 4px bar, but the button itself is a 26x24
+ * touch target (the bar is drawn with ::before) so it stays comfortably tappable
+ * on a phone.
+ */
 .feature__dot {
   width: 26px;
-  height: 4px;
+  height: 24px;
   padding: 0;
   border: 0;
   cursor: pointer;
-  background: rgba(255, 255, 255, 0.45);
+  background: transparent;
+  display: grid;
+  align-items: center;
+}
+
+.feature__dot::before {
+  content: '';
+  display: block;
+  height: 4px;
+  background: rgba(255, 255, 255, 0.5);
   transition: background-color var(--dur) var(--ease);
 }
 
-.feature__dot.is-active {
+.feature__dot.is-active::before {
   background: #fff;
 }
 

@@ -24,18 +24,19 @@ defineProps({
   isolation: isolate;
   padding-block: clamp(2.5rem, 1.8rem + 4vw, 5rem);
   color: #fff;
+  /* Brand-red wash over near-black, matching the home hero. */
   background:
-    radial-gradient(70% 120% at 88% 0%, rgba(26, 141, 174, 0.5), transparent 60%),
-    linear-gradient(140deg, var(--c-primary-800), var(--c-primary-900));
+    radial-gradient(70% 120% at 88% 0%, rgba(220, 38, 26, 0.28), transparent 60%),
+    linear-gradient(140deg, #2f2d2b, #171615);
 }
 
 .page-hero__eyebrow {
   font-family: var(--font-heading);
   font-size: var(--fs-eyebrow);
-  font-weight: 600;
+  font-weight: var(--fw-bold);
   letter-spacing: 0.14em;
   text-transform: uppercase;
-  color: var(--c-primary-300);
+  color: var(--c-accent-500);
   margin-bottom: var(--sp-3);
 }
 
