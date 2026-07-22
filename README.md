@@ -95,6 +95,49 @@ automatically (see `config/MailConfig.java`).
 `spring.jpa.hibernate.ddl-auto` is `update` in both profiles. Before the first real
 deployment, introduce Flyway or Liquibase and switch it to `validate`.
 
+## Deploying to Vercel (frontend + serverless API)
+
+Vercel cannot run the Java/Spring Boot backend (there is no JVM runtime). To keep
+the Spring Boot app as the real backend, host it on a Java-capable platform
+(Render, Railway, Fly.io) and set the SPA's `VITE_API_BASE_URL` to that origin.
+
+For a self-contained demo, the whole site runs on Vercel alone: the frontend is a
+static Vite build and the API is provided by Node serverless functions under
+`frontend/api/`, which reimplement the three endpoints and serve the same seeded
+content. The Vue app cannot tell the difference — same routes, same JSON shapes,
+same Bulgarian validation messages.
+
+**Vercel project settings (one-time):**
+
+1. **Root Directory → `frontend`.** This is what fixes the initial `404: NOT_FOUND`
+   — without it Vercel builds from the repo root, which has no app.
+2. Framework, build command and output are pinned by `frontend/vercel.json`
+   (Vite → `dist`) along with the SPA rewrite so client routes like `/produkti`
+   resolve instead of 404ing on direct load.
+
+**Serverless API** (`frontend/api/v1/*`, shared code in `frontend/api/_lib/`):
+
+| Route | Method | Behaviour |
+| --- | --- | --- |
+| `/api/v1/products` | GET | Seeded product categories |
+| `/api/v1/references` | GET | Seeded installation references |
+| `/api/v1/contact` | POST | Validates, logs, returns 201 |
+| `/api/v1/partner-applications` | POST | Validates, logs, returns 201 |
+
+Functions are stateless, so submissions are **logged** (Vercel → Deployment →
+Functions logs), not stored. To also email them, set these env vars in Vercel and
+`frontend/api/_lib/notify.js` sends via Resend (no npm dependency):
+
+| Variable | Purpose |
+| --- | --- |
+| `RESEND_API_KEY` | Resend API key |
+| `NOTIFY_TO` | Address that receives submissions |
+| `NOTIFY_FROM` | Verified sender (optional) |
+
+For durable storage, add Vercel Postgres / Neon and write to it inside the two
+POST handlers. The seeded catalog in `api/_lib/catalog.js` mirrors the Spring
+`CatalogSeeder`; keep them in sync until a shared CMS replaces both.
+
 ## Project layout
 
 ```
