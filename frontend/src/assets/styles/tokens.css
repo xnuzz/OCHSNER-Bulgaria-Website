@@ -61,11 +61,15 @@
   --fw-semibold: 600;
   --fw-bold: 700; /* all headings and buttons */
 
-  /* Fluid type scale. Desktop h1 lands at 54px to match the reference. */
+  /*
+   * Fluid type scale. The hero h1 stays large (54px) like the reference, but
+   * section headings are deliberately restrained: the corporate site sets its
+   * in-page h2 at ~29px/700, which reads far more refined than a 36px heading.
+   */
   --fs-hero: clamp(2.1rem, 1.3rem + 3.8vw, 3.75rem);
   --fs-h1: clamp(1.9rem, 1.25rem + 3vw, 3.375rem);
-  --fs-h2: clamp(1.5rem, 1.2rem + 1.5vw, 2.25rem);
-  --fs-h3: clamp(1.15rem, 1.05rem + 0.5vw, 1.25rem);
+  --fs-h2: clamp(1.45rem, 1.2rem + 1.1vw, 1.85rem);
+  --fs-h3: clamp(1.1rem, 1.02rem + 0.4vw, 1.2rem);
   --fs-lead: clamp(1rem, 0.96rem + 0.3vw, 1.125rem);
   --fs-body: 1rem;
   --fs-small: 0.875rem;

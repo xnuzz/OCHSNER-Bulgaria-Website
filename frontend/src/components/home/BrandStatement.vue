@@ -30,7 +30,9 @@ defineProps({
 }
 
 .statement__title {
-  font-size: clamp(1.6rem, 1.2rem + 2.2vw, 2.75rem);
+  /* Slightly larger than a section heading for prominence, but still restrained
+     to match the corporate mission block (~32px), not the old oversized 44px. */
+  font-size: clamp(1.55rem, 1.2rem + 1.5vw, 2rem);
   color: var(--c-primary-900);
   margin-inline: auto;
   max-width: 20ch;
