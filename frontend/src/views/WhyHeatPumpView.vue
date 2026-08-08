@@ -39,6 +39,33 @@ useSeo({ title: why.meta.title, description: why.meta.description, path: '/zasht
       </div>
     </section>
 
+    <!-- Manufacturer technology clip. Portrait 9:16, so it sits as a tall panel
+         beside the copy rather than as a banner. -->
+    <section id="tehnologiya" class="section section--alt">
+      <div class="container tech">
+        <div class="tech__media">
+          <video
+            class="tech__video"
+            src="/video/tischverdampfer.mp4"
+            :aria-label="why.technology.videoLabel"
+            autoplay
+            muted
+            loop
+            playsinline
+            preload="metadata"
+          ></video>
+        </div>
+        <div class="tech__body">
+          <SectionHeading
+            :eyebrow="why.technology.eyebrow"
+            :title="why.technology.title"
+          />
+          <p class="tech__text">{{ why.technology.body }}</p>
+          <p class="tech__note">{{ why.technology.note }}</p>
+        </div>
+      </div>
+    </section>
+
     <!-- 3-in-1 -->
     <section id="tri-v-edno" class="section section--alt">
       <div class="container">
@@ -308,6 +335,50 @@ useSeo({ title: why.meta.title, description: why.meta.description, path: '/zasht
   .pv {
     grid-template-columns: 1.4fr 1fr;
     gap: var(--sp-7);
+  }
+}
+
+/* --- Manufacturer technology clip -------------------------------------- */
+.tech {
+  display: grid;
+  gap: var(--sp-6);
+  align-items: center;
+}
+
+.tech__media {
+  max-width: 320px;
+  margin-inline: auto;
+  background: var(--c-surface-deep);
+  overflow: hidden;
+}
+
+.tech__video {
+  display: block;
+  width: 100%;
+  aspect-ratio: 9 / 16;
+  object-fit: cover;
+}
+
+.tech__text {
+  margin-top: var(--sp-4);
+  color: var(--c-ink-soft);
+  line-height: var(--lh-body);
+}
+
+.tech__note {
+  margin-top: var(--sp-4);
+  font-size: var(--fs-small);
+  color: var(--c-ink-muted);
+}
+
+@media (min-width: 900px) {
+  .tech {
+    grid-template-columns: 340px 1fr;
+    gap: var(--sp-8);
+  }
+
+  .tech__media {
+    margin-inline: 0;
   }
 }
 </style>

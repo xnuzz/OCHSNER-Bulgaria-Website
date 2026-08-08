@@ -54,7 +54,7 @@ public class CatalogSeeder {
                         ),
                         "Съществуващи къщи и апартаменти, при които се подменя котел на ток, газ, "
                                 + "нафта или твърдо гориво, както и нови еднофамилни сгради с ограничен двор.",
-                        "/images/products/air-water.jpg",
+                        "/images/products/air-water.png",
                         "/downloads/ochsner-air-water-bg.pdf",
                         1
                 ),
@@ -77,7 +77,7 @@ public class CatalogSeeder {
                         ),
                         "Нови сгради и основни реновации, при които има достъп за сондажна техника "
                                 + "или достатъчна площ двор за хоризонтален колектор.",
-                        "/images/products/ground-water.jpg",
+                        "/images/products/ground-water.png",
                         "/downloads/ochsner-ground-water-bg.pdf",
                         2
                 ),
@@ -100,7 +100,7 @@ public class CatalogSeeder {
                         ),
                         "Имоти с доказан дебит на подпочвена вода — къщи, хотели, производствени "
                                 + "и обществени сгради, при които предварително се прави хидрогеоложко проучване.",
-                        "/images/products/water-water.jpg",
+                        "/images/products/water-water.png",
                         "/downloads/ochsner-water-water-bg.pdf",
                         3
                 ),
@@ -123,7 +123,7 @@ public class CatalogSeeder {
                         ),
                         "Домакинства, които все още не са готови за пълна подмяна на отоплението, "
                                 + "както и къщи с камина или котел, използвани само през зимата.",
-                        "/images/products/hot-water.jpg",
+                        "/images/products/hot-water.png",
                         "/downloads/ochsner-hot-water-bg.pdf",
                         4
                 )

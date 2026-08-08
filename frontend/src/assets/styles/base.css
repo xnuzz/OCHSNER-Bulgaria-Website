@@ -64,7 +64,7 @@ h2 {
 }
 h3 {
   font-size: var(--fs-h3);
-  line-height: var(--lh-snug);
+  line-height: var(--lh-h3);
 }
 
 p {
@@ -96,15 +96,20 @@ ol {
 
 /* ---------- Layout utilities ------------------------------------------- */
 
+/*
+ * --container is the *content* width, so the cap adds the gutters back on top
+ * of it. This reproduces ochsner.com exactly: content spans 16→1424 at a 1440
+ * viewport, and 105→1815 at 1920.
+ */
 .container {
   width: 100%;
-  max-width: var(--container);
+  max-width: calc(var(--container) + 2 * var(--gutter));
   margin-inline: auto;
   padding-inline: var(--gutter);
 }
 
 .container--narrow {
-  max-width: var(--container-narrow);
+  max-width: calc(var(--container-narrow) + 2 * var(--gutter));
 }
 
 .section {

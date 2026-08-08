@@ -80,7 +80,15 @@ onBeforeUnmount(stop)
               :aria-hidden="i !== active"
               :tabindex="i === active ? 0 : -1"
             >
-              <PlaceholderImage :label="''" :tone="slide.tone" ratio="16 / 10" />
+              <PlaceholderImage
+                :src="slide.image"
+                :label="slide.title"
+                :tone="slide.tone"
+                surface="deep"
+                fit="cover"
+                eager
+                ratio="16 / 10"
+              />
               <span class="feature__caption">
                 <span class="feature__kicker">{{ slide.kicker }}</span>
                 <span class="feature__title">{{ slide.title }}</span>
@@ -391,9 +399,13 @@ onBeforeUnmount(stop)
     padding: var(--sp-8);
   }
 
+  /* Keeps the feature panel close to the corporate hero's ~1.9:1 proportion.
+     Without it the panel collapses to whatever height the editorial column
+     leaves over, which reads as a letterbox strip. */
   .panel--feature {
     grid-column: 2 / 4;
     grid-row: 1;
+    min-height: 540px;
   }
 
   .tile {

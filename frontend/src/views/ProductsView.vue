@@ -64,7 +64,14 @@ onMounted(() =>
       >
         <div class="container product" :class="{ 'product--flip': index % 2 === 1 }">
           <div class="product__media">
-            <PlaceholderImage :label="item.title" :tone="tones[index % tones.length]" ratio="4 / 3" />
+            <PlaceholderImage
+              :src="item.imageUrl"
+              :label="item.title"
+              :tone="tones[index % tones.length]"
+              surface="none"
+              inset="4%"
+              ratio="4 / 3"
+            />
           </div>
 
           <div class="product__body">

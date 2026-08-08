@@ -22,6 +22,7 @@ export const home = {
         title: 'Енергия от въздуха',
         cta: 'Научи повече',
         hash: 'vazduh-voda',
+        image: '/images/hero/air.jpg',
         tone: 'deep'
       },
       {
@@ -29,6 +30,7 @@ export const home = {
         title: 'Геотермална стабилност',
         cta: 'Научи повече',
         hash: 'zemya-voda',
+        image: '/images/hero/ground.jpg',
         tone: 'warm'
       },
       {
@@ -36,6 +38,7 @@ export const home = {
         title: 'Най-висока ефективност',
         cta: 'Научи повече',
         hash: 'voda-voda',
+        image: '/images/hero/water.jpg',
         tone: 'teal'
       }
     ],

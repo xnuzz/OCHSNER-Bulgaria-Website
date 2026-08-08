@@ -26,7 +26,7 @@ export const products = [
     ],
     suitableFor:
       'Съществуващи къщи и апартаменти, при които се подменя котел на ток, газ, нафта или твърдо гориво, както и нови еднофамилни сгради с ограничен двор.',
-    imageUrl: '/images/products/air-water.jpg',
+    imageUrl: '/images/products/air-water.png',
     datasheetUrl: '/downloads/ochsner-air-water-bg.pdf'
   },
   {
@@ -44,7 +44,7 @@ export const products = [
     ],
     suitableFor:
       'Нови сгради и основни реновации, при които има достъп за сондажна техника или достатъчна площ двор за хоризонтален колектор.',
-    imageUrl: '/images/products/ground-water.jpg',
+    imageUrl: '/images/products/ground-water.png',
     datasheetUrl: '/downloads/ochsner-ground-water-bg.pdf'
   },
   {
@@ -62,7 +62,7 @@ export const products = [
     ],
     suitableFor:
       'Имоти с доказан дебит на подпочвена вода — къщи, хотели, производствени и обществени сгради, при които предварително се прави хидрогеоложко проучване.',
-    imageUrl: '/images/products/water-water.jpg',
+    imageUrl: '/images/products/water-water.png',
     datasheetUrl: '/downloads/ochsner-water-water-bg.pdf'
   },
   {
@@ -80,7 +80,7 @@ export const products = [
     ],
     suitableFor:
       'Домакинства, които все още не са готови за пълна подмяна на отоплението, както и къщи с камина или котел, използвани само през зимата.',
-    imageUrl: '/images/products/hot-water.jpg',
+    imageUrl: '/images/products/hot-water.png',
     datasheetUrl: '/downloads/ochsner-hot-water-bg.pdf'
   }
 ]

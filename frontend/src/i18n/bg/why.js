@@ -49,6 +49,17 @@ export const why = {
     powerLabel: 'Електроенергия'
   },
 
+  /* Vertical clip supplied by OCHSNER (1080×1920, 12 s, no audio). The body copy
+     is deliberately descriptive only — ЗА ПОПЪЛВАНЕ: the client should replace it
+     with the approved Bulgarian technical description of the evaporator. */
+  technology: {
+    eyebrow: 'Технология',
+    title: 'Настолен изпарител',
+    body: 'Конструкцията на изпарителя е сред отличителните решения на OCHSNER при въздушните термопомпи. Видеоматериалът е предоставен от производителя.',
+    note: 'ЗА ПОПЪЛВАНЕ — техническото описание да се потвърди от OCHSNER преди публикуване.',
+    videoLabel: 'Видео: конструкция на изпарителя OCHSNER'
+  },
+
   threeInOne: {
     eyebrow: '3-в-1',
     title: 'Отопление, топла вода и охлаждане от една система',

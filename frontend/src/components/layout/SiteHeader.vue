@@ -3,6 +3,7 @@ import { onBeforeUnmount, onMounted, ref, watch } from 'vue'
 import { useRoute } from 'vue-router'
 import BaseButton from '@/components/ui/BaseButton.vue'
 import AppIcon from '@/components/ui/AppIcon.vue'
+import PlaceholderImage from '@/components/ui/PlaceholderImage.vue'
 import BrandMark from './BrandMark.vue'
 import { fetchProducts, useAsyncData } from '@/api/catalog.js'
 import { useI18n } from '@/i18n'
@@ -176,6 +177,14 @@ onBeforeUnmount(() => {
                 :to="{ name: 'products', hash: `#${item.slug}` }"
                 @click="closeMenu"
               >
+                <PlaceholderImage
+                  class="mega__card-media"
+                  :src="item.imageUrl"
+                  :label="item.title"
+                  surface="alt"
+                  inset="8%"
+                  ratio="4 / 3"
+                />
                 <span class="mega__card-title">{{ item.title }}</span>
                 <span class="mega__card-text">{{ item.shortDescription }}</span>
               </RouterLink>
@@ -227,24 +236,29 @@ onBeforeUnmount(() => {
 </template>
 
 <style scoped>
+/* A hairline rather than a drop shadow while at the top of the page — the
+   corporate header separates from the content with a light rule, and only
+   gains a shadow once it lifts off the page on scroll. */
 .header {
   position: fixed;
   inset-inline: 0;
   top: 0;
   z-index: 100;
   background: #fff;
-  box-shadow: var(--shadow-sm);
+  border-bottom: 1px solid var(--c-line);
+  transition: box-shadow var(--dur) var(--ease);
 }
 
 .header--scrolled {
-  box-shadow: var(--shadow);
+  box-shadow: var(--shadow-sm);
 }
 
-/* Utility bar: desktop only — on phones these links live in the drawer. */
+/* Utility bar: desktop only — on phones these links live in the drawer.
+   Near-black strip with small uppercase white links, matching the corporate
+   treatment (12px / weight 300 / uppercase on #262523). */
 .utility {
   display: none;
-  background: var(--c-surface-alt);
-  border-bottom: 1px solid var(--c-line);
+  background: var(--c-surface-deep);
   height: var(--utility-h);
 }
 
@@ -257,8 +271,10 @@ onBeforeUnmount(() => {
 }
 
 .utility__role {
-  font-size: 0.8125rem;
-  color: var(--c-ink-muted);
+  font-size: 0.75rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.55);
 }
 
 .utility__nav {
@@ -272,17 +288,21 @@ onBeforeUnmount(() => {
   align-items: center;
   gap: var(--sp-2);
   font-weight: var(--fw-semibold);
-  color: var(--c-primary-800);
+  color: #fff;
 }
 
 .utility__nav a {
-  font-size: 0.8125rem;
-  color: var(--c-ink-muted);
+  font-size: 0.75rem;
+  font-weight: var(--fw-light);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.86);
   text-decoration: none;
+  transition: color var(--dur-fast) var(--ease);
 }
 
 .utility__nav a:hover {
-  color: var(--c-accent-600);
+  color: #fff;
 }
 
 .header__inner {
@@ -297,7 +317,15 @@ onBeforeUnmount(() => {
   align-items: center;
   text-decoration: none;
   color: var(--c-ink);
+  /* Below the desktop breakpoint there is no centred nav to balance against,
+     so the wordmark still pushes the toggle to the far edge. */
   margin-right: auto;
+}
+
+@media (min-width: 1080px) {
+  .header__brand {
+    margin-right: 0;
+  }
 }
 
 /* Desktop nav and inline actions are hidden below 1080px. */
@@ -306,13 +334,12 @@ onBeforeUnmount(() => {
   display: none;
 }
 
-/* Uppercase, bold main nav — the corporate treatment sets this noticeably
-   larger than a typical nav (18px on the reference); 1rem reads right here
-   with six Bulgarian labels to fit. */
+/* Uppercase, bold main nav at the reference's 18px. This only fits now that the
+   content column is 1710px wide rather than 1320px. */
 .header__link {
   position: relative;
   padding-block: var(--sp-2);
-  font-size: 1rem;
+  font-size: 1.125rem;
   font-weight: var(--fw-bold);
   text-transform: uppercase;
   color: var(--c-primary-900);
@@ -326,7 +353,7 @@ onBeforeUnmount(() => {
   left: 0;
   right: 0;
   bottom: 0;
-  height: 3px;
+  height: 2px;
   background: var(--c-accent-600);
   transform: scaleX(0);
   transform-origin: left;
@@ -394,6 +421,17 @@ onBeforeUnmount(() => {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
   gap: var(--sp-4);
+}
+
+/* Product thumbnail above the label — the corporate menu is text-only, but the
+   manufacturer's cut-outs make the category obvious at a glance. */
+.mega__card-media {
+  margin-bottom: var(--sp-3);
+  transition: transform var(--dur-slow) var(--ease);
+}
+
+.mega__card:hover .mega__card-media {
+  transform: scale(1.03);
 }
 
 .mega__card {
@@ -569,24 +607,37 @@ onBeforeUnmount(() => {
 /* ---------- Desktop ----------------------------------------------------- */
 
 @media (min-width: 1080px) {
-  .utility {
-    display: block;
-  }
-
   .mega {
     display: block;
   }
 
+  /* On the corporate header the nav sits left of centre — set in after the
+     wordmark, with the CTA pushed hard to the right edge — rather than being
+     centred in the bar. */
   .header__nav {
     display: flex;
     align-items: center;
-    gap: var(--sp-5);
+    gap: var(--sp-6);
+    /* Generous set-in from the wordmark, as on the corporate header, where the
+       nav starts roughly 200px clear of the logo lockup. */
+    margin-left: var(--sp-9);
   }
 
   .header__actions {
     display: flex;
     align-items: center;
     gap: var(--sp-4);
+    margin-left: auto;
+  }
+
+  /* The corporate CONTACT pill measures 18px/700, padding 13px 30px, 44px tall.
+     That height only works with a 1.0 line box — the default leading pushes it
+     to 57px. */
+  .header__cta {
+    min-height: 44px;
+    padding: 13px 30px;
+    font-size: 1.125rem;
+    line-height: 1;
   }
 
   .header__toggle {
