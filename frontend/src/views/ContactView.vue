@@ -343,11 +343,9 @@ useSeo({ title: copy.meta.title, description: copy.meta.description, path: '/kon
 
 .details__row dt {
   font-family: var(--font-heading);
-  font-size: var(--fs-eyebrow);
-  font-weight: 600;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-  color: var(--c-primary-600);
+  font-size: var(--fs-small);
+  font-weight: var(--fw-semibold);
+  color: var(--c-ink-muted);
 }
 
 .details__row dd {
@@ -397,9 +395,7 @@ useSeo({ title: copy.meta.title, description: copy.meta.description, path: '/kon
 .map__label {
   font-family: var(--font-heading);
   font-size: var(--fs-small);
-  font-weight: 600;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
+  font-weight: var(--fw-semibold);
 }
 
 @media (min-width: 640px) {

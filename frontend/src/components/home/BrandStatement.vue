@@ -29,8 +29,11 @@ defineProps({
   text-align: center;
 }
 
+/* Capped at the h2 size (34px). Nothing below h1 on the corporate site is set
+   larger than that; this was running to 44px. */
 .statement__title {
-  font-size: clamp(1.6rem, 1.2rem + 2.2vw, 2.75rem);
+  font-size: var(--fs-h2);
+  line-height: var(--lh-snug);
   color: var(--c-primary-900);
   margin-inline: auto;
   max-width: 20ch;
@@ -38,8 +41,8 @@ defineProps({
 
 .statement__text {
   margin-top: var(--sp-5);
-  font-size: var(--fs-lead);
-  color: var(--c-ink-soft);
+  font-size: var(--fs-body);
+  color: var(--c-ink);
   margin-inline: auto;
   max-width: 68ch;
 }

@@ -31,7 +31,10 @@
 
   /* --- Text & surfaces --------------------------------------------------- */
   --c-ink: #313130;
-  --c-ink-soft: #4a4a4a;
+  /* Running text on the reference is the same near-black as the base ink — there
+     is no lighter grey for body copy. --c-ink-muted stays for genuinely
+     secondary text (captions, notes). */
+  --c-ink-soft: #313130;
   --c-ink-muted: #707070;
   --c-line: #e6e6e6;
   --c-line-soft: #f0efef;
@@ -58,8 +61,9 @@
 
   --fw-light: 300; /* body copy */
   --fw-regular: 400;
+  --fw-medium: 500; /* h3 — the reference sets sub-headings in medium, not bold */
   --fw-semibold: 600;
-  --fw-bold: 700; /* all headings and buttons */
+  --fw-bold: 700; /* h1, h2 and buttons */
 
   /* Fluid type scale. Desktop h1 lands at 54px to match the reference. */
   /* Their h1 is 54px with a 54px line box — the hero headline is not set larger

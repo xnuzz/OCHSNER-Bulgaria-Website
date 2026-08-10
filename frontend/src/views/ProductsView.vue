@@ -194,7 +194,7 @@ onMounted(() =>
 
 .product__lead {
   margin-top: var(--sp-3);
-  font-size: var(--fs-lead);
+  font-size: var(--fs-body);
   color: var(--c-ink);
 }
 
@@ -204,14 +204,15 @@ onMounted(() =>
   max-width: 62ch;
 }
 
+/* A real sub-heading rather than a tracked-out uppercase label — the reference
+   uses no uppercase text outside buttons and navigation. */
 .product__subtitle {
   margin-top: var(--sp-5);
   font-family: var(--font-heading);
-  font-size: var(--fs-eyebrow);
-  font-weight: 600;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-  color: var(--c-primary-600);
+  font-size: var(--fs-h3);
+  font-weight: var(--fw-medium);
+  line-height: var(--lh-h3);
+  color: var(--c-primary-800);
 }
 
 .product__advantages {

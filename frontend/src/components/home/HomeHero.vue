@@ -248,7 +248,7 @@ onBeforeUnmount(stop)
   font-family: var(--font-heading);
   font-weight: var(--fw-bold);
   font-size: 0.9375rem;
-  text-transform: uppercase;
+  /* Sentence case: the corporate site keeps uppercase to buttons and nav. */
   color: #fff;
   text-decoration: none;
 }

@@ -62,9 +62,11 @@ h1 {
 h2 {
   font-size: var(--fs-h2);
 }
+/* Sub-headings are medium weight on the reference, not bold — 20.7px/500/lh 34. */
 h3 {
   font-size: var(--fs-h3);
   line-height: var(--lh-h3);
+  font-weight: var(--fw-medium);
 }
 
 p {

@@ -9,9 +9,12 @@ defineProps({
 })
 </script>
 
+
 <template>
   <header class="heading" :class="[`heading--${align}`, { 'heading--invert': invert }]">
-    <p v-if="eyebrow" class="heading__eyebrow">{{ eyebrow }}</p>
+    <!-- No eyebrow: the corporate design has no kicker above a section heading,
+         and uses no uppercase text at all outside buttons and navigation. The
+         prop and the strings are kept so this is a one-line revert. -->
     <component :is="level" class="heading__title">{{ title }}</component>
     <p v-if="subtitle" class="heading__subtitle">{{ subtitle }}</p>
   </header>
@@ -30,16 +33,6 @@ defineProps({
   margin-inline: auto;
 }
 
-.heading__eyebrow {
-  font-family: var(--font-heading);
-  font-size: var(--fs-eyebrow);
-  font-weight: 600;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-  color: var(--c-primary-600);
-  margin-bottom: var(--sp-2);
-}
-
 .heading__title {
   max-width: 22ch;
 }
@@ -48,16 +41,14 @@ defineProps({
   margin-inline: auto;
 }
 
+/* 16px in the base ink, matching the corporate body copy — they set no larger
+   "lead" size and no lighter grey for running text. */
 .heading__subtitle {
   margin-top: var(--sp-4);
-  font-size: var(--fs-lead);
+  font-size: var(--fs-body);
   line-height: var(--lh-body);
-  color: var(--c-ink-soft);
+  color: var(--c-ink);
   max-width: 62ch;
-}
-
-.heading--invert .heading__eyebrow {
-  color: var(--c-primary-300);
 }
 
 .heading--invert .heading__title {
