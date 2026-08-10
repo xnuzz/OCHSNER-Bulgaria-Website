@@ -39,6 +39,20 @@ export const why = {
         text: 'Налягането се понижава рязко, течността се охлажда и цикълът започва отначало.'
       }
     ],
+    /* Labels laid over the manufacturer's cycle animation, which ships with its
+       captions burned into the artwork in German. Each one covers the German
+       beneath it — see HeatPumpDiagram.vue for the coordinates. */
+    animation: {
+      source: 'ТОПЛИНЕН ИЗТОЧНИК',
+      sourceHint: ['Въздух,', 'Вода,', 'Земя'],
+      distribution: 'РАЗПРЕДЕЛЕНИЕ',
+      distributionHint: ['Подово,', 'радиатори,', 'басейн'],
+      evaporate: 'ИЗПАРЯВАНЕ',
+      compress: 'СГЪСТЯВАНЕ',
+      condense: 'КОНДЕНЗАЦИЯ',
+      expand: 'РАЗШИРЯВАНЕ'
+    },
+
     diagramTitle: 'Схема на термопомпения цикъл',
     diagramCaption:
       'Опростена схема: топлина се извлича отляво (източник) и се предава отдясно (сграда). Само компресорът консумира ток.',
