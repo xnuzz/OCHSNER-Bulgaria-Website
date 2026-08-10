@@ -43,7 +43,8 @@ export default async function handler(req, res) {
       `Град: ${b.city || '—'}`,
       '',
       b.message || ''
-    ]
+    ],
+    replyTo: b.email
   })
 
   return sendJson(res, 201, accepted(Date.now()))

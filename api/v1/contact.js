@@ -43,7 +43,9 @@ export default async function handler(req, res) {
       `Тип: ${b.requestType}`,
       '',
       b.message
-    ]
+    ],
+    // Lets the representative reply straight to the enquirer.
+    replyTo: b.email
   })
 
   // Stateless demo: an id echoes the Spring response shape without a database.

@@ -1,5 +1,5 @@
 import { fileURLToPath, URL } from 'node:url'
-import { defineConfig } from 'vite'
+import { defineConfig, loadEnv } from 'vite'
 import vue from '@vitejs/plugin-vue'
 
 /**
@@ -12,16 +12,45 @@ import vue from '@vitejs/plugin-vue'
  * this and proxy to http://localhost:8080 instead — that path needs JDK 21.
  */
 function devApi() {
+  /*
+   * Resolved as absolute file URLs at request time. A literal import specifier
+   * would be inlined into the bundled config by esbuild, which then tries to
+   * resolve the handlers' own dependencies (nodemailer) from frontend/ instead
+   * of the repo root, where they are installed for Vercel.
+   */
+  const handler = (name) =>
+    import(/* @vite-ignore */ new URL(`../api/v1/${name}.js`, import.meta.url).href)
+
   const routes = {
-    '/api/v1/products': () => import('../api/v1/products.js'),
-    '/api/v1/references': () => import('../api/v1/references.js'),
-    '/api/v1/contact': () => import('../api/v1/contact.js'),
-    '/api/v1/partner-applications': () => import('../api/v1/partner-applications.js')
+    '/api/v1/products': () => handler('products'),
+    '/api/v1/references': () => handler('references'),
+    '/api/v1/contact': () => handler('contact'),
+    '/api/v1/partner-applications': () => handler('partner-applications')
   }
 
   return {
     name: 'ochsner-dev-api',
     apply: 'serve',
+    configResolved(config) {
+      /*
+       * Mail settings are read from process.env by api/_lib/notify.js, exactly as
+       * on Vercel. Loading frontend/.env.local here lets SMTP be tested locally
+       * with the real code path. The '' prefix means unprefixed keys are read
+       * too — these stay server-side and are never exposed to the browser, which
+       * only ever sees VITE_-prefixed values.
+       */
+      const env = loadEnv(config.mode, config.envDir || process.cwd(), '')
+      for (const key of [
+        'SMTP_HOST',
+        'SMTP_PORT',
+        'SMTP_USERNAME',
+        'SMTP_PASSWORD',
+        'NOTIFY_EMAIL',
+        'MAIL_FROM'
+      ]) {
+        if (env[key] && !process.env[key]) process.env[key] = env[key]
+      }
+    },
     configureServer(server) {
       server.middlewares.use(async (req, res, next) => {
         const path = (req.url || '').split('?')[0]
