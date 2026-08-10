@@ -6,10 +6,15 @@ export const home = {
   },
 
   hero: {
+    /* Not shown in the panel — the corporate hero has no eyebrow. Retained as
+       the accessible name for the feature slider's tablist. */
     eyebrow: 'Австрийска термопомпена технология от 1978 г.',
-    title: 'Топлина, която не зависи от цената на горивата',
-    subtitle:
-      'Термопомпите OCHSNER превръщат енергията от въздуха, земята или водата в отопление, топла вода и охлаждане — с до четири пъти по-малко електроенергия от конвенционалните решения.',
+
+    /* Headline and standfirst are the corporate hero's own copy, translated:
+       "OCHSNER HEAT PUMPS" / "Technology leader in the heat pump sector.
+       Top quality made in Austria." */
+    title: 'Термопомпи OCHSNER',
+    subtitle: 'Технологичен лидер в сектора на термопомпите.\nВърхово качество, произведено в Австрия.',
     ctaNote: 'Безплатен оглед и оферта, без ангажимент.',
     moreAbout: 'Повече за OCHSNER',
 
