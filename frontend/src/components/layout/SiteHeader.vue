@@ -317,12 +317,15 @@ onBeforeUnmount(() => {
   align-items: center;
   text-decoration: none;
   color: var(--c-ink);
+  /* The lockup is an SVG with no intrinsic width, so as a flex item it would
+     otherwise be shrunk to zero by the nav beside it. */
+  flex: 0 0 auto;
   /* Below the desktop breakpoint there is no centred nav to balance against,
      so the wordmark still pushes the toggle to the far edge. */
   margin-right: auto;
 }
 
-@media (min-width: 1080px) {
+@media (min-width: 1440px) {
   .header__brand {
     margin-right: 0;
   }
@@ -606,7 +609,7 @@ onBeforeUnmount(() => {
 
 /* ---------- Desktop ----------------------------------------------------- */
 
-@media (min-width: 1080px) {
+@media (min-width: 1440px) {
   .mega {
     display: block;
   }
@@ -620,7 +623,7 @@ onBeforeUnmount(() => {
     gap: var(--sp-6);
     /* Generous set-in from the wordmark, as on the corporate header, where the
        nav starts roughly 200px clear of the logo lockup. */
-    margin-left: var(--sp-9);
+    margin-left: var(--sp-7);
   }
 
   .header__actions {
