@@ -83,6 +83,21 @@ export const home = {
     ]
   },
 
+  /* Six-across category strip, as on the corporate home page. */
+  range: {
+    title: 'Цялата гама',
+    strong: 'Цялата гама',
+    light: 'термопомпи и решения OCHSNER'
+  },
+
+  /* Condensed knowledge block, linking through to Защо термопомпа. */
+  knowledge: {
+    strong: 'Всичко за термопомпите',
+    light: 'накратко',
+    intro: 'Най-важното за принципа на работа, приложението и разходите — обобщено. Пълните обяснения са на страницата „Защо термопомпа".',
+    cta: 'Виж пълното обяснение'
+  },
+
   products: {
     eyebrow: 'Продукти',
     title: 'Четири технологии, едно решение за вашия дом',

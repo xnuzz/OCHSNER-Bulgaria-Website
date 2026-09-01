@@ -7,12 +7,16 @@ export const products = {
 
   hero: {
     eyebrow: 'Продукти',
+    /* Two-weight headline, as on the reference overview page. */
+    heading: { strong: 'Продуктов преглед', light: 'термопомпи OCHSNER' },
     title: 'Термопомпи за всеки тип сграда',
     subtitle:
       'OCHSNER предлага четири технологии, които се различават по източника на топлина. Всяка има своето място — правилният избор зависи от сградата, парцела и начина, по който я ползвате.'
   },
 
   jumpLabel: 'Бърз преход:',
+  cardCta: 'Научи повече',
+  cardModels: 'Модели:',
   advantagesLabel: 'Предимства',
   suitableForLabel: 'Подходящо за',
   comparison: {

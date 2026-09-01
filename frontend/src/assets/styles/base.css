@@ -43,15 +43,33 @@ select {
   color: inherit;
 }
 
+/*
+ * Headings on the reference are light (300), with the lead phrase set bold
+ * inside them — h1/h2 300, h3 500, and <strong> 700.
+ */
 h1,
 h2,
 h3,
 h4 {
   font-family: var(--font-heading);
-  font-weight: var(--fw-bold);
+  font-weight: var(--fw-light);
   line-height: var(--lh-snug);
   letter-spacing: normal;
   text-wrap: balance;
+}
+
+h1 strong,
+h2 strong,
+h3 strong,
+h4 strong {
+  font-weight: var(--fw-bold);
+}
+
+/* No heading on the reference is left in the light weight without a bold lead;
+   where ours carries no <strong>, the whole heading is bold instead. */
+h1:not(:has(strong)),
+h2:not(:has(strong)) {
+  font-weight: var(--fw-bold);
 }
 
 h1 {

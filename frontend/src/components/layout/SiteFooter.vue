@@ -6,7 +6,6 @@ const { common, nav, footer, contactDetails } = useI18n()
 
 const links = [
   { name: 'products', label: nav.products },
-  { name: 'why', label: nav.why },
   { name: 'about', label: nav.about },
   { name: 'references', label: nav.references },
   { name: 'partner', label: nav.partner },
@@ -113,8 +112,6 @@ const year = new Date().getFullYear()
   font-family: var(--font-heading);
   font-size: var(--fs-eyebrow);
   font-weight: 600;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
   color: #fff;
   margin-bottom: var(--sp-3);
 }

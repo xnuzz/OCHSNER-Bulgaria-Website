@@ -20,7 +20,6 @@ let closeTimer = null
 
 const links = [
   { name: 'products', label: nav.products, panel: 'products' },
-  { name: 'why', label: nav.why, panel: 'why' },
   { name: 'about', label: nav.about },
   { name: 'references', label: nav.references },
   { name: 'partner', label: nav.partner },
@@ -31,14 +30,6 @@ const links = [
 const { data: products, load } = useAsyncData(fetchProducts)
 
 // Anchors into the "Защо термопомпа" page.
-const whyLinks = [
-  { hash: '', label: nav.megaWhy.overview },
-  { hash: '#kak-raboti', label: nav.megaWhy.how },
-  { hash: '#tri-v-edno', label: nav.megaWhy.threeInOne },
-  { hash: '#fotovoltaici', label: nav.megaWhy.pv },
-  { hash: '#koga-si-struva', label: nav.megaWhy.when },
-  { hash: '#finansirane', label: nav.megaWhy.subsidies }
-]
 
 function onScroll() {
   scrolled.value = window.scrollY > 8
@@ -174,7 +165,7 @@ onBeforeUnmount(() => {
             <li v-for="item in products" :key="item.slug">
               <RouterLink
                 class="mega__card"
-                :to="{ name: 'products', hash: `#${item.slug}` }"
+                :to="{ name: 'product-category', params: { slug: item.slug } }"
                 @click="closeMenu"
               >
                 <PlaceholderImage
@@ -196,19 +187,6 @@ onBeforeUnmount(() => {
           </RouterLink>
         </template>
 
-        <template v-else-if="openPanel === 'why'">
-          <p class="mega__label">{{ nav.why }}</p>
-          <ul class="mega__links">
-            <li v-for="item in whyLinks" :key="item.label">
-              <RouterLink
-                :to="{ name: 'why', hash: item.hash || undefined }"
-                @click="closeMenu"
-              >
-                {{ item.label }}
-              </RouterLink>
-            </li>
-          </ul>
-        </template>
       </div>
     </div>
 
@@ -422,7 +400,8 @@ onBeforeUnmount(() => {
   list-style: none;
   padding: 0;
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
+  /* Six categories now, so let the row reflow rather than pinning four. */
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
   gap: var(--sp-4);
 }
 
