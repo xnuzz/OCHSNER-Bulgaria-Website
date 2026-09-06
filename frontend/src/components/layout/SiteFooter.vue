@@ -51,10 +51,9 @@ const year = new Date().getFullYear()
       <div class="footer__col">
         <h2 class="footer__heading">{{ footer.legalHeading }}</h2>
         <ul class="footer__list">
-          <!-- Legal pages are not built yet; the client will supply the texts. -->
-          <li><a href="#">{{ footer.privacy }}</a></li>
-          <li><a href="#">{{ footer.terms }}</a></li>
-          <li><a href="#">{{ footer.cookies }}</a></li>
+          <li><RouterLink :to="{ name: 'legal-privacy' }">{{ footer.privacy }}</RouterLink></li>
+          <li><RouterLink :to="{ name: 'legal-terms' }">{{ footer.terms }}</RouterLink></li>
+          <li><RouterLink :to="{ name: 'legal-cookies' }">{{ footer.cookies }}</RouterLink></li>
         </ul>
       </div>
     </div>

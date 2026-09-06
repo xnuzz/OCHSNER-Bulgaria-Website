@@ -71,6 +71,24 @@ const routes = [
     component: () => import('@/views/ContactView.vue')
   },
   {
+    path: '/politika-poveritelnost',
+    name: 'legal-privacy',
+    component: () => import('@/views/LegalView.vue'),
+    props: { doc: 'privacy', path: '/politika-poveritelnost' }
+  },
+  {
+    path: '/obshti-usloviya',
+    name: 'legal-terms',
+    component: () => import('@/views/LegalView.vue'),
+    props: { doc: 'terms', path: '/obshti-usloviya' }
+  },
+  {
+    path: '/politika-biskvitki',
+    name: 'legal-cookies',
+    component: () => import('@/views/LegalView.vue'),
+    props: { doc: 'cookies', path: '/politika-biskvitki' }
+  },
+  {
     path: '/:pathMatch(.*)*',
     name: 'not-found',
     component: () => import('@/views/NotFoundView.vue')

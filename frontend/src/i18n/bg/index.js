@@ -10,6 +10,7 @@ import { about } from './about.js'
 import { references } from './references.js'
 import { partner } from './partner.js'
 import { contact } from './contact.js'
+import { legal } from './legal.js'
 
 export default {
   common,
@@ -30,6 +31,7 @@ export default {
   references,
   partner,
   contact,
+  legal,
 
   notFound: {
     meta: { title: 'Страницата не е намерена | OCHSNER България' },

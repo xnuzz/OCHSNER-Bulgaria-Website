@@ -206,8 +206,9 @@ useSeo({ title: copy.meta.title, description: copy.meta.description, path: '/kon
               <input id="contact-gdpr" v-model="form.gdprConsent" type="checkbox" />
               <label for="contact-gdpr">
                 {{ copy.form.gdpr }}
-                <!-- Privacy policy page is not built yet. -->
-                <a href="#">{{ copy.form.gdprLink }}</a>
+                <RouterLink :to="{ name: 'legal-privacy' }" target="_blank">
+                  {{ copy.form.gdprLink }}
+                </RouterLink>
               </label>
             </div>
             <p v-if="fieldErrors.gdprConsent" class="consent__error" role="alert">
