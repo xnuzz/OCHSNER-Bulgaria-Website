@@ -18,6 +18,8 @@ import SectionHeading from '@/components/ui/SectionHeading.vue'
 import AccordionList from '@/components/ui/AccordionList.vue'
 import CtaBand from '@/components/ui/CtaBand.vue'
 import AppIcon from '@/components/ui/AppIcon.vue'
+import RedirectNotice from '@/components/ui/RedirectNotice.vue'
+import { useExternalLink } from '@/composables/useExternalLink.js'
 import PlaceholderImage from '@/components/ui/PlaceholderImage.vue'
 import { useSeo } from '@/composables/useSeo.js'
 import { useI18n } from '@/i18n'
@@ -72,6 +74,9 @@ applySeo()
 watch(key, applySeo)
 
 const page = ref(null)
+
+/* External destinations open behind the redirect notice. */
+const { leavingFor, confirmLeave, cancelLeave } = useExternalLink()
 
 /* Artwork that fails to load is dropped rather than left as a broken image. */
 const failed = reactive({})
@@ -266,7 +271,22 @@ const failed = reactive({})
         />
         <ul class="links">
           <li v-for="link in categoryCommon.links" :key="link.title">
-            <RouterLink class="link" :to="{ name: link.to }">
+            <a
+              v-if="link.href"
+              class="link"
+              :href="link.href"
+              @click="confirmLeave($event, link.href)"
+            >
+              <span class="link__thumb" aria-hidden="true"></span>
+              <span class="link__body">
+                <span class="link__title">
+                  {{ link.title }}
+                  <AppIcon name="arrowRight" :size="16" />
+                </span>
+                <span class="link__text">{{ link.text }}</span>
+              </span>
+            </a>
+            <RouterLink v-else class="link" :to="{ name: link.to }">
               <span class="link__thumb" aria-hidden="true"></span>
               <span class="link__body">
                 <span class="link__title">
@@ -292,6 +312,8 @@ const failed = reactive({})
     </section>
 
     <CtaBand :title="copy.ctaBand.title" :text="copy.ctaBand.text" />
+
+    <RedirectNotice :url="leavingFor" @close="cancelLeave" />
   </div>
 </template>
 

@@ -45,8 +45,7 @@ export const contact = {
   details: {
     title: 'Директен контакт',
     mapTitle: 'Как да ни намерите',
-    mapPlaceholder: 'Карта',
-    mapNote: 'Точната локация ще бъде добавена след потвърждаване на адреса от клиента.',
+    mapLinkLabel: 'Отвори в Google Карти',
     responseNote: 'Отговаряме на запитвания в рамките на един работен ден.'
   }
 }

@@ -18,6 +18,9 @@ import BaseButton from '@/components/ui/BaseButton.vue'
 import CtaBand from '@/components/ui/CtaBand.vue'
 import AccordionList from '@/components/ui/AccordionList.vue'
 import AppIcon from '@/components/ui/AppIcon.vue'
+import RedirectNotice from '@/components/ui/RedirectNotice.vue'
+import { useExternalLink } from '@/composables/useExternalLink.js'
+import { downloadCenterUrl } from '@/i18n/bg/common.js'
 import PlaceholderImage from '@/components/ui/PlaceholderImage.vue'
 import { fetchProducts, useAsyncData } from '@/api/catalog.js'
 import { useSeo } from '@/composables/useSeo.js'
@@ -62,6 +65,9 @@ onMounted(() => {
 watch(slug, applySeo)
 
 const page = ref(null)
+
+/* External destinations open behind the redirect notice. */
+const { leavingFor, confirmLeave, cancelLeave } = useExternalLink()
 </script>
 
 <template>
@@ -172,7 +178,13 @@ const page = ref(null)
         <SectionHeading :strong="content.choosing.title.split(' ').slice(0, 2).join(' ')" :title="content.choosing.title.split(' ').slice(2).join(' ')" level="h2" />
         <p class="prose">{{ content.choosing.body }}</p>
         <p v-if="product" class="prose prose--note">{{ product.suitableFor }}</p>
-        <a v-if="product" class="datasheet" :href="product.datasheetUrl" download>
+        <!-- The datasheets live in OCHSNER Austria's download centre. -->
+        <a
+          v-if="product"
+          class="datasheet"
+          :href="downloadCenterUrl"
+          @click="confirmLeave($event, downloadCenterUrl)"
+        >
           {{ common.downloadSpec }}
           <AppIcon name="arrowRight" :size="16" />
         </a>
@@ -193,7 +205,20 @@ const page = ref(null)
         <SectionHeading :title="categoryCommon.linksTitle" level="h2" align="center" />
         <ul class="links">
           <li v-for="link in categoryCommon.links" :key="link.title">
-            <RouterLink class="link-card" :to="{ name: link.to }">
+            <a
+              v-if="link.href"
+              class="link-card"
+              :href="link.href"
+              @click="confirmLeave($event, link.href)"
+            >
+              <h3 class="link-card__title">{{ link.title }}</h3>
+              <p class="link-card__text">{{ link.text }}</p>
+              <span class="link-card__more">
+                {{ common.ctaMore }}
+                <AppIcon name="arrowRight" :size="16" />
+              </span>
+            </a>
+            <RouterLink v-else class="link-card" :to="{ name: link.to }">
               <h3 class="link-card__title">{{ link.title }}</h3>
               <p class="link-card__text">{{ link.text }}</p>
               <span class="link-card__more">
@@ -207,6 +232,8 @@ const page = ref(null)
     </section>
 
     <CtaBand :title="copy.ctaBand.title" :text="copy.ctaBand.text" />
+
+    <RedirectNotice :url="leavingFor" @close="cancelLeave" />
   </div>
 </template>
 

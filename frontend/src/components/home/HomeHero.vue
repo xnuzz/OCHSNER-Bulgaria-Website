@@ -3,6 +3,8 @@ import { onBeforeUnmount, onMounted, ref } from 'vue'
 import BaseButton from '@/components/ui/BaseButton.vue'
 import PlaceholderImage from '@/components/ui/PlaceholderImage.vue'
 import AppIcon from '@/components/ui/AppIcon.vue'
+import RedirectNotice from '@/components/ui/RedirectNotice.vue'
+import { useExternalLink } from '@/composables/useExternalLink.js'
 import { useI18n } from '@/i18n'
 
 const { common, home } = useI18n()
@@ -18,6 +20,9 @@ const { common, home } = useI18n()
  */
 const slides = home.hero.slides
 const active = ref(0)
+
+/* External destinations open behind the redirect notice. */
+const { leavingFor, confirmLeave, cancelLeave } = useExternalLink()
 let timer = null
 
 const reduceMotion =
@@ -115,12 +120,14 @@ onBeforeUnmount(stop)
         </div>
 
         <!-- Bottom-right: two colour action tiles -->
-        <RouterLink
+        <component
+          :is="tile.href ? 'a' : 'RouterLink'"
           v-for="tile in home.hero.tiles"
           :key="tile.title"
           class="panel tile"
           :class="`tile--${tile.variant}`"
-          :to="{ name: tile.to }"
+          v-bind="tile.href ? { href: tile.href } : { to: { name: tile.to } }"
+          @click="tile.href && confirmLeave($event, tile.href)"
         >
           <!-- Oversized tone-on-tone glyph bleeding off the right edge, echoing
                the corporate action tiles. Decorative only. -->
@@ -159,9 +166,11 @@ onBeforeUnmount(stop)
             {{ tile.cta }}
             <AppIcon name="arrowRight" :size="16" />
           </span>
-        </RouterLink>
+        </component>
       </div>
     </div>
+
+    <RedirectNotice :url="leavingFor" @close="cancelLeave" />
   </section>
 </template>
 

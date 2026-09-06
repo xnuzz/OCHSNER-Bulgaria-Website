@@ -7,6 +7,9 @@ import PlaceholderImage from '@/components/ui/PlaceholderImage.vue'
 import BrandMark from './BrandMark.vue'
 import { fetchProducts, useAsyncData } from '@/api/catalog.js'
 import { useI18n } from '@/i18n'
+import RedirectNotice from '@/components/ui/RedirectNotice.vue'
+import { useExternalLink } from '@/composables/useExternalLink.js'
+import { downloadCenterUrl } from '@/i18n/bg/common.js'
 
 const { common, nav, contactDetails } = useI18n()
 const route = useRoute()
@@ -83,6 +86,9 @@ onBeforeUnmount(() => {
   window.removeEventListener('keydown', onKeydown)
   document.body.style.overflow = ''
 })
+
+/* External destinations open behind the redirect notice. */
+const { leavingFor, confirmLeave, cancelLeave } = useExternalLink()
 </script>
 
 <template>
@@ -92,9 +98,13 @@ onBeforeUnmount(() => {
       <div class="container utility__inner">
         <p class="utility__role">{{ common.brandTagline }}</p>
         <nav class="utility__nav" :aria-label="nav.utilityLabel">
-          <!-- Destinations to be confirmed with OCHSNER Austria. -->
+          <!-- Service and the partner portal are still to be confirmed with
+               OCHSNER Austria; the download centre is theirs and goes through
+               the redirect notice. -->
           <a href="#">{{ nav.utility.service }}</a>
-          <a href="#">{{ nav.utility.downloads }}</a>
+          <a :href="downloadCenterUrl" @click="confirmLeave($event, downloadCenterUrl)">
+            {{ nav.utility.downloads }}
+          </a>
           <a href="#">{{ nav.utility.partnerPortal }}</a>
           <a class="utility__phone" :href="contactDetails.phoneHref">
             <AppIcon name="phone" :size="15" />
@@ -210,6 +220,8 @@ onBeforeUnmount(() => {
         </div>
       </div>
     </Transition>
+
+    <RedirectNotice :url="leavingFor" @close="cancelLeave" />
   </header>
 </template>
 

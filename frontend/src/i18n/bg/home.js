@@ -1,3 +1,4 @@
+import { downloadCenterUrl } from './common.js'
 export const home = {
   meta: {
     title: 'OCHSNER България — термопомпи с австрийско качество',
@@ -54,7 +55,8 @@ export const home = {
         variant: 'gold',
         title: 'Технически документи',
         cta: 'Виж документите',
-        to: 'products'
+        /* OCHSNER Austria's download centre, reached through the redirect notice. */
+        href: downloadCenterUrl
       },
       {
         variant: 'teal',

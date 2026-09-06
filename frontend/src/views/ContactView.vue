@@ -4,6 +4,7 @@ import PageHero from '@/components/ui/PageHero.vue'
 import BaseButton from '@/components/ui/BaseButton.vue'
 import FormField from '@/components/form/FormField.vue'
 import FormStatus from '@/components/form/FormStatus.vue'
+import AppIcon from '@/components/ui/AppIcon.vue'
 import { submitContact } from '@/api/catalog.js'
 import { toFormError } from '@/api/client.js'
 import { useSeo } from '@/composables/useSeo.js'
@@ -248,16 +249,24 @@ useSeo({ title: copy.meta.title, description: copy.meta.description, path: '/kon
           <p class="details__response">{{ copy.details.responseNote }}</p>
 
           <h3 class="map__title">{{ copy.details.mapTitle }}</h3>
-          <!--
-            Placeholder for the embedded map. Swap for an <iframe> (or a
-            privacy-friendlier static map) once the client confirms the address —
-            an iframe is deliberately not loaded now to avoid third-party cookies.
-          -->
-          <div class="map" role="img" :aria-label="copy.details.mapTitle">
-            <span class="map__pin" aria-hidden="true">◎</span>
-            <span class="map__label">{{ copy.details.mapPlaceholder }}</span>
-          </div>
-          <p class="details__note">{{ copy.details.mapNote }}</p>
+          <!-- Keyless Google Maps embed for the office address. -->
+          <iframe
+            class="map"
+            :src="contactDetails.mapEmbed"
+            :title="copy.details.mapTitle"
+            loading="lazy"
+            referrerpolicy="no-referrer-when-downgrade"
+            allowfullscreen
+          ></iframe>
+          <a
+            class="map__link"
+            :href="contactDetails.mapLink"
+            target="_blank"
+            rel="noopener"
+          >
+            {{ copy.details.mapLinkLabel }}
+            <AppIcon name="arrowRight" :size="16" />
+          </a>
         </aside>
       </div>
     </section>
@@ -375,27 +384,29 @@ useSeo({ title: copy.meta.title, description: copy.meta.description, path: '/kon
 
 .map {
   margin-top: var(--sp-3);
-  display: grid;
-  place-items: center;
-  gap: var(--sp-2);
+  display: block;
+  width: 100%;
+  max-width: 100%;
   aspect-ratio: 4 / 3;
-  border: 1px dashed var(--c-primary-300);
+  border: 0;
   border-radius: var(--radius);
-  background:
-    repeating-linear-gradient(0deg, transparent 0 26px, rgba(13, 90, 114, 0.06) 26px 27px),
-    repeating-linear-gradient(90deg, transparent 0 26px, rgba(13, 90, 114, 0.06) 26px 27px),
-    var(--c-primary-50);
-  color: var(--c-primary-700);
+  background: var(--c-primary-50);
 }
 
-.map__pin {
-  font-size: 1.8rem;
-}
-
-.map__label {
+.map__link {
+  margin-top: var(--sp-3);
+  display: inline-flex;
+  align-items: center;
+  gap: var(--sp-2);
   font-family: var(--font-heading);
   font-size: var(--fs-small);
   font-weight: var(--fw-semibold);
+  color: var(--c-accent-500);
+  text-decoration: none;
+}
+
+.map__link:hover {
+  text-decoration: underline;
 }
 
 @media (min-width: 640px) {
