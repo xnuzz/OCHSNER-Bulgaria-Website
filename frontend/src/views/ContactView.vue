@@ -235,6 +235,13 @@ useSeo({ title: copy.meta.title, description: copy.meta.description, path: '/kon
               <dd><a :href="contactDetails.emailHref">{{ contactDetails.email }}</a></dd>
             </div>
             <div class="details__row">
+              <dt>{{ copy.details.serviceLabel }}</dt>
+              <dd>
+                <a :href="contactDetails.serviceEmailHref">{{ contactDetails.serviceEmail }}</a>
+                <span class="details__note">{{ copy.details.serviceNote }}</span>
+              </dd>
+            </div>
+            <div class="details__row">
               <dt>{{ common.addressLabel }}</dt>
               <dd>
                 {{ contactDetails.address }}

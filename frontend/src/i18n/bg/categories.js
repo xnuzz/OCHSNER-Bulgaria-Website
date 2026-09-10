@@ -176,13 +176,6 @@ export const categories = {
           range: '2 – 12 kW',
           image: '/images/models/geo-fox.png',
           text: 'SmartGrid-ready геотермална термопомпа от висок клас с природния хладилен агент R290. Работи много тихо, адаптира се гъвкаво към нуждите благодарение на инверторна технология и е оборудвана с интуитивен сензорен дисплей и Modbus интерфейс. Като компактна кула S200 или като спестяващо място вътрешно тяло S1 — подходяща за отопление, пасивно охлаждане и битова гореща вода в еднофамилни и многофамилни сгради.'
-        },
-        {
-          key: 'terra-fox',
-          name: 'OCHSNER TERRA FOX',
-          range: '4 – 16 kW',
-          image: '/images/models/terra-fox.png',
-          text: 'Smart Grid геотермална термопомпа от висок клас с максимална ефективност (SCOP до 5,8, клас A+++). Работи много тихо (32–36 dB), адаптира се гъвкаво чрез инверторна технология и разполага с интуитивен сензорен дисплей и Modbus интерфейс. Предлага се като компактна кула S200 или като вътрешно тяло S1 — за отопление, пасивно охлаждане и топла вода в еднофамилни и многофамилни сгради.'
         }
       ]
     },
@@ -481,6 +474,8 @@ export const categories = {
   },
 
   akumulatori: {
+    /* No individual product pages for this category — hide the „Виж продукта“ link. */
+    hideModelsCta: true,
     /* Small card on the home page product strip. */
     strip: '/images/categories/strip-akumulatori.jpg',
     /* Image for the card on the product overview page. */
@@ -575,6 +570,8 @@ export const categories = {
   },
 
   'golemi-termopompi': {
+    /* No individual product pages for this category — hide the „Виж продукта“ link. */
+    hideModelsCta: true,
     /* Small card on the home page product strip. */
     strip: '/images/categories/strip-golemi-termopompi.jpg',
     /* Image for the card on the product overview page. */
@@ -675,7 +672,7 @@ export const categoryCommon = {
   backToAll: 'Всички продукти',
   linksTitle: 'Полезни връзки',
   links: [
-    { title: 'Заяви консултация', text: 'Безплатен оглед и ориентировъчна оферта за вашия обект.', to: 'contact' },
+    { title: 'Заяви консултация', text: 'Персонална консултация за вашия обект.', to: 'contact' },
     { title: 'Всички продукти', text: 'Сравнение на четирите технологии на едно място.', to: 'products' },
     { title: 'Референции', text: 'Реализирани инсталации и типове сгради.', to: 'references' },
     { title: 'За нас', text: 'Официален представител на OCHSNER за България.', to: 'about' },

@@ -2,20 +2,35 @@ export const references = {
   meta: {
     title: 'Референции — реализирани инсталации | OCHSNER България',
     description:
-      'Избрани реализирани термопомпени инсталации в България: еднофамилни къщи, хотели и офис сгради.'
+      'Избрани реализирани термопомпени инсталации в България — еднофамилни къщи и жилищни обекти в София, Пловдив, Черноморието и страната.'
   },
 
   hero: {
     eyebrow: 'Референции',
     title: 'Обекти, които вече се отопляват с термопомпа',
     subtitle:
-      'Всеки обект е различен — различна сграда, различна инсталация, различен бюджет. По-долу са избрани примери от практиката.'
+      'Избрани реализирани проекти в цяла България. Всеки обект е различен — различна сграда, инсталация и бюджет.'
   },
 
-  placeholderNote:
-    'Показаните обекти са примерни. Реалните проекти и снимки се въвеждат през администрацията на сайта.',
-  emptyTitle: 'Все още няма публикувани обекти',
-  emptyText: 'Първите референции ще бъдат добавени скоро.',
+  /* Real project photos supplied by the client, one per location. */
+  galleryTag: 'Реализиран проект',
+  countLabel: 'реализирани обекта',
+  close: 'Затвори',
+  prev: 'Предишна снимка',
+  next: 'Следваща снимка',
+  items: [
+    { location: 'Бояна', image: '/images/references/boyana.jpg' },
+    { location: 'Драгалевци', image: '/images/references/dragalevtsi.jpg' },
+    { location: 'Панчарево', image: '/images/references/pancharevo.jpg' },
+    { location: 'Residential Park', image: '/images/references/residential-park.jpg' },
+    { location: 'Бояна', image: '/images/references/boyana-2.jpg' },
+    { location: 'Средец', image: '/images/references/sredets.jpg' },
+    { location: 'Белащица', image: '/images/references/belashtitsa.jpg' },
+    { location: 'Пловдив', image: '/images/references/plovdiv.jpg' },
+    { location: 'Арбанаси', image: '/images/references/arbanasi.jpg' },
+    { location: 'Арапя', image: '/images/references/arapya.jpg' },
+    { location: 'Коларово', image: '/images/references/kolarovo.jpg' }
+  ],
 
   ctaBand: {
     title: 'Вашият дом може да е следващият',

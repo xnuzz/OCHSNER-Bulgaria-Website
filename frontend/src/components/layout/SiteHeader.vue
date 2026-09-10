@@ -137,17 +137,20 @@ const { leavingFor, confirmLeave, cancelLeave } = useExternalLink()
             </button>
           </span>
 
+          <a
+            v-else-if="link.href"
+            class="header__link"
+            :href="link.href"
+            @click="confirmLeave($event, link.href)"
+          >
+            {{ link.label }}
+          </a>
+
           <RouterLink v-else :to="{ name: link.name }" class="header__link">
             {{ link.label }}
           </RouterLink>
         </template>
       </nav>
-
-      <div class="header__actions">
-        <BaseButton :to="{ name: 'contact' }" size="sm" class="header__cta">
-          {{ common.ctaHeader }}
-        </BaseButton>
-      </div>
 
       <button
         class="header__toggle"
@@ -203,14 +206,19 @@ const { leavingFor, confirmLeave, cancelLeave } = useExternalLink()
     <Transition name="drawer">
       <div v-if="menuOpen" id="mobile-nav" class="drawer">
         <nav class="drawer__nav" :aria-label="nav.mobileLabel">
-          <RouterLink
-            v-for="link in links"
-            :key="link.name"
-            :to="{ name: link.name }"
-            class="drawer__link"
-          >
-            {{ link.label }}
-          </RouterLink>
+          <template v-for="link in links" :key="link.name">
+            <a
+              v-if="link.href"
+              class="drawer__link"
+              :href="link.href"
+              @click="confirmLeave($event, link.href)"
+            >
+              {{ link.label }}
+            </a>
+            <RouterLink v-else :to="{ name: link.name }" class="drawer__link">
+              {{ link.label }}
+            </RouterLink>
+          </template>
         </nav>
         <div class="drawer__footer">
           <BaseButton :to="{ name: 'contact' }" size="lg" block>
@@ -315,7 +323,7 @@ const { leavingFor, confirmLeave, cancelLeave } = useExternalLink()
   margin-right: auto;
 }
 
-@media (min-width: 1440px) {
+@media (min-width: 1120px) {
   .header__brand {
     margin-right: 0;
   }
@@ -332,12 +340,14 @@ const { leavingFor, confirmLeave, cancelLeave } = useExternalLink()
 .header__link {
   position: relative;
   padding-block: var(--sp-2);
-  font-size: 1.125rem;
-  font-weight: var(--fw-bold);
+  font-size: 0.9375rem;
+  font-weight: var(--fw-semibold);
+  letter-spacing: 0.04em;
   text-transform: uppercase;
   color: var(--c-primary-900);
   text-decoration: none;
   white-space: nowrap;
+  transition: color var(--dur-fast) var(--ease);
 }
 
 .header__link::after {
@@ -345,8 +355,9 @@ const { leavingFor, confirmLeave, cancelLeave } = useExternalLink()
   position: absolute;
   left: 0;
   right: 0;
-  bottom: 0;
+  bottom: -2px;
   height: 2px;
+  border-radius: 2px;
   background: var(--c-accent-600);
   transform: scaleX(0);
   transform-origin: left;
@@ -600,7 +611,7 @@ const { leavingFor, confirmLeave, cancelLeave } = useExternalLink()
 
 /* ---------- Desktop ----------------------------------------------------- */
 
-@media (min-width: 1440px) {
+@media (min-width: 1120px) {
   .mega {
     display: block;
   }
@@ -612,9 +623,8 @@ const { leavingFor, confirmLeave, cancelLeave } = useExternalLink()
     display: flex;
     align-items: center;
     gap: var(--sp-6);
-    /* Generous set-in from the wordmark, as on the corporate header, where the
-       nav starts roughly 200px clear of the logo lockup. */
-    margin-left: var(--sp-7);
+    /* CTA removed — the nav now carries the right side of the bar. */
+    margin-left: auto;
   }
 
   .header__actions {

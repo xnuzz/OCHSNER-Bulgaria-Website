@@ -122,6 +122,7 @@ const { leavingFor, confirmLeave, cancelLeave } = useExternalLink()
               <p class="model__range">{{ model.range }}</p>
               <p class="model__text">{{ model.text }}</p>
               <BaseButton
+                v-if="!content.hideModelsCta"
                 :to="model.key
                   ? { name: 'product-model', params: { slug, model: model.key } }
                   : { name: 'contact' }"

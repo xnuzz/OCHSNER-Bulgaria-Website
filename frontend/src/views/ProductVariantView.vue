@@ -163,6 +163,12 @@ const page = ref(null)
             </dl>
           </details>
         </div>
+
+        <!-- Full technical sheets live in the download centre. -->
+        <p class="tech-more">
+          {{ variantCommon.techMore }}
+          <RouterLink :to="{ name: 'downloads' }">{{ variantCommon.techMoreLink }}</RouterLink>
+        </p>
       </div>
     </section>
 
@@ -557,5 +563,15 @@ const page = ref(null)
   .series {
     grid-template-columns: repeat(3, 1fr);
   }
+}
+.tech-more {
+  margin-top: var(--sp-5);
+  font-size: var(--fs-small);
+  color: var(--c-ink-soft);
+}
+
+.tech-more a {
+  color: var(--c-accent-500);
+  font-weight: var(--fw-medium);
 }
 </style>

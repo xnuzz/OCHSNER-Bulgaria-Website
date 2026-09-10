@@ -1,5 +1,6 @@
 <script setup>
 import BrandMark from './BrandMark.vue'
+import AppIcon from '@/components/ui/AppIcon.vue'
 import { useI18n } from '@/i18n'
 
 const { common, nav, footer, contactDetails } = useI18n()
@@ -9,7 +10,8 @@ const links = [
   { name: 'about', label: nav.about },
   { name: 'references', label: nav.references },
   { name: 'partner', label: nav.partner },
-  { name: 'contact', label: nav.contact }
+  { name: 'contact', label: nav.contact },
+  { name: 'downloads', label: nav.downloadCenter }
 ]
 
 const year = new Date().getFullYear()
@@ -54,6 +56,21 @@ const year = new Date().getFullYear()
           <li><RouterLink :to="{ name: 'legal-privacy' }">{{ footer.privacy }}</RouterLink></li>
           <li><RouterLink :to="{ name: 'legal-terms' }">{{ footer.terms }}</RouterLink></li>
           <li><RouterLink :to="{ name: 'legal-cookies' }">{{ footer.cookies }}</RouterLink></li>
+        </ul>
+
+        <h2 class="footer__heading footer__heading--social">{{ footer.socialHeading }}</h2>
+        <ul class="footer__social">
+          <li v-for="item in footer.social" :key="item.name">
+            <a
+              :href="item.href"
+              class="footer__social-link"
+              target="_blank"
+              rel="noopener"
+              :aria-label="item.label"
+            >
+              <AppIcon :name="item.name" :size="20" />
+            </a>
+          </li>
         </ul>
       </div>
     </div>
@@ -130,6 +147,34 @@ const year = new Date().getFullYear()
 .footer__list a:hover {
   color: #fff;
   text-decoration: underline;
+}
+
+.footer__heading--social {
+  margin-top: var(--sp-5);
+}
+
+.footer__social {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  gap: var(--sp-3);
+}
+
+.footer__social-link {
+  display: grid;
+  place-items: center;
+  width: 40px;
+  height: 40px;
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  border-radius: 999px;
+  color: rgba(255, 255, 255, 0.82);
+  transition: border-color var(--dur) var(--ease), color var(--dur) var(--ease);
+}
+
+.footer__social-link:hover {
+  border-color: #fff;
+  color: #fff;
 }
 
 .footer__bottom {

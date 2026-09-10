@@ -15,11 +15,16 @@ import SectionHeading from '@/components/ui/SectionHeading.vue'
 import BaseButton from '@/components/ui/BaseButton.vue'
 import CtaBand from '@/components/ui/CtaBand.vue'
 import AppIcon from '@/components/ui/AppIcon.vue'
+import RedirectNotice from '@/components/ui/RedirectNotice.vue'
+import { useExternalLink } from '@/composables/useExternalLink.js'
 import { fetchProducts, useAsyncData } from '@/api/catalog.js'
 import { useSeo } from '@/composables/useSeo.js'
 import { useI18n } from '@/i18n'
 
 const { common, products: copy, categories, categoryCommon } = useI18n()
+
+/* External destinations open behind the redirect notice. */
+const { leavingFor, confirmLeave, cancelLeave } = useExternalLink()
 const page = ref(null)
 
 const { data: items, loading, failed, load } = useAsyncData(fetchProducts)
@@ -134,7 +139,20 @@ onMounted(() => load())
         <SectionHeading :title="categoryCommon.linksTitle" level="h2" align="center" />
         <ul class="links">
           <li v-for="link in categoryCommon.links" :key="link.title">
-            <RouterLink class="link-card" :to="{ name: link.to }">
+            <a
+              v-if="link.href"
+              class="link-card"
+              :href="link.href"
+              @click="confirmLeave($event, link.href)"
+            >
+              <h3 class="link-card__title">{{ link.title }}</h3>
+              <p class="link-card__text">{{ link.text }}</p>
+              <span class="link-card__more">
+                {{ common.ctaMore }}
+                <AppIcon name="arrowRight" :size="16" />
+              </span>
+            </a>
+            <RouterLink v-else class="link-card" :to="{ name: link.to }">
               <h3 class="link-card__title">{{ link.title }}</h3>
               <p class="link-card__text">{{ link.text }}</p>
               <span class="link-card__more">
@@ -148,6 +166,7 @@ onMounted(() => load())
     </section>
 
     <CtaBand :title="copy.ctaBand.title" :text="copy.ctaBand.text" />
+    <RedirectNotice :url="leavingFor" @close="cancelLeave" />
   </div>
 </template>
 

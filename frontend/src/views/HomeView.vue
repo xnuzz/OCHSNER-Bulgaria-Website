@@ -40,6 +40,27 @@ onMounted(load)
   <div>
     <HomeHero />
 
+    <!-- Brand film, directly below the hero — as on ochsner.com/en. Full
+         content-width, rounded corners, autoplaying muted with controls. -->
+    <section class="home-video">
+      <div class="container">
+        <div class="home-video__frame">
+          <video
+            class="home-video__player"
+            :poster="home.video.poster"
+            :aria-label="home.video.label"
+            autoplay
+            muted
+            playsinline
+            controls
+            preload="metadata"
+          >
+            <source :src="home.video.src" type="video/webm" />
+          </video>
+        </div>
+      </div>
+    </section>
+
     <!-- Brand statement band -->
     <BrandStatement :title="home.statement.title" :body="home.statement.body" />
 
@@ -108,6 +129,20 @@ onMounted(load)
     <!-- Why a heat pump — teaser -->
     <section class="section">
       <div class="container">
+        <!-- Intro block, laid out as on ochsner.com/en: heading, copy, image below. -->
+        <div class="hp-intro">
+          <h2 class="hp-intro__title">{{ home.whyTeaser.heading }}</h2>
+          <p class="hp-intro__text">{{ home.whyTeaser.body }}</p>
+          <figure class="hp-intro__media">
+            <img
+              :src="home.whyTeaser.image"
+              :alt="home.whyTeaser.imageAlt"
+              loading="lazy"
+              decoding="async"
+            />
+          </figure>
+        </div>
+
         <SectionHeading
           :eyebrow="home.whyTeaser.eyebrow"
           :title="home.whyTeaser.title"
@@ -122,9 +157,6 @@ onMounted(load)
             <p class="teaser__text">{{ item.text }}</p>
           </li>
         </ul>
-        <div class="section__footer">
-          <BaseButton href="#kak-raboti">{{ home.whyTeaser.cta }}</BaseButton>
-        </div>
       </div>
     </section>
 
@@ -181,6 +213,61 @@ onMounted(load)
 </template>
 
 <style scoped>
+/* --- brand film below the hero ------------------------------------------ */
+.home-video {
+  /* Sits close under the hero, matching the reference's tight placement. */
+  padding-block: clamp(var(--sp-5), 3vw, var(--sp-7));
+}
+
+.home-video__frame {
+  width: 100%;
+  /* Native ratio of the film (1694 × 720), so it fills without letterboxing. */
+  aspect-ratio: 1694 / 720;
+  border-radius: 20px;
+  overflow: hidden;
+  background: #000;
+}
+
+.home-video__player {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* --- „Термопомпи" intro block, mirroring ochsner.com/en -------------------- */
+.hp-intro {
+  max-width: 760px;
+  margin: 0 auto var(--sp-8);
+}
+
+.hp-intro__title {
+  font-size: 1.5rem;
+  font-weight: var(--fw-bold);
+  line-height: 1.25;
+  color: var(--c-primary-900);
+}
+
+.hp-intro__text {
+  margin-top: var(--sp-4);
+  line-height: var(--lh-body);
+  color: var(--c-ink-soft);
+}
+
+.hp-intro__media {
+  margin: var(--sp-5) 0 0;
+  border-radius: 6px;
+  overflow: hidden;
+}
+
+.hp-intro__media img {
+  display: block;
+  width: 100%;
+  /* Native ratio of the reference image (≈16:9). */
+  aspect-ratio: 16 / 9;
+  object-fit: cover;
+}
+
 /* --- how it works: numbered steps under the cycle diagram ---------------- */
 .steps {
   margin-top: var(--sp-7);

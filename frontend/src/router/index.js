@@ -4,6 +4,13 @@ import { categories } from '@/i18n/bg/categories.js'
 import { models } from '@/i18n/bg/models.js'
 import { variants } from '@/i18n/bg/variants.js'
 
+/*
+ * Series withdrawn from the Bulgarian range: their data stays in the bundle so
+ * the series can be restored quickly, but the pages are unreachable and any
+ * stray link falls back to the product overview.
+ */
+const withdrawnSeries = new Set(['terra-fox'])
+
 /**
  * Only the home view is bundled eagerly — every other route is code-split so the
  * first paint on mobile stays small.
@@ -29,6 +36,7 @@ const routes = [
     name: 'product-model',
     component: () => import('@/views/ProductModelView.vue'),
     beforeEnter: (to) => {
+      if (withdrawnSeries.has(to.params.model)) return { name: 'products' }
       const m = models[to.params.model]
       if (!m) return { name: 'products' }
       // Keep the URL honest: the category in the path must own the model.
@@ -42,7 +50,7 @@ const routes = [
     component: () => import('@/views/ProductVariantView.vue'),
     beforeEnter: (to) => {
       const v = variants[to.params.variant]
-      if (!v) return { name: 'products' }
+      if (!v || withdrawnSeries.has(v.model)) return { name: 'products' }
       const m = models[v.model]
       // Keep the URL honest: category and series in the path must own the unit.
       return v.model === to.params.model && m && m.category === to.params.slug
@@ -69,6 +77,11 @@ const routes = [
     path: '/kontakti',
     name: 'contact',
     component: () => import('@/views/ContactView.vue')
+  },
+  {
+    path: '/tsentar-za-izteglyane',
+    name: 'downloads',
+    component: () => import('@/views/DownloadView.vue')
   },
   {
     path: '/politika-poveritelnost',

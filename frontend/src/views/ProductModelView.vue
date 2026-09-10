@@ -416,26 +416,33 @@ const failed = reactive({})
 }
 
 /* --- green feature pills ------------------------------------------------ */
+/*
+ * The green feature pills overlay green pills baked into the artwork (in German
+ * on the source images). To hide the originals completely they must fill the
+ * mapped box, not shrink to their text — otherwise the baked text bleeds out
+ * around them and the two pills end up different widths. So the pills stretch to
+ * the full box width and split its height evenly.
+ */
 .shot__pills {
   position: absolute;
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
-  align-items: flex-start;
-  gap: 0.6%;
+  gap: 3%;
 }
 
 .pill {
-  display: inline-flex;
+  flex: 1 1 0;
+  display: flex;
   align-items: center;
-  padding: 0.35cqw 0.9cqw;
+  width: 100%;
+  padding: 0 0.9cqw;
   border-radius: 6px;
   background: #5eb85e;
   color: #fff;
   font-family: var(--font-heading);
   font-size: 0.78cqw;
   font-weight: var(--fw-semibold);
-  line-height: 1.2;
+  line-height: 1.15;
   white-space: nowrap;
 }
 
