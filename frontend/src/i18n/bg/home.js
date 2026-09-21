@@ -211,6 +211,26 @@ export const home = {
     ]
   },
 
+  /* Live Facebook + Instagram feed. Handles are filled in once the client
+     connects their own accounts; see api/_lib/social.js. */
+  social: {
+    title: 'Последно от нас',
+    subtitle:
+      'Актуални проекти, монтажи и новини директно от нашите профили във Facebook и Instagram.',
+    facebook: 'Facebook',
+    instagram: 'Instagram',
+    /* Public profile URLs — fill in with the client's real pages. */
+    facebookUrl: '',
+    instagramUrl: '',
+    loading: 'Зареждане на публикациите…',
+    viewPost: 'Виж публикацията',
+    followFacebook: 'Последвай ни във Facebook',
+    followInstagram: 'Последвай ни в Instagram',
+    empty: 'Все още няма публикации за показване.',
+    demoNotice:
+      'Примерни публикации. Секцията ще показва реалните ви публикации веднага след свързване на профилите във Facebook и Instagram.'
+  },
+
   finalCta: {
     title: 'Готови ли сте да намалите сметките за отопление?',
     text: 'Изпратете запитване и ще се свържем с вас за консултация и ориентировъчна оферта.',

@@ -8,6 +8,7 @@ import SectionHeading from '@/components/ui/SectionHeading.vue'
 import AccordionList from '@/components/ui/AccordionList.vue'
 import AppIcon from '@/components/ui/AppIcon.vue'
 import BaseButton from '@/components/ui/BaseButton.vue'
+import SocialFeed from '@/components/home/SocialFeed.vue'
 import CtaBand from '@/components/ui/CtaBand.vue'
 import { fetchProducts, useAsyncData } from '@/api/catalog.js'
 import { useSeo } from '@/composables/useSeo.js'
@@ -207,6 +208,9 @@ onMounted(load)
         <p class="disclaimer">{{ home.testimonials.disclaimer }}</p>
       </div>
     </section>
+
+    <!-- Latest Facebook + Instagram posts -->
+    <SocialFeed />
 
     <CtaBand :title="home.finalCta.title" :text="home.finalCta.text" />
   </div>

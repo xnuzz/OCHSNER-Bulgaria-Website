@@ -29,6 +29,16 @@ export function fetchReferences() {
   return client.get('/references').then((response) => response.data)
 }
 
+/**
+ * Latest Facebook + Instagram posts.
+ *
+ * Returns the whole envelope ({ posts, demo, sources }) rather than just the
+ * array, because the UI needs the `demo` flag to label sample content.
+ */
+export function fetchSocialPosts(limit = 6) {
+  return client.get(`/social?limit=${limit}`).then((response) => response.data)
+}
+
 export function submitContact(payload) {
   return client.post('/contact', payload).then((response) => response.data)
 }

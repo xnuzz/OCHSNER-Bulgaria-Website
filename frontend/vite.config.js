@@ -25,7 +25,8 @@ function devApi() {
     '/api/v1/products': () => handler('products'),
     '/api/v1/references': () => handler('references'),
     '/api/v1/contact': () => handler('contact'),
-    '/api/v1/partner-applications': () => handler('partner-applications')
+    '/api/v1/partner-applications': () => handler('partner-applications'),
+    '/api/v1/social': () => handler('social')
   }
 
   return {
