@@ -219,9 +219,20 @@ export const home = {
       'Актуални проекти, монтажи и новини директно от нашите профили във Facebook и Instagram.',
     facebook: 'Facebook',
     instagram: 'Instagram',
-    /* Public profile URLs — fill in with the client's real pages. */
-    facebookUrl: '',
-    instagramUrl: '',
+    /*
+     * Official OCHSNER Wärmepumpen profiles, used as the default destination.
+     * Replace both with the Bulgarian representative's own pages once they
+     * exist — these also back the "open post" link while the feed is in demo
+     * mode, since a sample post has no real permalink of its own.
+     */
+    facebookUrl: 'https://www.facebook.com/ochsnerwaermepumpen/',
+    instagramUrl: 'https://www.instagram.com/ochsnerwaermepumpen/',
+    /* Shown as the account name on each card. */
+    handle: 'ochsnerwaermepumpen',
+    displayName: 'OCHSNER Wärmepumpen',
+    likes: 'харесвания',
+    comments: 'коментара',
+    openOn: 'Отвори в',
     loading: 'Зареждане на публикациите…',
     viewPost: 'Виж публикацията',
     followFacebook: 'Последвай ни във Facebook',

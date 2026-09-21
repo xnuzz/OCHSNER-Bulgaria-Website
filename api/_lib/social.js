@@ -59,7 +59,8 @@ function excerpt(text, max = 220) {
 }
 
 async function fetchFacebook(token, pageId) {
-  const fields = 'id,message,created_time,permalink_url,full_picture'
+  const fields =
+    'id,message,created_time,permalink_url,full_picture,reactions.summary(total_count).limit(0),comments.summary(total_count).limit(0)'
   const url = `${GRAPH}/${pageId}/posts?fields=${fields}&limit=8&access_token=${token}`
   const { data = [] } = await getJson(url)
   return data
@@ -71,12 +72,15 @@ async function fetchFacebook(token, pageId) {
       text: excerpt(p.message),
       image: p.full_picture || null,
       permalink: p.permalink_url,
-      postedAt: p.created_time
+      postedAt: p.created_time,
+      likes: p.reactions?.summary?.total_count ?? null,
+      comments: p.comments?.summary?.total_count ?? null
     }))
 }
 
 async function fetchInstagram(token, igUserId) {
-  const fields = 'id,caption,media_type,media_url,thumbnail_url,permalink,timestamp'
+  const fields =
+    'id,caption,media_type,media_url,thumbnail_url,permalink,timestamp,like_count,comments_count'
   const url = `${GRAPH}/${igUserId}/media?fields=${fields}&limit=8&access_token=${token}`
   const { data = [] } = await getJson(url)
   return data.map((m) => ({
@@ -86,7 +90,9 @@ async function fetchInstagram(token, igUserId) {
     // Videos expose a still in thumbnail_url; media_url would be the mp4.
     image: m.media_type === 'VIDEO' ? m.thumbnail_url || null : m.media_url || null,
     permalink: m.permalink,
-    postedAt: m.timestamp
+    postedAt: m.timestamp,
+    likes: m.like_count ?? null,
+    comments: m.comments_count ?? null
   }))
 }
 
@@ -202,6 +208,8 @@ export async function getSocialPosts({ limit = 6, force = false } = {}) {
 const demoPosts = [
   {
     id: 'demo_1',
+    likes: 184,
+    comments: 12,
     network: 'facebook',
     demo: true,
     text: 'Завършен монтаж на термопомпа въздух-вода в еднофамилна къща. Подменихме стар котел на нафта — отоплението и топлата вода вече се осигуряват от една система.',
@@ -211,6 +219,8 @@ const demoPosts = [
   },
   {
     id: 'demo_2',
+    likes: 263,
+    comments: 21,
     network: 'instagram',
     demo: true,
     text: 'Геотермална инсталация в процес на изграждане. Сондажите са готови, следва свързване на колекторите. #термопомпа #геотермия',
@@ -220,6 +230,8 @@ const demoPosts = [
   },
   {
     id: 'demo_3',
+    likes: 97,
+    comments: 6,
     network: 'instagram',
     demo: true,
     text: 'Термопомпа вода-вода — най-високата ефективност при подходящи условия на терена.',
@@ -229,6 +241,8 @@ const demoPosts = [
   },
   {
     id: 'demo_4',
+    likes: 411,
+    comments: 38,
     network: 'facebook',
     demo: true,
     text: 'Често ни питат колко ток консумира една термопомпа. Накратко: от 1 kWh електроенергия се получават 3 до 5 kWh топлина. Останалото идва безплатно от околната среда.',
@@ -238,6 +252,8 @@ const demoPosts = [
   },
   {
     id: 'demo_5',
+    likes: 152,
+    comments: 9,
     network: 'instagram',
     demo: true,
     text: 'Вътрешно тяло, монтирано и пуснато в експлоатация. Компактно решение, което се вписва дори в малко техническо помещение.',
@@ -247,6 +263,8 @@ const demoPosts = [
   },
   {
     id: 'demo_6',
+    likes: 88,
+    comments: 4,
     network: 'facebook',
     demo: true,
     text: 'Подготвяме оферти за есенния сезон. Ако планирате подмяна на отоплението преди зимата, сега е моментът за оглед.',

@@ -8,10 +8,17 @@ import { useI18n } from '@/i18n'
 /*
  * Latest Facebook + Instagram posts, from GET /api/v1/social.
  *
- * The endpoint always answers 200 — a network outage or a missing token yields
- * an empty list rather than an error — so this component only has to handle
- * "loading", "has posts" and "nothing to show". It never renders a failure at
- * a visitor.
+ * Each card is styled as the network's own post chrome — Instagram's square
+ * image with the action row beneath, Facebook's text-above-image with the
+ * reaction bar — so the section reads as a genuine embed rather than a generic
+ * card grid.
+ *
+ * The engagement glyphs are DECORATIVE (aria-hidden): you cannot like or
+ * comment from here. The whole card is a single link to the real post, which is
+ * where those actions actually live.
+ *
+ * The endpoint always answers 200, so this only handles "loading", "has posts"
+ * and "nothing to show" — never an error state at a visitor.
  */
 const { home } = useI18n()
 const { data, loading, load } = useAsyncData(() => fetchSocialPosts(6))
@@ -21,11 +28,19 @@ const dateFmt = new Intl.DateTimeFormat('bg-BG', {
   month: 'long',
   year: 'numeric'
 })
+const numFmt = new Intl.NumberFormat('bg-BG')
 
 const formatDate = (iso) => {
   const d = new Date(iso)
   return Number.isNaN(d.getTime()) ? '' : dateFmt.format(d)
 }
+
+const profileUrl = (network) =>
+  network === 'instagram' ? home.social.instagramUrl : home.social.facebookUrl
+
+/* A sample post has no permalink of its own, so it falls back to the profile —
+   the card still opens the real account on the real network. */
+const postUrl = (post) => post.permalink || profileUrl(post.network)
 
 onMounted(load)
 </script>
@@ -77,45 +92,85 @@ onMounted(load)
 
       <ul v-else class="social__grid">
         <li v-for="post in data.posts" :key="post.id" class="post">
-          <component
-            :is="post.permalink ? 'a' : 'div'"
-            class="post__inner"
-            v-bind="
-              post.permalink
-                ? { href: post.permalink, target: '_blank', rel: 'noopener noreferrer' }
-                : {}
-            "
+          <a
+            class="card"
+            :class="`card--${post.network}`"
+            :href="postUrl(post)"
+            target="_blank"
+            rel="noopener noreferrer"
+            :aria-label="`${home.social.openOn} ${home.social[post.network]}`"
           >
-            <div class="post__media">
+            <!-- Account row -->
+            <div class="card__head">
+              <span class="card__avatar" aria-hidden="true">O</span>
+              <span class="card__who">
+                <span class="card__name">
+                  {{ post.author || home.social.handle }}
+                </span>
+                <span v-if="post.network === 'facebook'" class="card__meta">
+                  {{ formatDate(post.postedAt) }}
+                  <AppIcon name="globe" :size="11" />
+                </span>
+              </span>
+              <AppIcon class="card__more" name="more" :size="18" />
+            </div>
+
+            <!-- Facebook puts the copy above the image; Instagram below it. -->
+            <p v-if="post.network === 'facebook'" class="card__fbtext">{{ post.text }}</p>
+
+            <div class="card__media">
               <PlaceholderImage
                 :src="post.image"
                 :label="home.social[post.network]"
                 fit="cover"
                 inset="0%"
                 surface="alt"
-                ratio="4 / 3"
+                :ratio="post.network === 'instagram' ? '1 / 1' : '1.91 / 1'"
               />
-              <span
-                class="post__badge"
-                :class="`post__badge--${post.network}`"
-                role="img"
-                :aria-label="home.social[post.network]"
-              >
-                <AppIcon :name="post.network" :size="16" />
-              </span>
             </div>
 
-            <div class="post__body">
-              <time class="post__date" :datetime="post.postedAt">
-                {{ formatDate(post.postedAt) }}
-              </time>
-              <p class="post__text">{{ post.text }}</p>
-              <span v-if="post.permalink" class="post__cta">
-                {{ home.social.viewPost }}
-                <AppIcon name="arrowRight" :size="15" />
-              </span>
-            </div>
-          </component>
+            <!-- Instagram: action row, like count, caption -->
+            <template v-if="post.network === 'instagram'">
+              <div class="ig__actions" aria-hidden="true">
+                <AppIcon name="heart" :size="22" />
+                <AppIcon name="comment" :size="22" />
+                <AppIcon name="share" :size="22" />
+                <AppIcon class="ig__save" name="bookmark" :size="22" />
+              </div>
+              <div class="card__body">
+                <p v-if="post.likes != null" class="ig__likes">
+                  {{ numFmt.format(post.likes) }} {{ home.social.likes }}
+                </p>
+                <p class="ig__caption">
+                  <span class="card__name">{{ post.author || home.social.handle }}</span>
+                  {{ post.text }}
+                </p>
+                <time class="card__date" :datetime="post.postedAt">
+                  {{ formatDate(post.postedAt) }}
+                </time>
+              </div>
+            </template>
+
+            <!-- Facebook: reaction summary, then the action bar -->
+            <template v-else>
+              <div class="card__body fb__body">
+                <div v-if="post.likes != null" class="fb__summary">
+                  <span class="fb__thumb" aria-hidden="true">
+                    <AppIcon name="thumbsUp" :size="11" />
+                  </span>
+                  <span>{{ numFmt.format(post.likes) }}</span>
+                  <span v-if="post.comments != null" class="fb__comments">
+                    {{ numFmt.format(post.comments) }} {{ home.social.comments }}
+                  </span>
+                </div>
+                <div class="fb__actions" aria-hidden="true">
+                  <span><AppIcon name="thumbsUp" :size="17" /></span>
+                  <span><AppIcon name="comment" :size="17" /></span>
+                  <span><AppIcon name="share" :size="17" /></span>
+                </div>
+              </div>
+            </template>
+          </a>
         </li>
       </ul>
     </div>
@@ -198,78 +253,192 @@ onMounted(load)
   display: flex;
 }
 
-.post__inner {
+/* --- The post card ----------------------------------------------------- */
+.card {
   display: flex;
   flex-direction: column;
   width: 100%;
-  background: var(--c-surface);
-  color: inherit;
+  background: #fff;
+  color: var(--c-ink);
   text-decoration: none;
-  transition: transform var(--dur) var(--ease), box-shadow var(--dur) var(--ease);
+  /* Native post cards are hairline-bordered and gently rounded — the one place
+     on this site that departs from the square corporate tile. */
+  border: 1px solid #dbdbdb;
+  border-radius: 8px;
+  overflow: hidden;
+  transition: box-shadow var(--dur) var(--ease), transform var(--dur) var(--ease);
 }
 
-a.post__inner:hover {
-  transform: translateY(-3px);
+.card:hover {
+  transform: translateY(-2px);
   box-shadow: var(--shadow);
 }
 
-.post__media {
-  position: relative;
+.card__head {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-3);
+  padding: 12px 14px;
+}
+
+.card__avatar {
+  display: grid;
+  place-items: center;
+  width: 34px;
+  height: 34px;
+  flex-shrink: 0;
+  border-radius: 50%;
+  background: var(--c-accent-600);
+  color: #fff;
+  font-family: var(--font-heading);
+  font-weight: var(--fw-bold);
+  font-size: 1rem;
+  line-height: 1;
+}
+
+/* Instagram rings the avatar in its signature gradient. */
+.card--instagram .card__avatar {
+  box-shadow: 0 0 0 2px #fff, 0 0 0 4px #dc2743;
+  margin: 2px;
+}
+
+.card__who {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.card__name {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: #262626;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.card__meta {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 0.75rem;
+  color: #65676b;
+}
+
+.card__more {
+  margin-left: auto;
+  color: #65676b;
+  flex-shrink: 0;
+}
+
+.card__media {
+  background: #fafafa;
+}
+
+.card__body {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 0 14px 14px;
+}
+
+.card__date {
+  font-size: 0.6875rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: #8e8e8e;
+}
+
+/* --- Instagram chrome --------------------------------------------------- */
+.ig__actions {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 10px 14px 6px;
+  color: #262626;
+}
+
+.ig__save {
+  margin-left: auto;
+}
+
+.ig__likes {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: #262626;
+}
+
+.ig__caption {
+  font-size: 0.875rem;
+  line-height: 1.45;
+  color: #262626;
+  /*
+   * Clamp to exactly three lines. -webkit-line-clamp is not used: the build
+   * normalises `display: -webkit-box` to `flow-root`, which silently disables
+   * it and leaves a half-line sliver showing. An exact line multiple cuts
+   * cleanly whatever the build does to the display value.
+   */
+  max-height: 4.35em; /* 3 x 1.45 */
   overflow: hidden;
 }
 
-.post__badge {
-  position: absolute;
-  top: var(--sp-3);
-  left: var(--sp-3);
+.ig__caption .card__name {
+  margin-right: 5px;
+}
+
+/* --- Facebook chrome ---------------------------------------------------- */
+.card__fbtext {
+  /* See .ig__caption — exact line multiple rather than -webkit-line-clamp. */
+  margin: 0 14px 12px;
+  font-size: 0.9375rem;
+  line-height: 1.4;
+  color: #050505;
+  max-height: 4.2em; /* 3 x 1.4 */
+  overflow: hidden;
+}
+
+.fb__body {
+  gap: 0;
+  padding: 0 14px 6px;
+  /* Cards in a row stretch to equal height; keep the reaction bar at the
+     bottom edge instead of leaving it floating mid-card. */
+  margin-top: auto;
+}
+
+.fb__summary {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 10px 0;
+  font-size: 0.8125rem;
+  color: #65676b;
+}
+
+.fb__thumb {
   display: grid;
   place-items: center;
-  width: 32px;
-  height: 32px;
+  width: 18px;
+  height: 18px;
   border-radius: 50%;
-  color: #fff;
-  /* Both brand colours are dark enough for white glyphs at this size. */
-  background: var(--c-primary-900);
-}
-
-.post__badge--facebook {
   background: #1877f2;
+  color: #fff;
 }
 
-.post__badge--instagram {
-  background: linear-gradient(45deg, #f09433, #dc2743 50%, #bc1888);
+.fb__comments {
+  margin-left: auto;
 }
 
-.post__body {
+.fb__actions {
   display: flex;
-  flex-direction: column;
+  border-top: 1px solid #ced0d4;
+  color: #65676b;
+}
+
+.fb__actions span {
   flex: 1;
-  gap: var(--sp-2);
-  padding: var(--sp-5);
-}
-
-.post__date {
-  font-size: 0.75rem;
-  text-transform: uppercase;
-  letter-spacing: 0.06em;
-  color: var(--c-ink-muted);
-}
-
-.post__text {
-  flex: 1;
-  font-size: 0.9375rem;
-  color: var(--c-ink);
-}
-
-.post__cta {
-  display: inline-flex;
-  align-items: center;
-  gap: var(--sp-2);
-  margin-top: var(--sp-2);
-  font-size: 0.8125rem;
-  font-weight: var(--fw-bold);
-  text-transform: uppercase;
-  color: var(--c-accent-600);
+  display: grid;
+  place-items: center;
+  padding: 8px 0;
 }
 
 @media (min-width: 640px) {
