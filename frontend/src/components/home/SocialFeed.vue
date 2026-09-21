@@ -112,7 +112,6 @@ onMounted(load)
                   <AppIcon name="globe" :size="11" />
                 </span>
               </span>
-              <AppIcon class="card__more" name="more" :size="18" />
             </div>
 
             <!-- Facebook puts the copy above the image; Instagram below it. -->
@@ -132,10 +131,10 @@ onMounted(load)
             <!-- Instagram: action row, like count, caption -->
             <template v-if="post.network === 'instagram'">
               <div class="ig__actions" aria-hidden="true">
-                <AppIcon name="heart" :size="22" />
-                <AppIcon name="comment" :size="22" />
-                <AppIcon name="share" :size="22" />
-                <AppIcon class="ig__save" name="bookmark" :size="22" />
+                <AppIcon name="heart" :size="19" />
+                <AppIcon name="comment" :size="19" />
+                <AppIcon name="share" :size="19" />
+                <AppIcon class="ig__save" name="bookmark" :size="19" />
               </div>
               <div class="card__body">
                 <p v-if="post.likes != null" class="ig__likes">
@@ -162,11 +161,6 @@ onMounted(load)
                   <span v-if="post.comments != null" class="fb__comments">
                     {{ numFmt.format(post.comments) }} {{ home.social.comments }}
                   </span>
-                </div>
-                <div class="fb__actions" aria-hidden="true">
-                  <span><AppIcon name="thumbsUp" :size="17" /></span>
-                  <span><AppIcon name="comment" :size="17" /></span>
-                  <span><AppIcon name="share" :size="17" /></span>
                 </div>
               </div>
             </template>
@@ -263,8 +257,8 @@ onMounted(load)
   text-decoration: none;
   /* Native post cards are hairline-bordered and gently rounded — the one place
      on this site that departs from the square corporate tile. */
-  border: 1px solid #dbdbdb;
-  border-radius: 8px;
+  border: 1px solid #ebebeb;
+  border-radius: 10px;
   overflow: hidden;
   transition: box-shadow var(--dur) var(--ease), transform var(--dur) var(--ease);
 }
@@ -277,28 +271,28 @@ onMounted(load)
 .card__head {
   display: flex;
   align-items: center;
-  gap: var(--sp-3);
-  padding: 12px 14px;
+  gap: 10px;
+  padding: 10px 12px;
 }
 
 .card__avatar {
   display: grid;
   place-items: center;
-  width: 34px;
-  height: 34px;
+  width: 30px;
+  height: 30px;
   flex-shrink: 0;
   border-radius: 50%;
   background: var(--c-accent-600);
   color: #fff;
   font-family: var(--font-heading);
   font-weight: var(--fw-bold);
-  font-size: 1rem;
+  font-size: 0.875rem;
   line-height: 1;
 }
 
 /* Instagram rings the avatar in its signature gradient. */
 .card--instagram .card__avatar {
-  box-shadow: 0 0 0 2px #fff, 0 0 0 4px #dc2743;
+  box-shadow: 0 0 0 2px #fff, 0 0 0 3px #dc2743;
   margin: 2px;
 }
 
@@ -325,11 +319,6 @@ onMounted(load)
   color: #65676b;
 }
 
-.card__more {
-  margin-left: auto;
-  color: #65676b;
-  flex-shrink: 0;
-}
 
 .card__media {
   background: #fafafa;
@@ -338,8 +327,8 @@ onMounted(load)
 .card__body {
   display: flex;
   flex-direction: column;
-  gap: 6px;
-  padding: 0 14px 14px;
+  gap: 5px;
+  padding: 0 12px 12px;
 }
 
 .card__date {
@@ -353,9 +342,9 @@ onMounted(load)
 .ig__actions {
   display: flex;
   align-items: center;
-  gap: 14px;
-  padding: 10px 14px 6px;
-  color: #262626;
+  gap: 12px;
+  padding: 9px 12px 5px;
+  color: #3a3a3a;
 }
 
 .ig__save {
@@ -389,7 +378,7 @@ onMounted(load)
 /* --- Facebook chrome ---------------------------------------------------- */
 .card__fbtext {
   /* See .ig__caption — exact line multiple rather than -webkit-line-clamp. */
-  margin: 0 14px 12px;
+  margin: 0 12px 10px;
   font-size: 0.9375rem;
   line-height: 1.4;
   color: #050505;
@@ -399,7 +388,7 @@ onMounted(load)
 
 .fb__body {
   gap: 0;
-  padding: 0 14px 6px;
+  padding: 0 12px 10px;
   /* Cards in a row stretch to equal height; keep the reaction bar at the
      bottom edge instead of leaving it floating mid-card. */
   margin-top: auto;
@@ -409,9 +398,10 @@ onMounted(load)
   display: flex;
   align-items: center;
   gap: 6px;
-  padding: 10px 0;
-  font-size: 0.8125rem;
-  color: #65676b;
+  padding: 9px 0 0;
+  border-top: 1px solid #f0f0f0;
+  font-size: 0.78rem;
+  color: #8a8d91;
 }
 
 .fb__thumb {
@@ -428,18 +418,6 @@ onMounted(load)
   margin-left: auto;
 }
 
-.fb__actions {
-  display: flex;
-  border-top: 1px solid #ced0d4;
-  color: #65676b;
-}
-
-.fb__actions span {
-  flex: 1;
-  display: grid;
-  place-items: center;
-  padding: 8px 0;
-}
 
 @media (min-width: 640px) {
   .social__grid {

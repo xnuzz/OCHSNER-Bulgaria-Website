@@ -25,6 +25,8 @@
  * explicitly — these are illustrative posts, not real ones from any account.
  */
 
+import { curatedPosts } from './curated-posts.js'
+
 const GRAPH = 'https://graph.facebook.com/v21.0'
 
 /* Serverless instances are reused between invocations, so a module-scope cache
@@ -128,6 +130,110 @@ async function fetchInstagramDiscovery(token, igUserId, username) {
   }))
 }
 
+/*
+ * Curated posts: real permalinks, resolved through Open Graph tags.
+ *
+ * Instagram and Facebook both serve og:image / og:title / og:description on a
+ * public post URL without authentication — that is how every link preview in
+ * every chat app works. Reading them needs no token and touches no feed, so it
+ * stays inside Meta's terms while still showing genuine posts.
+ *
+ * Caveat worth knowing: Meta's CDN image URLs are signed and expire after a
+ * while. For anything that has to survive months, set `image` in
+ * curated-posts.js to a local copy instead.
+ */
+const entities = (t = '') =>
+  t
+    .replace(/&#x([0-9a-f]+);/gi, (_, h) => String.fromCodePoint(parseInt(h, 16)))
+    .replace(/&#(\d+);/g, (_, d) => String.fromCodePoint(Number(d)))
+    .replace(/&quot;/g, '"')
+    .replace(/&#0?39;/g, "'")
+    .replace(/&amp;/g, '&')
+    .replace(/&lt;/g, '<')
+    .replace(/&gt;/g, '>')
+
+function readOg(html, prop) {
+  // Attribute order varies between the two networks, so try both arrangements.
+  const patterns = [
+    new RegExp(`<meta[^>]+property=["']og:${prop}["'][^>]+content=["']([^"']*)["']`, 'i'),
+    new RegExp(`<meta[^>]+content=["']([^"']*)["'][^>]+property=["']og:${prop}["']`, 'i')
+  ]
+  for (const re of patterns) {
+    const m = html.match(re)
+    if (m) return entities(m[1])
+  }
+  return null
+}
+
+/** Instagram's og:description is "N likes, M comments - Name on DATE: \"caption\"". */
+function parseIgDescription(desc) {
+  if (!desc) return { text: '', likes: null, comments: null }
+  const counts = desc.match(/([\d,.]+)\s+likes?,\s*([\d,.]+)\s+comments?/i)
+  const num = (v) => (v ? Number(v.replace(/[,.]/g, '')) : null)
+  const quoted = desc.match(/[:\-]\s*["“]([\s\S]+)["”]\s*$/)
+  return {
+    text: quoted ? quoted[1] : desc,
+    likes: counts ? num(counts[1]) : null,
+    comments: counts ? num(counts[2]) : null
+  }
+}
+
+async function fetchCurated(entries) {
+  const results = await Promise.allSettled(
+    entries.map(async (entry, i) => {
+      const network = /instagram\.com/i.test(entry.url) ? 'instagram' : 'facebook'
+      let og = {}
+      try {
+        // A crawler UA is what makes Meta serve the preview tags.
+        const res = await fetch(entry.url, {
+          headers: {
+            'User-Agent': 'facebookexternalhit/1.1',
+            'Accept-Language': 'bg,en;q=0.8'
+          },
+          redirect: 'follow'
+        })
+        const html = await res.text()
+        og = {
+          image: readOg(html, 'image'),
+          title: readOg(html, 'title'),
+          description: readOg(html, 'description')
+        }
+      } catch {
+        // A fetch failure is not fatal: an entry that supplies its own text and
+        // image still renders perfectly well.
+      }
+
+      const parsed =
+        network === 'instagram' ? parseIgDescription(og.description) : { text: og.description }
+
+      const text = entry.text || parsed.text || ''
+      const image = entry.image || og.image || null
+      if (!text && !image) throw new Error(`no usable metadata for ${entry.url}`)
+
+      return {
+        id: `cur_${i}`,
+        network,
+        curated: true,
+        author: (og.title || '').split('(')[0].trim() || null,
+        text: excerpt(text),
+        image,
+        permalink: entry.url,
+        postedAt: entry.date || null,
+        likes: entry.likes ?? parsed.likes ?? null,
+        comments: entry.comments ?? parsed.comments ?? null
+      }
+    })
+  )
+
+  const posts = []
+  const errors = []
+  results.forEach((r, i) => {
+    if (r.status === 'fulfilled') posts.push(r.value)
+    else errors.push({ network: 'curated', message: `${entries[i].url}: ${r.reason?.message}` })
+  })
+  return { posts, errors }
+}
+
 /**
  * Returns { posts, demo, sources, errors }.
  *
@@ -137,6 +243,20 @@ async function fetchInstagramDiscovery(token, igUserId, username) {
 export async function getSocialPosts({ limit = 6, force = false } = {}) {
   if (!force && cache.payload && Date.now() - cache.at < ttlMs()) {
     return { ...cache.payload, cached: true }
+  }
+
+  // Hand-picked real posts need no token, so they are tried first.
+  if (curatedPosts.length) {
+    const { posts, errors } = await fetchCurated(curatedPosts)
+    if (posts.length) {
+      // Keep the order given in curated-posts.js unless dates are supplied.
+      if (posts.every((p) => p.postedAt)) {
+        posts.sort((a, b) => new Date(b.postedAt) - new Date(a.postedAt))
+      }
+      const payload = { demo: false, sources: ['curated'], errors, posts: posts.slice(0, limit) }
+      cache = { at: Date.now(), payload }
+      return { ...payload, cached: false }
+    }
   }
 
   if (!isConfigured()) {
