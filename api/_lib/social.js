@@ -90,6 +90,38 @@ async function fetchInstagram(token, igUserId) {
   }))
 }
 
+/*
+ * Posts from SOMEONE ELSE'S public Instagram, via the business_discovery edge.
+ *
+ * This is the only way Meta lets you read an account you do not own, and it is
+ * still not a free-for-all:
+ *   - the request is made AS your own IG account, with your own token;
+ *   - the target must be a Business or Creator account (personal profiles are
+ *     invisible to this edge, which is why most profiles cannot be read);
+ *   - it needs instagram_basic + instagram_manage_insights.
+ *
+ * Set IG_DISCOVER_USERNAME to e.g. the manufacturer's official account to
+ * surface their posts alongside (or instead of) the client's own.
+ */
+async function fetchInstagramDiscovery(token, igUserId, username) {
+  const media = 'media.limit(8){caption,media_type,media_url,thumbnail_url,permalink,timestamp}'
+  const url =
+    `${GRAPH}/${igUserId}?fields=business_discovery.username(${encodeURIComponent(username)})` +
+    `{username,${media}}&access_token=${token}`
+  const body = await getJson(url)
+  const found = body?.business_discovery
+  if (!found) throw new Error(`business_discovery returned nothing for @${username}`)
+  return (found.media?.data || []).map((m) => ({
+    id: `igd_${m.id}`,
+    network: 'instagram',
+    author: found.username || username,
+    text: excerpt(m.caption),
+    image: m.media_type === 'VIDEO' ? m.thumbnail_url || null : m.media_url || null,
+    permalink: m.permalink,
+    postedAt: m.timestamp
+  }))
+}
+
 /**
  * Returns { posts, demo, sources, errors }.
  *
@@ -119,6 +151,13 @@ export async function getSocialPosts({ limit = 6, force = false } = {}) {
   }
   if (process.env.IG_USER_ID) {
     jobs.push(['instagram', fetchInstagram(token, process.env.IG_USER_ID)])
+  }
+  // Optional: a second Instagram source, read from a public Business account.
+  if (process.env.IG_USER_ID && process.env.IG_DISCOVER_USERNAME) {
+    jobs.push([
+      'instagram-discovery',
+      fetchInstagramDiscovery(token, process.env.IG_USER_ID, process.env.IG_DISCOVER_USERNAME)
+    ])
   }
 
   const settled = await Promise.allSettled(jobs.map(([, p]) => p))
