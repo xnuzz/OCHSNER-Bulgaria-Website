@@ -3,9 +3,13 @@ import { onBeforeUnmount, onMounted, ref, watch } from 'vue'
 import { useRoute } from 'vue-router'
 import BaseButton from '@/components/ui/BaseButton.vue'
 import AppIcon from '@/components/ui/AppIcon.vue'
+import PlaceholderImage from '@/components/ui/PlaceholderImage.vue'
 import BrandMark from './BrandMark.vue'
 import { fetchProducts, useAsyncData } from '@/api/catalog.js'
 import { useI18n } from '@/i18n'
+import RedirectNotice from '@/components/ui/RedirectNotice.vue'
+import { useExternalLink } from '@/composables/useExternalLink.js'
+import { downloadCenterUrl } from '@/i18n/bg/common.js'
 
 const { common, nav, contactDetails } = useI18n()
 const route = useRoute()
@@ -19,7 +23,6 @@ let closeTimer = null
 
 const links = [
   { name: 'products', label: nav.products, panel: 'products' },
-  { name: 'why', label: nav.why, panel: 'why' },
   { name: 'about', label: nav.about },
   { name: 'references', label: nav.references },
   { name: 'partner', label: nav.partner },
@@ -30,14 +33,6 @@ const links = [
 const { data: products, load } = useAsyncData(fetchProducts)
 
 // Anchors into the "Защо термопомпа" page.
-const whyLinks = [
-  { hash: '', label: nav.megaWhy.overview },
-  { hash: '#kak-raboti', label: nav.megaWhy.how },
-  { hash: '#tri-v-edno', label: nav.megaWhy.threeInOne },
-  { hash: '#fotovoltaici', label: nav.megaWhy.pv },
-  { hash: '#koga-si-struva', label: nav.megaWhy.when },
-  { hash: '#finansirane', label: nav.megaWhy.subsidies }
-]
 
 function onScroll() {
   scrolled.value = window.scrollY > 8
@@ -91,6 +86,9 @@ onBeforeUnmount(() => {
   window.removeEventListener('keydown', onKeydown)
   document.body.style.overflow = ''
 })
+
+/* External destinations open behind the redirect notice. */
+const { leavingFor, confirmLeave, cancelLeave } = useExternalLink()
 </script>
 
 <template>
@@ -100,9 +98,13 @@ onBeforeUnmount(() => {
       <div class="container utility__inner">
         <p class="utility__role">{{ common.brandTagline }}</p>
         <nav class="utility__nav" :aria-label="nav.utilityLabel">
-          <!-- Destinations to be confirmed with OCHSNER Austria. -->
+          <!-- Service and the partner portal are still to be confirmed with
+               OCHSNER Austria; the download centre is theirs and goes through
+               the redirect notice. -->
           <a href="#">{{ nav.utility.service }}</a>
-          <a href="#">{{ nav.utility.downloads }}</a>
+          <a :href="downloadCenterUrl" @click="confirmLeave($event, downloadCenterUrl)">
+            {{ nav.utility.downloads }}
+          </a>
           <a href="#">{{ nav.utility.partnerPortal }}</a>
           <a class="utility__phone" :href="contactDetails.phoneHref">
             <AppIcon name="phone" :size="15" />
@@ -135,17 +137,20 @@ onBeforeUnmount(() => {
             </button>
           </span>
 
+          <a
+            v-else-if="link.href"
+            class="header__link"
+            :href="link.href"
+            @click="confirmLeave($event, link.href)"
+          >
+            {{ link.label }}
+          </a>
+
           <RouterLink v-else :to="{ name: link.name }" class="header__link">
             {{ link.label }}
           </RouterLink>
         </template>
       </nav>
-
-      <div class="header__actions">
-        <BaseButton :to="{ name: 'contact' }" size="sm" class="header__cta">
-          {{ common.ctaHeader }}
-        </BaseButton>
-      </div>
 
       <button
         class="header__toggle"
@@ -173,9 +178,17 @@ onBeforeUnmount(() => {
             <li v-for="item in products" :key="item.slug">
               <RouterLink
                 class="mega__card"
-                :to="{ name: 'products', hash: `#${item.slug}` }"
+                :to="{ name: 'product-category', params: { slug: item.slug } }"
                 @click="closeMenu"
               >
+                <PlaceholderImage
+                  class="mega__card-media"
+                  :src="item.imageUrl"
+                  :label="item.title"
+                  surface="alt"
+                  inset="8%"
+                  ratio="4 / 3"
+                />
                 <span class="mega__card-title">{{ item.title }}</span>
                 <span class="mega__card-text">{{ item.shortDescription }}</span>
               </RouterLink>
@@ -187,33 +200,25 @@ onBeforeUnmount(() => {
           </RouterLink>
         </template>
 
-        <template v-else-if="openPanel === 'why'">
-          <p class="mega__label">{{ nav.why }}</p>
-          <ul class="mega__links">
-            <li v-for="item in whyLinks" :key="item.label">
-              <RouterLink
-                :to="{ name: 'why', hash: item.hash || undefined }"
-                @click="closeMenu"
-              >
-                {{ item.label }}
-              </RouterLink>
-            </li>
-          </ul>
-        </template>
       </div>
     </div>
 
     <Transition name="drawer">
       <div v-if="menuOpen" id="mobile-nav" class="drawer">
         <nav class="drawer__nav" :aria-label="nav.mobileLabel">
-          <RouterLink
-            v-for="link in links"
-            :key="link.name"
-            :to="{ name: link.name }"
-            class="drawer__link"
-          >
-            {{ link.label }}
-          </RouterLink>
+          <template v-for="link in links" :key="link.name">
+            <a
+              v-if="link.href"
+              class="drawer__link"
+              :href="link.href"
+              @click="confirmLeave($event, link.href)"
+            >
+              {{ link.label }}
+            </a>
+            <RouterLink v-else :to="{ name: link.name }" class="drawer__link">
+              {{ link.label }}
+            </RouterLink>
+          </template>
         </nav>
         <div class="drawer__footer">
           <BaseButton :to="{ name: 'contact' }" size="lg" block>
@@ -223,28 +228,35 @@ onBeforeUnmount(() => {
         </div>
       </div>
     </Transition>
+
+    <RedirectNotice :url="leavingFor" @close="cancelLeave" />
   </header>
 </template>
 
 <style scoped>
+/* A hairline rather than a drop shadow while at the top of the page — the
+   corporate header separates from the content with a light rule, and only
+   gains a shadow once it lifts off the page on scroll. */
 .header {
   position: fixed;
   inset-inline: 0;
   top: 0;
   z-index: 100;
   background: #fff;
-  box-shadow: var(--shadow-sm);
+  border-bottom: 1px solid var(--c-line);
+  transition: box-shadow var(--dur) var(--ease);
 }
 
 .header--scrolled {
-  box-shadow: var(--shadow);
+  box-shadow: var(--shadow-sm);
 }
 
-/* Utility bar: desktop only — on phones these links live in the drawer. */
+/* Utility bar: desktop only — on phones these links live in the drawer.
+   Near-black strip with small uppercase white links, matching the corporate
+   treatment (12px / weight 300 / uppercase on #262523). */
 .utility {
   display: none;
-  background: var(--c-surface-alt);
-  border-bottom: 1px solid var(--c-line);
+  background: var(--c-surface-deep);
   height: var(--utility-h);
 }
 
@@ -257,8 +269,10 @@ onBeforeUnmount(() => {
 }
 
 .utility__role {
-  font-size: 0.8125rem;
-  color: var(--c-ink-muted);
+  font-size: 0.75rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.55);
 }
 
 .utility__nav {
@@ -272,17 +286,21 @@ onBeforeUnmount(() => {
   align-items: center;
   gap: var(--sp-2);
   font-weight: var(--fw-semibold);
-  color: var(--c-primary-800);
+  color: #fff;
 }
 
 .utility__nav a {
-  font-size: 0.8125rem;
-  color: var(--c-ink-muted);
+  font-size: 0.75rem;
+  font-weight: var(--fw-light);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.86);
   text-decoration: none;
+  transition: color var(--dur-fast) var(--ease);
 }
 
 .utility__nav a:hover {
-  color: var(--c-accent-600);
+  color: #fff;
 }
 
 .header__inner {
@@ -297,7 +315,18 @@ onBeforeUnmount(() => {
   align-items: center;
   text-decoration: none;
   color: var(--c-ink);
+  /* The lockup is an SVG with no intrinsic width, so as a flex item it would
+     otherwise be shrunk to zero by the nav beside it. */
+  flex: 0 0 auto;
+  /* Below the desktop breakpoint there is no centred nav to balance against,
+     so the wordmark still pushes the toggle to the far edge. */
   margin-right: auto;
+}
+
+@media (min-width: 1120px) {
+  .header__brand {
+    margin-right: 0;
+  }
 }
 
 /* Desktop nav and inline actions are hidden below 1080px. */
@@ -306,18 +335,19 @@ onBeforeUnmount(() => {
   display: none;
 }
 
-/* Uppercase, bold main nav — the corporate treatment sets this noticeably
-   larger than a typical nav (18px on the reference); 1rem reads right here
-   with six Bulgarian labels to fit. */
+/* Uppercase, bold main nav at the reference's 18px. This only fits now that the
+   content column is 1710px wide rather than 1320px. */
 .header__link {
   position: relative;
   padding-block: var(--sp-2);
-  font-size: 1rem;
-  font-weight: var(--fw-bold);
+  font-size: 0.9375rem;
+  font-weight: var(--fw-semibold);
+  letter-spacing: 0.04em;
   text-transform: uppercase;
   color: var(--c-primary-900);
   text-decoration: none;
   white-space: nowrap;
+  transition: color var(--dur-fast) var(--ease);
 }
 
 .header__link::after {
@@ -325,8 +355,9 @@ onBeforeUnmount(() => {
   position: absolute;
   left: 0;
   right: 0;
-  bottom: 0;
-  height: 3px;
+  bottom: -2px;
+  height: 2px;
+  border-radius: 2px;
   background: var(--c-accent-600);
   transform: scaleX(0);
   transform-origin: left;
@@ -392,8 +423,20 @@ onBeforeUnmount(() => {
   list-style: none;
   padding: 0;
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
+  /* Six categories now, so let the row reflow rather than pinning four. */
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
   gap: var(--sp-4);
+}
+
+/* Product thumbnail above the label — the corporate menu is text-only, but the
+   manufacturer's cut-outs make the category obvious at a glance. */
+.mega__card-media {
+  margin-bottom: var(--sp-3);
+  transition: transform var(--dur-slow) var(--ease);
+}
+
+.mega__card:hover .mega__card-media {
+  transform: scale(1.03);
 }
 
 .mega__card {
@@ -568,25 +611,37 @@ onBeforeUnmount(() => {
 
 /* ---------- Desktop ----------------------------------------------------- */
 
-@media (min-width: 1080px) {
-  .utility {
-    display: block;
-  }
-
+@media (min-width: 1120px) {
   .mega {
     display: block;
   }
 
+  /* On the corporate header the nav sits left of centre — set in after the
+     wordmark, with the CTA pushed hard to the right edge — rather than being
+     centred in the bar. */
   .header__nav {
     display: flex;
     align-items: center;
-    gap: var(--sp-5);
+    gap: var(--sp-6);
+    /* CTA removed — the nav now carries the right side of the bar. */
+    margin-left: auto;
   }
 
   .header__actions {
     display: flex;
     align-items: center;
     gap: var(--sp-4);
+    margin-left: auto;
+  }
+
+  /* The corporate CONTACT pill measures 18px/700, padding 13px 30px, 44px tall.
+     That height only works with a 1.0 line box — the default leading pushes it
+     to 57px. */
+  .header__cta {
+    min-height: 44px;
+    padding: 13px 30px;
+    font-size: 1.125rem;
+    line-height: 1;
   }
 
   .header__toggle {

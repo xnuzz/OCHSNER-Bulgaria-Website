@@ -1,45 +1,74 @@
 /*
- * Notification for form submissions.
+ * Notification for form submissions — plain SMTP, no third-party mail service.
  *
- * Vercel functions are stateless, so there is no database here — submissions are
- * always logged (visible under the deployment's Function Logs). If the following
- * environment variables are set, the submission is also emailed via Resend
- * (https://resend.com), which needs no npm package — a plain fetch to their API:
+ * Deliberately uses the same environment variables as the Spring backend
+ * (config/MailConfig.java, application-prod.yml) so one mailbox configures both
+ * deployments identically:
  *
- *   RESEND_API_KEY   your Resend API key
- *   NOTIFY_TO        recipient address (the representative's inbox)
- *   NOTIFY_FROM      verified sender address (optional; defaults to onboarding@resend.dev)
+ *   SMTP_HOST       mail server hostname        (required to send)
+ *   SMTP_PORT       defaults to 587
+ *   SMTP_USERNAME   mailbox login
+ *   SMTP_PASSWORD   mailbox password
+ *   NOTIFY_EMAIL    address that receives submissions (default office@ochsner.bg)
+ *   MAIL_FROM       envelope sender             (default no-reply@ochsner.bg)
  *
- * Without them, the function still works and returns success — the log is the
- * record. Wire a real database (Vercel Postgres / Neon) later for persistence.
+ * With no SMTP_HOST set, the submission is written to the log instead of being
+ * sent — the same fallback the Spring app uses (LoggingNotificationMailer), so
+ * local development and preview deployments never need credentials.
+ *
+ * Port 465 uses implicit TLS; anything else (587, 25) upgrades via STARTTLS.
+ *
+ * Vercel functions are stateless, so the mail is the only record. Add a database
+ * in the two POST handlers before relying on this for real leads.
  */
-export async function notify({ subject, lines }) {
-  const body = lines.join('\n')
-  console.log(`[form] ${subject}\n${body}`)
+import nodemailer from 'nodemailer'
 
-  const key = process.env.RESEND_API_KEY
-  const to = process.env.NOTIFY_TO
-  if (!key || !to) return
+let transport
+
+function getTransport() {
+  if (transport) return transport
+  const port = Number(process.env.SMTP_PORT || 587)
+  transport = nodemailer.createTransport({
+    host: process.env.SMTP_HOST,
+    port,
+    secure: port === 465,
+    auth: process.env.SMTP_USERNAME
+      ? { user: process.env.SMTP_USERNAME, pass: process.env.SMTP_PASSWORD }
+      : undefined,
+    // Keeps a stuck server from holding the function open to its timeout.
+    connectionTimeout: 10000,
+    greetingTimeout: 10000,
+    socketTimeout: 15000
+  })
+  return transport
+}
+
+/**
+ * @param {object}   args
+ * @param {string}   args.subject
+ * @param {string[]} args.lines     message body, one entry per line
+ * @param {string}   [args.replyTo] the submitter's address, so a reply reaches them
+ */
+export async function notify({ subject, lines, replyTo }) {
+  const body = lines.join('\n')
+
+  if (!process.env.SMTP_HOST) {
+    console.log(`[MAIL — not sent, no SMTP host configured]\n${subject}\n${body}`)
+    return
+  }
 
   try {
-    const res = await fetch('https://api.resend.com/emails', {
-      method: 'POST',
-      headers: {
-        Authorization: `Bearer ${key}`,
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({
-        from: process.env.NOTIFY_FROM || 'OCHSNER сайт <onboarding@resend.dev>',
-        to: [to],
-        subject,
-        text: body
-      })
+    await getTransport().sendMail({
+      from: process.env.MAIL_FROM || 'no-reply@ochsner.bg',
+      to: process.env.NOTIFY_EMAIL || 'office@ochsner.bg',
+      replyTo: replyTo || undefined,
+      subject,
+      text: body
     })
-    if (!res.ok) {
-      console.error('[notify] Resend responded', res.status, await res.text())
-    }
+    console.log(`[MAIL — sent] ${subject}`)
   } catch (err) {
-    // Never let a mail failure turn into a 500 for the visitor.
-    console.error('[notify] email failed', err)
+    // A mail failure must never turn into a 500 for the visitor, but the
+    // submission itself must not be lost — log it so it stays recoverable.
+    console.error(`[MAIL — FAILED] ${err.message}\n${subject}\n${body}`)
   }
 }

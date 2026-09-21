@@ -13,6 +13,10 @@ frontend/.vite/
 .env.local
 *.local
 
+# Raw asset dump from the manufacturer — staging only. Finals are copied
+# into frontend/public/images/ and committed from there.
+assets-inbox/
+
 # Editors / OS
 .idea/
 .vscode/

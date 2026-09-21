@@ -25,8 +25,22 @@ export const common = {
   openMenu: 'Отвори менюто',
   closeMenu: 'Затвори менюто',
   required: 'задължително поле',
-  downloadSpec: 'Изтегли техническа спецификация (PDF)',
+  downloadSpec: 'Технически документи',
   imagePlaceholder: 'Тук ще бъде добавена реална продуктова снимка.'
+}
+
+/* Newsletter subscribe pop-up. Design-only for now — the email is validated and
+   a thank-you shown, but not yet posted to a mailing-list service. */
+export const newsletter = {
+  eyebrow: 'Бюлетин',
+  title: 'Останете в течение',
+  text: 'Получавайте новини за термопомпите OCHSNER, съвети за отопление и програми за финансиране. Без спам — може да се отпишете по всяко време.',
+  placeholder: 'Вашият имейл адрес',
+  submit: 'Абонирай се',
+  dismiss: 'Не сега',
+  close: 'Затвори',
+  success: 'Благодарим! Записахме имейла ви.',
+  invalid: 'Моля, въведете валиден имейл адрес.'
 }
 
 export const nav = {
@@ -41,6 +55,7 @@ export const nav = {
   references: 'Референции',
   partner: 'Стани партньор',
   contact: 'Контакти',
+  downloadCenter: 'Център за изтегляне',
 
   megaToggle: 'отвори подменюто',
   megaAllProducts: 'Всички продукти',
@@ -63,16 +78,25 @@ export const nav = {
   }
 }
 
-/** Real address, phone and hours to be confirmed by the client before launch. */
+/** Phone and email are still to be confirmed by the client before launch. */
 export const contactDetails = {
   companyName: 'ОКСНЕР България',
-  phone: '+359 700 00 000',
-  phoneHref: 'tel:+35970000000',
-  email: 'office@ochsner.bg',
-  emailHref: 'mailto:office@ochsner.bg',
-  address: 'гр. София, бул. „Примерен“ 1',
-  addressNote: 'Точният адрес се уточнява.',
-  hours: 'Понеделник – петък, 09:00 – 18:00'
+  phone: '02 405 9870',
+  phoneHref: 'tel:+35924059870',
+  email: 'info@ochsner.bg',
+  emailHref: 'mailto:info@ochsner.bg',
+  /* Separate inbox for service/after-sales enquiries. */
+  serviceEmail: 'service@ochsner.bg',
+  serviceEmailHref: 'mailto:service@ochsner.bg',
+  address: 'ул. „Панорама София“ 5, XS Tower, София 1766',
+  addressNote: '',
+  /* Keyless Google Maps embed for the office address. */
+  mapQuery: 'XS Tower, 5 Panorama Sofia str., Sofia 1766, Bulgaria',
+  mapEmbed:
+    'https://www.google.com/maps?q=XS%20Tower%2C%205%20Panorama%20Sofia%20str.%2C%20Sofia%201766%2C%20Bulgaria&output=embed',
+  mapLink:
+    'https://www.google.com/maps/search/?api=1&query=XS%20Tower%2C%205%20Panorama%20Sofia%20str.%2C%20Sofia%201766%2C%20Bulgaria',
+  hours: 'Понеделник – петък, 09:00 – 17:00'
 }
 
 export const footer = {
@@ -81,10 +105,30 @@ export const footer = {
   navHeading: 'Навигация',
   contactHeading: 'Контакти',
   legalHeading: 'Правна информация',
+  socialHeading: 'Последвайте ни',
+  /* Temporary profile URLs — replace with the real OCHSNER България pages. */
+  social: [
+    { name: 'facebook', label: 'Facebook', href: 'https://www.facebook.com/' },
+    { name: 'instagram', label: 'Instagram', href: 'https://www.instagram.com/' }
+  ],
   privacy: 'Политика за поверителност',
   terms: 'Общи условия',
   cookies: 'Бисквитки',
   legalNote:
     'OCHSNER® е регистрирана марка на OCHSNER Wärmepumpen GmbH, Австрия. Този сайт се поддържа от местния представител за България.',
   copyright: 'Всички права запазени.'
+}
+
+/* The download centre is run by OCHSNER Austria; every link to it goes through
+   the redirect notice. Defined once so there is a single address to change. */
+export const downloadCenterUrl = 'https://www.ochsner.com/en/service/download/'
+
+/* Interstitial shown before leaving for a site run by OCHSNER Austria. */
+export const redirectNotice = {
+  strong: 'Пренасочваме ви',
+  title: 'към сайта на OCHSNER Австрия',
+  text: 'Центърът за изтегляне се поддържа от OCHSNER Австрия. Ще ви прехвърлим към него, за да свалите техническите документи.',
+  counting: 'Прехвърляне след {n} сек.',
+  go: 'Продължи сега',
+  stay: 'Остани тук'
 }

@@ -1,6 +1,7 @@
 <script setup>
 import SiteHeader from '@/components/layout/SiteHeader.vue'
 import SiteFooter from '@/components/layout/SiteFooter.vue'
+import NewsletterPopup from '@/components/ui/NewsletterPopup.vue'
 import { useI18n } from '@/i18n'
 
 const { common } = useI18n()
@@ -18,6 +19,7 @@ const { common } = useI18n()
     <RouterView />
   </main>
   <SiteFooter />
+  <NewsletterPopup />
 </template>
 
 <style scoped>

@@ -1,62 +1,60 @@
 <script setup>
 /**
- * Two-line wordmark lockup: brand name over a letterspaced category descriptor.
+ * OCHSNER brand lockup, Bulgarian.
  *
- * Set as type rather than an image so it stays crisp at any size and can be
- * restyled from tokens. This is a PLACEHOLDER standing in for the licensed
- * OCHSNER logo artwork — replace with the official asset before launch.
+ * This is the manufacturer's own `OCH_logo_155_englisch.svg` with the two grey
+ * outlined words replaced by live text — "HEAT PUMPS" → ТЕРМОПОМПИ and
+ * "YEARS" → ГОДИНИ. The red artwork (the OCHSNER wordmark and the 155 mark) is
+ * the original vector data, untouched, so the trademark itself is not redrawn.
+ *
+ * The replacements are pinned with textLength to the exact width and baseline
+ * the English words occupied, so the lockup's proportions are unchanged.
+ *
+ * Inlined rather than used via <img> because the substituted text is set in
+ * Poppins, and an SVG loaded as an image cannot reach the page's webfonts.
  */
+import markup from '@/assets/brand/ochsner-155-bg.svg?raw'
+
 defineProps({
-  descriptor: { type: String, default: 'ТЕРМОПОМПИ' },
+  /** Light-on-dark placement, e.g. the footer. */
   invert: { type: Boolean, default: false }
 })
 </script>
 
 <template>
-  <span class="mark" :class="{ 'mark--invert': invert }">
-    <span class="mark__name">OCHSNER</span>
-    <span class="mark__descriptor">{{ descriptor }}</span>
-  </span>
+  <span
+    class="mark"
+    :class="{ 'mark--invert': invert }"
+    role="img"
+    aria-label="OCHSNER Термопомпи — 155 години"
+    v-html="markup"
+  />
 </template>
 
 <style scoped>
 .mark {
-  display: inline-flex;
-  flex-direction: column;
-  line-height: 1;
-  /* Optical alignment: the descriptor sits flush under the wordmark. */
-  gap: 3px;
+  display: block;
+  line-height: 0;
 }
 
-.mark__name {
-  font-family: var(--font-heading);
-  font-weight: var(--fw-bold);
-  font-size: 1.5rem;
-  letter-spacing: 0.01em;
-  color: var(--c-accent-600);
+/* The source SVG carries a viewBox but no width/height, so `height: auto`
+   resolves to zero — the ratio has to be stated explicitly. */
+.mark :deep(svg) {
+  display: block;
+  width: 172px;
+  height: 27.3px; /* 172 ÷ (307.84/48.85) */
 }
 
-.mark__descriptor {
-  font-family: var(--font-heading);
-  font-weight: var(--fw-regular);
-  font-size: 0.5625rem;
-  /* Tracked out so the descriptor spans the width of the wordmark above it. */
-  letter-spacing: 0.34em;
-  color: var(--c-primary-800);
-  white-space: nowrap;
+/* On dark surfaces the grey descriptor would nearly vanish. */
+.mark--invert :deep(.cls-2) {
+  fill: rgba(255, 255, 255, 0.82);
 }
 
-.mark--invert .mark__descriptor {
-  color: rgba(255, 255, 255, 0.75);
-}
-
-@media (min-width: 1080px) {
-  .mark__name {
-    font-size: 1.65rem;
-  }
-
-  .mark__descriptor {
-    font-size: 0.625rem;
+/* Matches the 200px width the lockup occupies on the corporate header. */
+@media (min-width: 1440px) {
+  .mark :deep(svg) {
+    width: 200px;
+    height: 31.7px;
   }
 }
 </style>

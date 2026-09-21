@@ -1,3 +1,4 @@
+import { downloadCenterUrl } from './common.js'
 export const home = {
   meta: {
     title: 'OCHSNER България — термопомпи с австрийско качество',
@@ -6,10 +7,15 @@ export const home = {
   },
 
   hero: {
+    /* Not shown in the panel — the corporate hero has no eyebrow. Retained as
+       the accessible name for the feature slider's tablist. */
     eyebrow: 'Австрийска термопомпена технология от 1978 г.',
-    title: 'Топлина, която не зависи от цената на горивата',
-    subtitle:
-      'Термопомпите OCHSNER превръщат енергията от въздуха, земята или водата в отопление, топла вода и охлаждане — с до четири пъти по-малко електроенергия от конвенционалните решения.',
+
+    /* Headline and standfirst are the corporate hero's own copy, translated:
+       "OCHSNER HEAT PUMPS" / "Technology leader in the heat pump sector.
+       Top quality made in Austria." */
+    title: 'Термопомпи OCHSNER',
+    subtitle: 'Технологичен лидер в сектора на термопомпите.\nВърхово качество, произведено в Австрия.',
     ctaNote: 'Безплатен оглед и оферта, без ангажимент.',
     moreAbout: 'Повече за OCHSNER',
 
@@ -22,6 +28,7 @@ export const home = {
         title: 'Енергия от въздуха',
         cta: 'Научи повече',
         hash: 'vazduh-voda',
+        image: '/images/hero/air.jpg',
         tone: 'deep'
       },
       {
@@ -29,6 +36,7 @@ export const home = {
         title: 'Геотермална стабилност',
         cta: 'Научи повече',
         hash: 'zemya-voda',
+        image: '/images/hero/ground.jpg',
         tone: 'warm'
       },
       {
@@ -36,6 +44,7 @@ export const home = {
         title: 'Най-висока ефективност',
         cta: 'Научи повече',
         hash: 'voda-voda',
+        image: '/images/hero/water.jpg',
         tone: 'teal'
       }
     ],
@@ -46,7 +55,8 @@ export const home = {
         variant: 'gold',
         title: 'Технически документи',
         cta: 'Виж документите',
-        to: 'products'
+        /* OCHSNER Austria's download centre, reached through the redirect notice. */
+        href: downloadCenterUrl
       },
       {
         variant: 'teal',
@@ -66,6 +76,14 @@ export const home = {
     ]
   },
 
+  /* Brand film below the hero, exactly as the corporate home page places it:
+     full content-width, rounded, autoplaying muted. */
+  video: {
+    src: '/video/air-eagle.webm',
+    poster: '/images/home/air-eagle-poster.jpg',
+    label: 'Видео: термопомпа OCHSNER AIR EAGLE'
+  },
+
   intro: {
     eyebrow: 'Накратко',
     title: 'Какво прави термопомпата и защо OCHSNER',
@@ -73,6 +91,21 @@ export const home = {
       'Термопомпата не изгаря гориво — тя пренася вече съществуваща топлина от околната среда във вашия дом. От един киловатчас електроенергия се получават три до пет киловатчаса топлина. Това е причината сметките за отопление да падат, без да правите компромис с комфорта.',
       'OCHSNER произвежда термопомпи в Австрия от 1978 г. и е сред пионерите в технологията в Европа. Компанията разработва и произвежда собствени компресори и топлообменници, което ѝ позволява да постига високи температури на подаване — критично важно при подмяна на котел в съществуваща сграда с радиатори.'
     ]
+  },
+
+  /* Six-across category strip, as on the corporate home page. */
+  range: {
+    title: 'Цялата гама',
+    strong: 'Цялата гама',
+    light: 'термопомпи и решения OCHSNER'
+  },
+
+  /* Condensed knowledge block, linking through to Защо термопомпа. */
+  knowledge: {
+    strong: 'Кога е добре да обмислим',
+    light: 'закупуване на термопомпа',
+    intro: 'Кратък преглед на случаите, в които преминаването към термопомпа си струва — ново строителство, подмяна на стар котел или комбинация с фотоволтаици.',
+    cta: 'Заяви консултация'
   },
 
   products: {
@@ -127,6 +160,12 @@ export const home = {
   whyTeaser: {
     eyebrow: 'Защо термопомпа',
     title: 'По-малко разходи, повече независимост',
+    /* Intro block mirroring the corporate home page's „Heat pumps“ section:
+       a bold heading, descriptive copy, then an image below. */
+    heading: 'Термопомпи',
+    body: 'Уютна топлина през зимата, битова гореща вода за банята и кухнята, приятни стайни температури в горещите летни дни: технологията на термопомпите може да осигури всичко това — без горене и без емисии на CO₂, с което допринася съществено за борбата с климатичните промени. Термопомпата е една от малкото отоплителни технологии, които произвеждат топлина, без да използват изчерпаемите изкопаеми горива нафта и газ или биомаса. И е единственият вид отопление, което по избор може да осигури и климатизация, и охлаждане. Благодарение на високата си ефективност термопомпите OCHSNER са подходящи за подово отопление в ново строителство и при реновация, както и за захранване на радиатори при подмяна на отоплителна система.',
+    image: '/images/home/heat-pumps.jpg',
+    imageAlt: 'Уютен интериор, отопляван с термопомпа OCHSNER',
     items: [
       {
         title: 'Спестявания',
@@ -141,7 +180,7 @@ export const home = {
         text: 'Без горене и без локални емисии в двора ви. С електроенергия от възобновяем източник отоплението става практически безвъглеродно.'
       }
     ],
-    cta: 'Как работи термопомпата'
+    cta: 'Как работи термопомпата при затворен цикъл'
   },
 
   /* Placeholder testimonials — fictional, written to show the layout.
@@ -174,7 +213,7 @@ export const home = {
 
   finalCta: {
     title: 'Готови ли сте да намалите сметките за отопление?',
-    text: 'Изпратете запитване и ще се свържем с вас в рамките на един работен ден за безплатна консултация и ориентировъчна оферта.',
+    text: 'Изпратете запитване и ще се свържем с вас за консултация и ориентировъчна оферта.',
     secondary: 'Или ни се обадете'
   }
 }

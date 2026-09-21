@@ -39,6 +39,20 @@ export const why = {
         text: 'Налягането се понижава рязко, течността се охлажда и цикълът започва отначало.'
       }
     ],
+    /* Labels laid over the manufacturer's cycle animation, which ships with its
+       captions burned into the artwork in German. Each one covers the German
+       beneath it — see HeatPumpDiagram.vue for the coordinates. */
+    animation: {
+      source: 'ТОПЛИНЕН ИЗТОЧНИК',
+      sourceHint: ['Въздух,', 'Вода,', 'Земя'],
+      distribution: 'РАЗПРЕДЕЛЕНИЕ',
+      distributionHint: ['Подово,', 'радиатори,', 'басейн'],
+      evaporate: 'ИЗПАРЯВАНЕ',
+      compress: 'СГЪСТЯВАНЕ',
+      condense: 'КОНДЕНЗАЦИЯ',
+      expand: 'РАЗШИРЯВАНЕ'
+    },
+
     diagramTitle: 'Схема на термопомпения цикъл',
     diagramCaption:
       'Опростена схема: топлина се извлича отляво (източник) и се предава отдясно (сграда). Само компресорът консумира ток.',
@@ -47,6 +61,17 @@ export const why = {
     buildingLabel: 'Отоплителна система',
     buildingHint: 'подово · радиатори · бойлер',
     powerLabel: 'Електроенергия'
+  },
+
+  /* Vertical clip supplied by OCHSNER (1080×1920, 12 s, no audio). The body copy
+     is deliberately descriptive only — ЗА ПОПЪЛВАНЕ: the client should replace it
+     with the approved Bulgarian technical description of the evaporator. */
+  technology: {
+    eyebrow: 'Технология',
+    title: 'Настолен изпарител',
+    body: 'Конструкцията на изпарителя е сред отличителните решения на OCHSNER при въздушните термопомпи. Видеоматериалът е предоставен от производителя.',
+    note: 'ЗА ПОПЪЛВАНЕ — техническото описание да се потвърди от OCHSNER преди публикуване.',
+    videoLabel: 'Видео: конструкция на изпарителя OCHSNER'
   },
 
   threeInOne: {

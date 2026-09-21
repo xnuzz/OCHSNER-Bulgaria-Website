@@ -15,7 +15,14 @@ defineProps({
 <template>
   <RouterLink class="tile" :to="{ name: 'products', hash: `#${product.slug}` }">
     <div class="tile__image">
-      <PlaceholderImage :label="''" :tone="tone" ratio="4 / 3" />
+      <PlaceholderImage
+        :src="product.imageUrl"
+        :label="product.title"
+        :tone="tone"
+        surface="alt"
+        inset="10%"
+        ratio="4 / 3"
+      />
     </div>
     <div class="tile__title">{{ product.title }}</div>
   </RouterLink>

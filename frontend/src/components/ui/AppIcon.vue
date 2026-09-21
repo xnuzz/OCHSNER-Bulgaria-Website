@@ -39,7 +39,12 @@ const paths = {
   arrowRight: ['m10 5 7 7-7 7'],
   check: ['m5 12.5 4.5 4.5L19 7'],
   minus: ['M5 12h14'],
-  plus: ['M12 5v14M5 12h14']
+  plus: ['M12 5v14M5 12h14'],
+
+  // Social — Facebook
+  facebook: ['M14.5 8.5H16V5.6h-2.2c-1.9 0-3.1 1.2-3.1 3.2v1.6H8.5v2.9h2.2V21h3v-7.7h2.2l.4-2.9h-2.6V9.1c0-.4.2-.6.8-.6z'],
+  // Social — Instagram
+  instagram: ['M7.5 3.5h9A4 4 0 0 1 20.5 7.5v9a4 4 0 0 1-4 4h-9a4 4 0 0 1-4-4v-9a4 4 0 0 1 4-4z', 'M12 8.3a3.7 3.7 0 1 0 0 7.4 3.7 3.7 0 0 0 0-7.4z', 'M17 6.9h.01']
 }
 </script>
 

@@ -3,6 +3,8 @@ import { onBeforeUnmount, onMounted, ref } from 'vue'
 import BaseButton from '@/components/ui/BaseButton.vue'
 import PlaceholderImage from '@/components/ui/PlaceholderImage.vue'
 import AppIcon from '@/components/ui/AppIcon.vue'
+import RedirectNotice from '@/components/ui/RedirectNotice.vue'
+import { useExternalLink } from '@/composables/useExternalLink.js'
 import { useI18n } from '@/i18n'
 
 const { common, home } = useI18n()
@@ -18,6 +20,9 @@ const { common, home } = useI18n()
  */
 const slides = home.hero.slides
 const active = ref(0)
+
+/* External destinations open behind the redirect notice. */
+const { leavingFor, confirmLeave, cancelLeave } = useExternalLink()
 let timer = null
 
 const reduceMotion =
@@ -51,7 +56,6 @@ onBeforeUnmount(stop)
         <div class="panel panel--main">
           <div class="panel__bg" aria-hidden="true"></div>
           <div class="panel__body">
-            <p class="hero__eyebrow">{{ home.hero.eyebrow }}</p>
             <h1 class="hero__title">{{ home.hero.title }}</h1>
             <p class="hero__subtitle">{{ home.hero.subtitle }}</p>
             <BaseButton :to="{ name: 'contact' }" size="lg">{{ common.ctaPrimary }}</BaseButton>
@@ -80,7 +84,15 @@ onBeforeUnmount(stop)
               :aria-hidden="i !== active"
               :tabindex="i === active ? 0 : -1"
             >
-              <PlaceholderImage :label="''" :tone="slide.tone" ratio="16 / 10" />
+              <PlaceholderImage
+                :src="slide.image"
+                :label="slide.title"
+                :tone="slide.tone"
+                surface="deep"
+                fit="cover"
+                eager
+                ratio="16 / 10"
+              />
               <span class="feature__caption">
                 <span class="feature__kicker">{{ slide.kicker }}</span>
                 <span class="feature__title">{{ slide.title }}</span>
@@ -108,21 +120,57 @@ onBeforeUnmount(stop)
         </div>
 
         <!-- Bottom-right: two colour action tiles -->
-        <RouterLink
+        <component
+          :is="tile.href ? 'a' : 'RouterLink'"
           v-for="tile in home.hero.tiles"
           :key="tile.title"
           class="panel tile"
           :class="`tile--${tile.variant}`"
-          :to="{ name: tile.to }"
+          v-bind="tile.href ? { href: tile.href } : { to: { name: tile.to } }"
+          @click="tile.href && confirmLeave($event, tile.href)"
         >
+          <!-- Oversized tone-on-tone glyph bleeding off the right edge, echoing
+               the corporate action tiles. Decorative only. -->
+          <svg
+            class="tile__glyph"
+            viewBox="0 0 120 120"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="3.5"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            aria-hidden="true"
+            focusable="false"
+          >
+            <template v-if="tile.variant === 'gold'">
+              <!-- Document held up by a hand -->
+              <rect x="52" y="6" width="46" height="62" rx="4" />
+              <path d="M62 24h26M62 36h26M62 48h16" />
+              <path d="M46 62v-18a5 5 0 0 1 10 0v26" />
+              <path d="M56 70v-8a5 5 0 0 1 10 0v8" />
+              <path d="M66 70v-6a5 5 0 0 1 10 0v6" />
+              <path d="M76 70v-4a5 5 0 0 1 10 0v14a26 26 0 0 1-26 26h-6a22 22 0 0 1-22-22V72a5 5 0 0 1 10 0v6" />
+            </template>
+            <template v-else>
+              <!-- Service technician: capped head and shoulders -->
+              <circle cx="60" cy="46" r="20" />
+              <path d="M34 40h52" />
+              <path d="M40 40a20 20 0 0 1 40 0" />
+              <path d="M60 20v-6" />
+              <path d="M26 112v-8a26 26 0 0 1 26-26h16a26 26 0 0 1 26 26v8" />
+            </template>
+          </svg>
+
           <span class="tile__title">{{ tile.title }}</span>
           <span class="tile__cta">
             {{ tile.cta }}
             <AppIcon name="arrowRight" :size="16" />
           </span>
-        </RouterLink>
+        </component>
       </div>
     </div>
+
+    <RedirectNotice :url="leavingFor" @close="cancelLeave" />
   </section>
 </template>
 
@@ -158,48 +206,58 @@ onBeforeUnmount(stop)
   isolation: isolate;
 }
 
+/* AIR HAWK outdoor unit, as on the corporate hero. The scrim keeps the headline
+   legible over the fan without washing the photograph out — it is heaviest at
+   the top, where the type sits, and clears by the lower third. */
 .panel__bg {
   position: absolute;
   inset: 0;
   z-index: -1;
   background:
-    radial-gradient(70% 90% at 80% 15%, rgba(220, 38, 26, 0.24), transparent 60%),
-    linear-gradient(155deg, #2f2d2b 0%, #171615 72%);
-}
-
-.hero__eyebrow {
-  font-family: var(--font-heading);
-  font-size: var(--fs-eyebrow);
-  font-weight: var(--fw-bold);
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
-  color: var(--c-accent-500);
-  margin-bottom: var(--sp-4);
+    linear-gradient(
+      180deg,
+      rgba(10, 10, 10, 0.92) 0%,
+      rgba(10, 10, 10, 0.72) 38%,
+      rgba(10, 10, 10, 0.25) 68%,
+      rgba(10, 10, 10, 0.45) 100%
+    ),
+    url('/images/hero/hawk-panel.jpg') center bottom / cover no-repeat,
+    #101010;
 }
 
 .hero__title {
   font-size: var(--fs-hero);
   font-weight: var(--fw-bold);
   line-height: var(--lh-tight);
+  text-transform: uppercase;
   color: #fff;
 }
 
+/* Bold, not light — the corporate hero sets its standfirst in the heading
+   weight, which is what makes it hold up over the photograph. */
 .hero__subtitle {
   margin-top: var(--sp-4);
   margin-bottom: var(--sp-6);
-  max-width: 42ch;
-  color: rgba(255, 255, 255, 0.82);
+  max-width: 38ch;
+  color: #fff;
   font-size: var(--fs-lead);
+  font-weight: var(--fw-bold);
+  line-height: 1.45;
+  /* The copy carries its own line break, matching the two-line standfirst on
+     the corporate hero. */
+  white-space: pre-line;
 }
 
+/* Sits at the bottom-right of the panel, as on the corporate hero. */
 .panel__more {
+  align-self: flex-end;
   display: inline-flex;
   align-items: center;
   gap: var(--sp-2);
   font-family: var(--font-heading);
   font-weight: var(--fw-bold);
   font-size: 0.9375rem;
-  text-transform: uppercase;
+  /* Sentence case: the corporate site keeps uppercase to buttons and nav. */
   color: #fff;
   text-decoration: none;
 }
@@ -326,14 +384,45 @@ onBeforeUnmount(stop)
 
 /* --- Colour action tiles ---------------------------------------------- */
 .tile {
+  position: relative;
+  overflow: hidden;
+  isolation: isolate;
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
+  /* Heading and button sit together low in the tile, as on the corporate
+     cards, rather than being pushed to opposite edges. */
+  justify-content: flex-end;
   gap: var(--sp-5);
   min-height: 150px;
   padding: var(--sp-5);
   text-decoration: none;
   transition: filter var(--dur) var(--ease);
+}
+
+/* Sits behind the label, cropped by the tile, in a darker shade of the tile's
+   own colour so it reads as texture rather than as an illustration. */
+.tile__glyph {
+  position: absolute;
+  z-index: -1;
+  right: -18px;
+  bottom: -20px;
+  width: 232px;
+  height: 232px;
+  opacity: 0.28;
+  pointer-events: none;
+  transition: transform var(--dur-slow) var(--ease);
+}
+
+.tile:hover .tile__glyph {
+  transform: translateX(-6px) scale(1.04);
+}
+
+.tile--gold .tile__glyph {
+  color: #b9832a;
+}
+
+.tile--teal .tile__glyph {
+  color: #4b8791;
 }
 
 .tile:hover {
@@ -350,10 +439,11 @@ onBeforeUnmount(stop)
   color: var(--c-tile-teal-ink);
 }
 
+/* 28px, the size the corporate card headings use. */
 .tile__title {
   font-family: var(--font-heading);
   font-weight: var(--fw-bold);
-  font-size: 1.2rem;
+  font-size: clamp(1.2rem, 1rem + 0.8vw, 1.75rem);
   line-height: 1.15;
 }
 
@@ -391,14 +481,22 @@ onBeforeUnmount(stop)
     padding: var(--sp-8);
   }
 
+  /* Keeps the feature panel close to the corporate hero's ~1.9:1 proportion.
+     Without it the panel collapses to whatever height the editorial column
+     leaves over, which reads as a letterbox strip. */
   .panel--feature {
     grid-column: 2 / 4;
     grid-row: 1;
+    min-height: 540px;
   }
 
+  /* Measured off the corporate hero: the action tiles run about half the height
+     of the feature panel above them (260px against 522px), which is what makes
+     the right-hand column balance the editorial panel. */
   .tile {
     grid-row: 2;
-    min-height: 170px;
+    min-height: 270px;
+    padding: var(--sp-6);
   }
 
   .tile--gold {

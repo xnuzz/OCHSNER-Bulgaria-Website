@@ -1,155 +1,185 @@
 <script setup>
+/**
+ * The manufacturer's refrigerant-cycle animation, localised.
+ *
+ * The GIF ships with its captions burned into the artwork in German
+ * (WÄRMEQUELLE / VERDICHTEN / VERDAMPFEN / VERFLÜSSIGEN / ENTSPANNEN /
+ * WÄRMEVERTEILUNG). Only the fluid in the coils animates — every caption is
+ * static across all 40 frames — so each one is covered by an absolutely
+ * positioned Bulgarian label instead.
+ *
+ * The regions behind the captions are flat: pure white in the middle of the
+ * frame and #cc3300 inside the two boxes, both sampled from the artwork, so the
+ * patches are invisible.
+ *
+ * Coordinates are percentages of the source frame (1100 × 366) and the type is
+ * sized in cqw, so the whole overlay scales with the image. Re-encoding the GIF
+ * was avoided deliberately: .NET's encoder drops per-frame timing, which would
+ * change the playback speed.
+ */
 import { useI18n } from '@/i18n'
 
 const { why } = useI18n()
 const cycle = why.cycle
+const a = cycle.animation
 </script>
 
 <template>
   <figure class="diagram">
-    <!--
-      Hand-built SVG rather than an exported image: it scales without artefacts,
-      inherits the design tokens, weighs ~2 KB and stays readable to screen readers
-      through the caption and the step list beneath it.
-    -->
-    <svg
-      class="diagram__svg"
-      viewBox="0 0 720 360"
-      role="img"
-      :aria-label="cycle.diagramTitle"
-      preserveAspectRatio="xMidYMid meet"
-    >
-      <title>{{ cycle.diagramTitle }}</title>
-
-      <defs>
-        <marker id="arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
-          <path d="M0 0 L10 5 L0 10 z" fill="var(--c-primary-500)" />
-        </marker>
-      </defs>
-
-      <!-- Source side -->
-      <rect x="4" y="120" width="136" height="120" rx="10" fill="var(--c-primary-50)" stroke="var(--c-primary-300)" />
-      <text x="72" y="168" class="d-label" text-anchor="middle">{{ cycle.sourceLabel }}</text>
-      <text x="72" y="192" class="d-hint" text-anchor="middle">{{ cycle.sourceHint }}</text>
-
-      <!-- Building side -->
-      <rect x="580" y="120" width="136" height="120" rx="10" fill="var(--c-accent-100)" stroke="var(--c-accent-500)" />
-      <text x="648" y="168" class="d-label" text-anchor="middle">{{ cycle.buildingLabel }}</text>
-      <text x="648" y="192" class="d-hint" text-anchor="middle">{{ cycle.buildingHint }}</text>
-
-      <!-- Refrigerant loop -->
-      <rect
-        x="180"
-        y="70"
-        width="360"
-        height="220"
-        rx="18"
-        fill="none"
-        stroke="var(--c-primary-300)"
-        stroke-width="2"
-        stroke-dasharray="6 6"
+    <div class="diagram__stage">
+      <img
+        class="diagram__gif"
+        src="/images/why/cycle.gif"
+        :alt="cycle.diagramTitle"
+        width="1100"
+        height="366"
+        loading="lazy"
+        decoding="async"
       />
 
-      <!-- 1. Evaporator (left of loop) -->
-      <g>
-        <rect x="150" y="150" width="60" height="60" rx="8" fill="var(--c-primary-700)" />
-        <text x="180" y="186" class="d-num" text-anchor="middle">1</text>
-        <text x="180" y="232" class="d-step" text-anchor="middle">{{ cycle.steps[0].title }}</text>
-      </g>
+      <!-- Localised captions, each covering the German beneath it. -->
+      <span class="lbl lbl--box lbl--source">{{ a.source }}</span>
+      <span class="lbl lbl--box lbl--distribution">{{ a.distribution }}</span>
 
-      <!-- 2. Compressor (top) -->
-      <g>
-        <rect x="330" y="40" width="60" height="60" rx="8" fill="var(--c-primary-700)" />
-        <text x="360" y="76" class="d-num" text-anchor="middle">2</text>
-        <text x="360" y="24" class="d-step" text-anchor="middle">{{ cycle.steps[1].title }}</text>
-      </g>
+      <span class="lbl lbl--hint lbl--source-hint">
+        <span v-for="line in a.sourceHint" :key="line">{{ line }}</span>
+      </span>
+      <span class="lbl lbl--hint lbl--distribution-hint">
+        <span v-for="line in a.distributionHint" :key="line">{{ line }}</span>
+      </span>
 
-      <!-- 3. Condenser (right of loop) -->
-      <g>
-        <rect x="510" y="150" width="60" height="60" rx="8" fill="var(--c-accent-600)" />
-        <text x="540" y="186" class="d-num" text-anchor="middle">3</text>
-        <text x="540" y="232" class="d-step" text-anchor="middle">{{ cycle.steps[2].title }}</text>
-      </g>
-
-      <!-- 4. Expansion valve (bottom) -->
-      <g>
-        <rect x="330" y="260" width="60" height="60" rx="8" fill="var(--c-primary-700)" />
-        <text x="360" y="296" class="d-num" text-anchor="middle">4</text>
-        <text x="360" y="342" class="d-step" text-anchor="middle">{{ cycle.steps[3].title }}</text>
-      </g>
-
-      <!-- Heat in / heat out -->
-      <line x1="142" y1="180" x2="148" y2="180" stroke="var(--c-primary-500)" stroke-width="3" marker-end="url(#arrow)" />
-      <line x1="572" y1="180" x2="578" y2="180" stroke="var(--c-accent-600)" stroke-width="3" marker-end="url(#arrow)" />
-
-      <!-- Electricity into the compressor -->
-      <line x1="360" y1="8" x2="360" y2="36" stroke="var(--c-accent-600)" stroke-width="3" marker-end="url(#arrow)" />
-      <text x="374" y="16" class="d-hint" text-anchor="start">{{ cycle.powerLabel }}</text>
-    </svg>
+      <span class="lbl lbl--step lbl--evaporate">{{ a.evaporate }}</span>
+      <span class="lbl lbl--step lbl--compress">{{ a.compress }}</span>
+      <span class="lbl lbl--step lbl--condense">{{ a.condense }}</span>
+      <span class="lbl lbl--step lbl--expand">{{ a.expand }}</span>
+    </div>
 
     <figcaption class="diagram__caption">{{ cycle.diagramCaption }}</figcaption>
   </figure>
 </template>
 
 <style scoped>
-/*
- * The cycle diagram is a wide landscape figure. It cannot scale below ~560px
- * without its labels becoming unreadable, so on phones it is hidden and the
- * numbered step list beneath it (same four stages, fully responsive) carries
- * the explanation instead. Tablet and up show the diagram.
- */
 .diagram {
-  display: none;
-  margin: 0;
-  padding: var(--sp-5);
-  background: var(--c-surface);
-  border: 1px solid var(--c-line);
-  border-radius: var(--radius-lg);
+  margin: var(--sp-6) 0 0;
 }
 
-.diagram__svg {
+.diagram__stage {
+  position: relative;
+  container-type: inline-size;
+  max-width: 1100px;
+  margin-inline: auto;
+}
+
+.diagram__gif {
+  display: block;
   width: 100%;
   height: auto;
 }
 
-@media (min-width: 620px) {
-  .diagram {
-    display: block;
-  }
+.lbl {
+  position: absolute;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-heading);
+  line-height: 1.1;
+  text-align: center;
+  white-space: nowrap;
+  pointer-events: none;
+}
+
+/* --- the two solid boxes ------------------------------------------------ */
+.lbl--box {
+  background: #cc3300;
+  color: #fff;
+  font-weight: var(--fw-bold);
+  font-size: 1.02cqw;
+  letter-spacing: 0.01em;
+  top: 38.5%;
+  height: 7.6%;
+}
+
+.lbl--source {
+  left: 3.6%;
+  width: 14.2%;
+}
+
+.lbl--distribution {
+  left: 82.2%;
+  width: 13.9%;
+}
+
+/* --- grey supporting lines --------------------------------------------- */
+.lbl--hint {
+  flex-direction: column;
+  justify-content: space-evenly;
+  background: #fff;
+  color: #5a5a5a;
+  font-weight: var(--fw-regular);
+  font-size: 1.16cqw;
+  top: 38.2%;
+  height: 23.5%;
+}
+
+.lbl--source-hint {
+  left: 18.5%;
+  width: 7.2%;
+}
+
+.lbl--distribution-hint {
+  left: 69.9%;
+  width: 12.3%;
+}
+
+/* --- the four cycle steps ---------------------------------------------- */
+.lbl--step {
+  background: #fff;
+  color: #cc3300;
+  font-weight: var(--fw-bold);
+  font-size: 1.3cqw;
+  height: 6.6%;
+}
+
+.lbl--evaporate {
+  left: 37.2%;
+  width: 9.9%;
+  top: 42.6%;
+}
+
+.lbl--condense {
+  left: 52.9%;
+  width: 9.9%;
+  top: 42.6%;
+}
+
+.lbl--compress {
+  left: 45.4%;
+  width: 9.2%;
+  top: 16.4%;
+}
+
+.lbl--expand {
+  left: 45.2%;
+  width: 9.5%;
+  top: 73.7%;
 }
 
 .diagram__caption {
   margin-top: var(--sp-4);
   font-size: var(--fs-small);
   color: var(--c-ink-muted);
-  max-width: 70ch;
+  text-align: center;
 }
 
-/* SVG text styling lives here so it follows the design tokens. */
-:deep(.d-label) {
-  font-family: var(--font-heading);
-  font-size: 13px;
-  font-weight: 600;
-  fill: var(--c-primary-800);
-}
-
-:deep(.d-hint) {
-  font-family: var(--font-body);
-  font-size: 11px;
-  fill: var(--c-ink-muted);
-}
-
-:deep(.d-step) {
-  font-family: var(--font-heading);
-  font-size: 13px;
-  font-weight: 600;
-  fill: var(--c-ink);
-}
-
-:deep(.d-num) {
-  font-family: var(--font-heading);
-  font-size: 20px;
-  font-weight: 700;
-  fill: #fff;
+/*
+ * Below ~560px the overlay type would fall under about 7px. The animation is
+ * 3:1, so it is already unreadable at that size — the numbered step list under
+ * the diagram carries the same explanation, so the graphic is dropped instead
+ * of being shown illegibly.
+ */
+@media (max-width: 560px) {
+  .diagram {
+    display: none;
+  }
 }
 </style>

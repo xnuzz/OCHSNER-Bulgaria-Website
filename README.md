@@ -125,14 +125,21 @@ same Bulgarian validation messages.
 | `/api/v1/partner-applications` | POST | Validates, logs, returns 201 |
 
 Functions are stateless, so submissions are **logged** (Vercel → Deployment →
-Functions logs), not stored. To also email them, set these env vars in Vercel and
-`frontend/api/_lib/notify.js` sends via Resend (no npm dependency):
+Functions logs), not stored. To also email them, set the SMTP variables below in
+Vercel — `api/_lib/notify.js` sends over plain SMTP via nodemailer, using the
+**same variable names as the Spring backend**, so one mailbox configures both:
 
 | Variable | Purpose |
 | --- | --- |
-| `RESEND_API_KEY` | Resend API key |
-| `NOTIFY_TO` | Address that receives submissions |
-| `NOTIFY_FROM` | Verified sender (optional) |
+| `SMTP_HOST` | Mail server hostname — required; without it, submissions are only logged |
+| `SMTP_PORT` | Defaults to `587`. Port `465` uses implicit TLS, anything else upgrades with STARTTLS |
+| `SMTP_USERNAME`, `SMTP_PASSWORD` | Mailbox credentials |
+| `NOTIFY_EMAIL` | Address that receives submissions (default `office@ochsner.bg`) |
+| `MAIL_FROM` | Envelope sender (default `no-reply@ochsner.bg`) |
+
+The notification sets `Reply-To` to the enquirer's address, so replying from the
+inbox reaches the customer directly. A mail failure is logged with the full
+submission and never turns into a 500 for the visitor.
 
 For durable storage, add Vercel Postgres / Neon and write to it inside the two
 POST handlers. The seeded catalog in `api/_lib/catalog.js` mirrors the Spring

@@ -42,6 +42,9 @@ const { common, contactDetails } = useI18n()
 }
 
 .cta__copy h2 {
+  /* Headings on the reference always carry a bold lead; this shout is bold
+     throughout rather than being left in the light heading weight. */
+  font-weight: var(--fw-bold);
   color: #fff;
   max-width: 20ch;
 }

@@ -10,7 +10,8 @@ defineProps({
 <template>
   <section class="page-hero">
     <div class="container">
-      <p v-if="eyebrow" class="page-hero__eyebrow">{{ eyebrow }}</p>
+      <!-- See SectionHeading: no kicker above the heading, matching the
+           corporate pages. The prop is retained for an easy revert. -->
       <h1 class="page-hero__title">{{ title }}</h1>
       <p v-if="subtitle" class="page-hero__subtitle">{{ subtitle }}</p>
       <slot />
@@ -28,16 +29,6 @@ defineProps({
   background:
     radial-gradient(70% 120% at 88% 0%, rgba(220, 38, 26, 0.28), transparent 60%),
     linear-gradient(140deg, #2f2d2b, #171615);
-}
-
-.page-hero__eyebrow {
-  font-family: var(--font-heading);
-  font-size: var(--fs-eyebrow);
-  font-weight: var(--fw-bold);
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
-  color: var(--c-accent-500);
-  margin-bottom: var(--sp-3);
 }
 
 .page-hero__title {

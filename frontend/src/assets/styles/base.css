@@ -43,15 +43,33 @@ select {
   color: inherit;
 }
 
+/*
+ * Headings on the reference are light (300), with the lead phrase set bold
+ * inside them — h1/h2 300, h3 500, and <strong> 700.
+ */
 h1,
 h2,
 h3,
 h4 {
   font-family: var(--font-heading);
-  font-weight: var(--fw-bold);
+  font-weight: var(--fw-light);
   line-height: var(--lh-snug);
   letter-spacing: normal;
   text-wrap: balance;
+}
+
+h1 strong,
+h2 strong,
+h3 strong,
+h4 strong {
+  font-weight: var(--fw-bold);
+}
+
+/* No heading on the reference is left in the light weight without a bold lead;
+   where ours carries no <strong>, the whole heading is bold instead. */
+h1:not(:has(strong)),
+h2:not(:has(strong)) {
+  font-weight: var(--fw-bold);
 }
 
 h1 {
@@ -62,9 +80,11 @@ h1 {
 h2 {
   font-size: var(--fs-h2);
 }
+/* Sub-headings are medium weight on the reference, not bold — 20.7px/500/lh 34. */
 h3 {
   font-size: var(--fs-h3);
-  line-height: var(--lh-snug);
+  line-height: var(--lh-h3);
+  font-weight: var(--fw-medium);
 }
 
 p {
@@ -96,15 +116,20 @@ ol {
 
 /* ---------- Layout utilities ------------------------------------------- */
 
+/*
+ * --container is the *content* width, so the cap adds the gutters back on top
+ * of it. This reproduces ochsner.com exactly: content spans 16→1424 at a 1440
+ * viewport, and 105→1815 at 1920.
+ */
 .container {
   width: 100%;
-  max-width: var(--container);
+  max-width: calc(var(--container) + 2 * var(--gutter));
   margin-inline: auto;
   padding-inline: var(--gutter);
 }
 
 .container--narrow {
-  max-width: var(--container-narrow);
+  max-width: calc(var(--container-narrow) + 2 * var(--gutter));
 }
 
 .section {

@@ -28,6 +28,7 @@ export const contact = {
     },
     requestTypeOptions: {
       HEAT_PUMP_INTEREST: 'Интересувам се от термопомпа',
+      SERVICE: 'Сервиз и поддръжка',
       EXISTING_CUSTOMER: 'Въпрос от съществуващ клиент',
       OTHER: 'Друго'
     },
@@ -44,9 +45,10 @@ export const contact = {
 
   details: {
     title: 'Директен контакт',
+    serviceLabel: 'Сервиз',
+    serviceNote: 'За сервиз и поддръжка изберете „Сервиз и поддръжка“ във формата или пишете директно на сервизния имейл.',
     mapTitle: 'Как да ни намерите',
-    mapPlaceholder: 'Карта',
-    mapNote: 'Точната локация ще бъде добавена след потвърждаване на адреса от клиента.',
+    mapLinkLabel: 'Отвори в Google Карти',
     responseNote: 'Отговаряме на запитвания в рамките на един работен ден.'
   }
 }
