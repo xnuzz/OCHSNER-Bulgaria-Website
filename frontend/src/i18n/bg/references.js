@@ -12,6 +12,11 @@ export const references = {
       'Избрани реализирани проекти в цяла България. Всеки обект е различен — различна сграда, инсталация и бюджет.'
   },
 
+  /* Two-weight section heading, as on every other page. */
+  heading: { strong: 'Реализирани обекти', light: 'в цяла България' },
+  intro:
+    'Еднофамилни къщи и жилищни сгради, които вече се отопляват с термопомпа OCHSNER.',
+
   /* Real project photos supplied by the client, one per location. */
   galleryTag: 'Реализиран проект',
   countLabel: 'реализирани обекта',

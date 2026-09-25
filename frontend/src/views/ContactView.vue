@@ -1,6 +1,5 @@
 <script setup>
 import { nextTick, reactive, ref } from 'vue'
-import PageHero from '@/components/ui/PageHero.vue'
 import BaseButton from '@/components/ui/BaseButton.vue'
 import FormField from '@/components/form/FormField.vue'
 import FormStatus from '@/components/form/FormStatus.vue'
@@ -9,6 +8,7 @@ import { submitContact } from '@/api/catalog.js'
 import { toFormError } from '@/api/client.js'
 import { useSeo } from '@/composables/useSeo.js'
 import { useI18n } from '@/i18n'
+import PageHero from '@/components/ui/PageHero.vue'
 
 const { common, contact: copy, contactDetails } = useI18n()
 const page = ref(null)

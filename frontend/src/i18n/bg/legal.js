@@ -18,9 +18,11 @@ const companyBlock = {
     'Този сайт се поддържа от „ОКСНЕР България“ — официален представител на OCHSNER Wärmepumpen GmbH (Австрия) за България (наричан по-долу „ние“, „нас“ или „Администратора“).',
     'Данни за контакт с Администратора:'
   ],
+  /* ЕИК deliberately not repeated here: GDPR чл. 13 asks only for the
+     controller's identity and contact details. The trade-register number is a
+     Търговски закон / e-commerce requirement and lives in Общи условия. */
   list: [
     'Наименование: [пълно юридическо наименование на дружеството]',
-    'ЕИК: [ЕИК/Булстат]',
     'Седалище и адрес на управление: ул. „Панорама София“ 5, XS Tower, София 1766',
     'Електронна поща: info@ochsner.bg',
     'Телефон: 02 405 9870'

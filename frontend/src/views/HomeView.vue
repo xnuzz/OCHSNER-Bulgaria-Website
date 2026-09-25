@@ -8,7 +8,6 @@ import SectionHeading from '@/components/ui/SectionHeading.vue'
 import AccordionList from '@/components/ui/AccordionList.vue'
 import AppIcon from '@/components/ui/AppIcon.vue'
 import BaseButton from '@/components/ui/BaseButton.vue'
-import SocialFeed from '@/components/home/SocialFeed.vue'
 import CtaBand from '@/components/ui/CtaBand.vue'
 import { fetchProducts, useAsyncData } from '@/api/catalog.js'
 import { useSeo } from '@/composables/useSeo.js'
@@ -209,8 +208,9 @@ onMounted(load)
       </div>
     </section>
 
-    <!-- Latest Facebook + Instagram posts -->
-    <SocialFeed />
+    <!-- Social feed removed at the client's request. SocialFeed.vue, the
+         /api/v1/social endpoint and the collected posts are all kept — drop
+         <SocialFeed /> back in here to restore it. -->
 
     <CtaBand :title="home.finalCta.title" :text="home.finalCta.text" />
   </div>

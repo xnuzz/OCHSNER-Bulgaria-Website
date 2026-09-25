@@ -4,9 +4,9 @@
  * the shared `legal` bundle. The route decides which one via the `doc` prop.
  */
 import { computed, ref, watch } from 'vue'
-import PageHero from '@/components/ui/PageHero.vue'
 import { useSeo } from '@/composables/useSeo.js'
 import { useI18n } from '@/i18n'
+import PageHero from '@/components/ui/PageHero.vue'
 
 const props = defineProps({
   /* Key into the legal bundle: 'privacy' | 'terms' | 'cookies'. */

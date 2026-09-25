@@ -1,6 +1,5 @@
 <script setup>
 import { nextTick, reactive, ref } from 'vue'
-import PageHero from '@/components/ui/PageHero.vue'
 import SectionHeading from '@/components/ui/SectionHeading.vue'
 import BaseButton from '@/components/ui/BaseButton.vue'
 import FormField from '@/components/form/FormField.vue'
@@ -9,6 +8,7 @@ import { submitPartnerApplication } from '@/api/catalog.js'
 import { toFormError } from '@/api/client.js'
 import { useSeo } from '@/composables/useSeo.js'
 import { useI18n } from '@/i18n'
+import PageHero from '@/components/ui/PageHero.vue'
 
 const { common, partner, contact: contactCopy } = useI18n()
 const page = ref(null)
@@ -80,7 +80,13 @@ useSeo({ title: partner.meta.title, description: partner.meta.description, path:
 
     <section class="section">
       <div class="container">
-        <SectionHeading :eyebrow="partner.looking.eyebrow" :title="partner.looking.title" />
+        <SectionHeading
+          :strong="partner.looking.title.split(' ').slice(0, 2).join(' ')"
+          :title="partner.looking.title.split(' ').slice(2).join(' ')"
+          level="h2"
+          align="center"
+          rule
+        />
         <ul class="who">
           <li v-for="item in partner.looking.items" :key="item.title" class="who__item">
             <h3 class="who__title">{{ item.title }}</h3>
@@ -92,7 +98,13 @@ useSeo({ title: partner.meta.title, description: partner.meta.description, path:
 
     <section class="section section--alt">
       <div class="container">
-        <SectionHeading :eyebrow="partner.offer.eyebrow" :title="partner.offer.title" />
+        <SectionHeading
+          :strong="partner.offer.title.split(' ').slice(0, 2).join(' ')"
+          :title="partner.offer.title.split(' ').slice(2).join(' ')"
+          level="h2"
+          align="center"
+          rule
+        />
         <ul class="offer">
           <li v-for="item in partner.offer.items" :key="item.title" class="offer__item">
             <h3 class="offer__title">{{ item.title }}</h3>
@@ -269,36 +281,41 @@ useSeo({ title: partner.meta.title, description: partner.meta.description, path:
 .offer {
   list-style: none;
   padding: 0;
+  margin: 0 auto;
+  max-width: 1082px;
   display: grid;
-  gap: var(--sp-5);
+  gap: 30px;
 }
 
-.who__item {
-  padding: var(--sp-5);
+.who__item,
+.offer__item {
+  padding: clamp(var(--sp-5), 2.4vw, 40px);
   background: var(--c-surface);
   border: 1px solid var(--c-line);
-  border-left: 3px solid var(--c-primary-500);
-  border-radius: var(--radius-lg);
+  border-radius: 20px;
+  transition: transform var(--dur) var(--ease), box-shadow var(--dur) var(--ease),
+    border-color var(--dur) var(--ease);
 }
 
-.offer__item {
-  padding: var(--sp-5);
-  background: var(--c-surface);
-  border-top: 3px solid var(--c-accent-500);
-  border-radius: var(--radius-lg);
-  box-shadow: var(--shadow-sm);
+.who__item:hover,
+.offer__item:hover {
+  transform: translateY(-4px);
+  border-color: transparent;
+  box-shadow: var(--shadow-lg);
 }
 
 .who__title,
 .offer__title {
-  color: var(--c-primary-800);
+  font-size: 1.25rem;
+  font-weight: var(--fw-bold);
+  color: var(--c-primary-900);
 }
 
 .who__text,
 .offer__text {
   margin-top: var(--sp-3);
-  font-size: 0.95rem;
   color: var(--c-ink-soft);
+  line-height: var(--lh-body);
 }
 
 .form {
@@ -366,6 +383,7 @@ useSeo({ title: partner.meta.title, description: partner.meta.description, path:
 }
 
 @media (min-width: 1000px) {
+  .who,
   .offer {
     grid-template-columns: repeat(3, 1fr);
   }

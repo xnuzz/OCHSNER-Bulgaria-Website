@@ -1,11 +1,12 @@
 <script setup>
 import { ref } from 'vue'
-import PageHero from '@/components/ui/PageHero.vue'
 import SectionHeading from '@/components/ui/SectionHeading.vue'
 import CtaBand from '@/components/ui/CtaBand.vue'
 import PlaceholderImage from '@/components/ui/PlaceholderImage.vue'
+import AppIcon from '@/components/ui/AppIcon.vue'
 import { useSeo } from '@/composables/useSeo.js'
 import { useI18n } from '@/i18n'
+import PageHero from '@/components/ui/PageHero.vue'
 
 const { about } = useI18n()
 const page = ref(null)
@@ -27,24 +28,27 @@ useSeo({ title: about.meta.title, description: about.meta.description, path: '/z
         <div class="rep__media">
           <PlaceholderImage label="Портретна снимка" tone="deep" ratio="3 / 4" />
         </div>
-        <div>
+        <div class="rep__body">
           <SectionHeading
-            :eyebrow="about.representative.eyebrow"
-            :title="about.representative.title"
+            :strong="about.representative.title.split(' ').slice(0, 2).join(' ')"
+            :title="about.representative.title.split(' ').slice(2).join(' ')"
+            level="h2"
+            rule
           />
           <p v-for="paragraph in about.representative.body" :key="paragraph" class="rep__paragraph">
             {{ paragraph }}
           </p>
 
-          <div class="notice">
-            <p class="notice__text">{{ about.representative.placeholderNote }}</p>
+          <div class="creds">
+            <h3 class="creds__title">{{ about.representative.credentials.title }}</h3>
+            <ul class="creds__list">
+              <li v-for="item in about.representative.credentials.items" :key="item">
+                <AppIcon name="check" :size="16" class="creds__tick" />
+                <span>{{ item }}</span>
+              </li>
+            </ul>
+            <p class="creds__note">{{ about.representative.credentials.note }}</p>
           </div>
-
-          <h3 class="rep__subtitle">{{ about.representative.credentials.title }}</h3>
-          <ul class="rep__credentials">
-            <li v-for="item in about.representative.credentials.items" :key="item">{{ item }}</li>
-          </ul>
-          <p class="rep__note">{{ about.representative.credentials.note }}</p>
         </div>
       </div>
     </section>
@@ -52,7 +56,12 @@ useSeo({ title: about.meta.title, description: about.meta.description, path: '/z
     <!-- Official partnership -->
     <section class="section section--alt">
       <div class="container">
-        <SectionHeading :eyebrow="about.partnership.eyebrow" :title="about.partnership.title" />
+        <SectionHeading
+          :strong="about.partnership.title.split(' ').slice(0, 2).join(' ')"
+          :title="about.partnership.title.split(' ').slice(2).join(' ')"
+          level="h2"
+          rule
+        />
         <div class="partnership">
           <div>
             <p v-for="paragraph in about.partnership.body" :key="paragraph" class="partnership__paragraph">
@@ -72,7 +81,13 @@ useSeo({ title: about.meta.title, description: about.meta.description, path: '/z
     <!-- Services -->
     <section class="section">
       <div class="container">
-        <SectionHeading :eyebrow="about.services.eyebrow" :title="about.services.title" />
+        <SectionHeading
+          :strong="about.services.title.split(' — ')[0]"
+          :title="about.services.title.split(' — ')[1] || ''"
+          level="h2"
+          align="center"
+          rule
+        />
         <ol class="services">
           <li v-for="(service, index) in about.services.items" :key="service.title" class="service">
             <span class="service__num" aria-hidden="true">{{ String(index + 1).padStart(2, '0') }}</span>
@@ -87,9 +102,12 @@ useSeo({ title: about.meta.title, description: about.meta.description, path: '/z
     <section class="section section--alt">
       <div class="container">
         <SectionHeading
-          :eyebrow="about.whyLocal.eyebrow"
-          :title="about.whyLocal.title"
+          :strong="about.whyLocal.title.split(' ').slice(0, 2).join(' ')"
+          :title="about.whyLocal.title.split(' ').slice(2).join(' ')"
           :subtitle="about.whyLocal.intro"
+          level="h2"
+          align="center"
+          rule
         />
         <div class="compare">
           <article class="compare__col compare__col--good">
@@ -125,6 +143,11 @@ useSeo({ title: about.meta.title, description: about.meta.description, path: '/z
   gap: var(--sp-6);
 }
 
+.rep__media :deep(.ph) {
+  border-radius: 20px;
+  overflow: hidden;
+}
+
 .rep__paragraph + .rep__paragraph,
 .partnership__paragraph + .partnership__paragraph {
   margin-top: var(--sp-4);
@@ -133,39 +156,50 @@ useSeo({ title: about.meta.title, description: about.meta.description, path: '/z
 .rep__paragraph,
 .partnership__paragraph {
   color: var(--c-ink-soft);
+  line-height: var(--lh-body);
   max-width: 62ch;
 }
 
-.rep__subtitle {
+/* Credentials in their own card rather than a bare bullet list. */
+.creds {
   margin-top: var(--sp-6);
-  color: var(--c-primary-800);
+  padding: clamp(var(--sp-5), 2vw, var(--sp-6));
+  background: var(--c-surface-alt);
+  border-radius: 20px;
 }
 
-.rep__credentials {
-  margin-top: var(--sp-3);
-  padding-left: var(--sp-5);
+.creds__title {
+  font-size: 1.125rem;
+  font-weight: var(--fw-bold);
+  color: var(--c-primary-900);
+}
+
+.creds__list {
+  margin-top: var(--sp-4);
+  list-style: none;
+  padding: 0;
   display: grid;
-  gap: var(--sp-2);
+  gap: var(--sp-3);
+}
+
+.creds__list li {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--sp-3);
   color: var(--c-ink-soft);
-  font-size: 0.95rem;
+  line-height: 1.45;
 }
 
-.rep__note,
-.notice__text {
-  font-size: 0.82rem;
+.creds__tick {
+  flex: 0 0 auto;
+  margin-top: 3px;
+  color: var(--c-accent-600);
+}
+
+.creds__note {
+  margin-top: var(--sp-4);
+  font-size: var(--fs-small);
   color: var(--c-ink-muted);
-}
-
-.rep__note {
-  margin-top: var(--sp-3);
-}
-
-.notice {
-  margin-top: var(--sp-5);
-  padding: var(--sp-4);
-  border: 1px dashed var(--c-accent-600);
-  border-radius: var(--radius);
-  background: var(--c-accent-100);
 }
 
 .facts {
@@ -176,21 +210,22 @@ useSeo({ title: about.meta.title, description: about.meta.description, path: '/z
 }
 
 .fact {
-  padding: var(--sp-4);
+  padding: var(--sp-5);
   background: var(--c-surface);
-  border-left: 3px solid var(--c-primary-500);
-  border-radius: 0 var(--radius) var(--radius) 0;
+  border: 1px solid var(--c-line);
+  border-radius: 20px;
 }
 
 .fact__value {
   font-family: var(--font-heading);
-  font-size: 1.5rem;
-  font-weight: 700;
-  color: var(--c-primary-800);
+  font-size: 2rem;
+  font-weight: var(--fw-bold);
+  line-height: 1.1;
+  color: var(--c-primary-900);
 }
 
 .fact__label {
-  margin: var(--sp-1) 0 0;
+  margin: var(--sp-2) 0 0;
   font-size: var(--fs-small);
   color: var(--c-ink-muted);
 }
@@ -198,80 +233,108 @@ useSeo({ title: about.meta.title, description: about.meta.description, path: '/z
 .services {
   list-style: none;
   padding: 0;
+  margin: 0 auto;
+  max-width: 1082px;
   display: grid;
-  gap: var(--sp-5);
+  gap: 30px;
 }
 
 .service {
-  padding: var(--sp-5);
+  padding: clamp(var(--sp-5), 2.4vw, 40px);
   border: 1px solid var(--c-line);
-  border-radius: var(--radius-lg);
+  border-radius: 20px;
   background: var(--c-surface);
+  transition: transform var(--dur) var(--ease), box-shadow var(--dur) var(--ease),
+    border-color var(--dur) var(--ease);
+}
+
+.service:hover {
+  transform: translateY(-4px);
+  border-color: transparent;
+  box-shadow: var(--shadow-lg);
 }
 
 .service__num {
+  display: inline-grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  border-radius: 999px;
+  border: 2px solid var(--c-accent-600);
   font-family: var(--font-heading);
-  font-size: 0.85rem;
-  font-weight: 700;
-  letter-spacing: 0.1em;
+  font-size: 0.95rem;
+  font-weight: var(--fw-bold);
   color: var(--c-accent-600);
 }
 
 .service__title {
-  margin-top: var(--sp-2);
-  color: var(--c-primary-800);
+  margin-top: var(--sp-4);
+  font-size: 1.25rem;
+  font-weight: var(--fw-bold);
+  color: var(--c-primary-900);
 }
 
 .service__text {
-  margin-top: var(--sp-2);
-  font-size: 0.95rem;
+  margin-top: var(--sp-3);
   color: var(--c-ink-soft);
+  line-height: var(--lh-body);
 }
 
 .compare {
   display: grid;
   gap: var(--sp-5);
+  max-width: 1082px;
+  margin-inline: auto;
 }
 
 .compare__col {
-  padding: var(--sp-5);
+  padding: clamp(var(--sp-5), 2.4vw, 40px);
   background: var(--c-surface);
   border: 1px solid var(--c-line);
-  border-radius: var(--radius-lg);
+  border-radius: 20px;
 }
 
 .compare__col--good {
-  border-color: var(--c-primary-300);
-  box-shadow: var(--shadow);
+  border-color: transparent;
+  box-shadow: var(--shadow-lg);
 }
 
 .compare__title {
-  color: var(--c-primary-800);
+  font-size: 1.25rem;
+  font-weight: var(--fw-bold);
+  color: var(--c-primary-900);
+  padding-bottom: var(--sp-4);
   margin-bottom: var(--sp-4);
+  border-bottom: 1px solid var(--c-line);
+}
+
+.compare__col--good .compare__title {
+  border-bottom-color: var(--c-accent-600);
 }
 
 .compare__list {
   list-style: none;
   padding: 0;
   display: grid;
-  gap: var(--sp-3);
+  gap: var(--sp-4);
 }
 
 .compare__list li {
   display: flex;
   gap: var(--sp-3);
-  font-size: 0.95rem;
   color: var(--c-ink-soft);
+  line-height: 1.45;
 }
 
 .compare__icon {
   display: grid;
   place-items: center;
   flex-shrink: 0;
-  width: 22px;
-  height: 22px;
+  width: 24px;
+  height: 24px;
   border-radius: 50%;
-  font-size: 0.75rem;
+  font-size: 0.8rem;
+  font-weight: var(--fw-bold);
 }
 
 .compare__icon--good {
@@ -298,13 +361,16 @@ useSeo({ title: about.meta.title, description: about.meta.description, path: '/z
   .rep {
     grid-template-columns: 1fr 1.6fr;
     gap: var(--sp-7);
+    align-items: start;
   }
 
   .partnership {
     grid-template-columns: 1.5fr 1fr;
     gap: var(--sp-7);
   }
+}
 
+@media (min-width: 1000px) {
   .services {
     grid-template-columns: repeat(3, 1fr);
   }

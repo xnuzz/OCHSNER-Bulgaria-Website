@@ -105,11 +105,20 @@ export const footer = {
   navHeading: 'Навигация',
   contactHeading: 'Контакти',
   legalHeading: 'Правна информация',
-  socialHeading: 'Последвайте ни',
-  /* Temporary profile URLs — replace with the real OCHSNER България pages. */
+  socialHeading: 'Последвайте OCHSNER',
+  /* Official OCHSNER Wärmepumpen profiles. Swap for the Bulgarian
+     representative's own pages once they exist. */
   social: [
-    { name: 'facebook', label: 'Facebook', href: 'https://www.facebook.com/' },
-    { name: 'instagram', label: 'Instagram', href: 'https://www.instagram.com/' }
+    {
+      name: 'facebook',
+      label: 'Facebook',
+      href: 'https://www.facebook.com/ochsnerwaermepumpen/'
+    },
+    {
+      name: 'instagram',
+      label: 'Instagram',
+      href: 'https://www.instagram.com/ochsnerwaermepumpen/'
+    }
   ],
   privacy: 'Политика за поверителност',
   terms: 'Общи условия',

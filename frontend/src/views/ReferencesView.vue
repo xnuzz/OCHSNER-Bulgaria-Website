@@ -1,10 +1,11 @@
 <script setup>
 import { computed, onBeforeUnmount, ref } from 'vue'
-import PageHero from '@/components/ui/PageHero.vue'
+import SectionHeading from '@/components/ui/SectionHeading.vue'
 import CtaBand from '@/components/ui/CtaBand.vue'
 import AppIcon from '@/components/ui/AppIcon.vue'
 import { useSeo } from '@/composables/useSeo.js'
 import { useI18n } from '@/i18n'
+import PageHero from '@/components/ui/PageHero.vue'
 
 const { references: copy } = useI18n()
 const page = ref(null)
@@ -44,31 +45,42 @@ useSeo({ title: copy.meta.title, description: copy.meta.description, path: '/ref
       :subtitle="copy.hero.subtitle"
     />
 
-    <section class="section">
+    <section class="section section--alt">
       <div class="container">
-        <p class="count">{{ copy.items.length }} {{ copy.countLabel }}</p>
+        <SectionHeading
+          :strong="copy.heading.strong"
+          :title="copy.heading.light"
+          :subtitle="copy.intro"
+          level="h2"
+          align="center"
+          rule
+        />
 
-        <!-- Real project photos, kept at their native aspect in a masonry gallery. -->
-        <ul class="gallery">
-          <li v-for="(item, index) in copy.items" :key="item.image" class="shot">
-            <button type="button" class="shot__btn" @click="show(index)">
-              <span class="shot__frame">
+        <p class="count">
+          <span class="count__num">{{ copy.items.length }}</span>
+          {{ copy.countLabel }}
+        </p>
+
+        <!-- White project cards, same language as the product cards. -->
+        <ul class="refs">
+          <li v-for="(item, index) in copy.items" :key="item.image" class="ref">
+            <button type="button" class="ref__btn" @click="show(index)">
+              <span class="ref__media">
                 <img
                   :src="item.image"
                   :alt="`Реализиран обект — ${item.location}`"
                   :loading="index < 3 ? 'eager' : 'lazy'"
                   decoding="async"
                 />
-                <span class="shot__caption">
-                  <span class="shot__tag">{{ copy.galleryTag }}</span>
-                  <span class="shot__loc">
-                    <AppIcon name="independence" :size="16" class="shot__pin" />
-                    {{ item.location }}
-                  </span>
+                <span class="ref__zoom" aria-hidden="true">
+                  <AppIcon name="plus" :size="18" />
                 </span>
-                <span class="shot__zoom" aria-hidden="true">
-                  <AppIcon name="plus" :size="20" />
-                </span>
+              </span>
+
+              <span class="ref__body">
+                <span class="ref__tag">{{ copy.galleryTag }}</span>
+                <span class="ref__name">{{ item.location }}</span>
+                <span class="ref__rule" aria-hidden="true"></span>
               </span>
             </button>
           </li>
@@ -82,23 +94,23 @@ useSeo({ title: copy.meta.title, description: copy.meta.description, path: '/ref
     <Teleport to="body">
       <div v-if="current" class="lb" @click.self="close">
         <button type="button" class="lb__close" :aria-label="copy.close" @click="close">
-          <AppIcon name="plus" :size="26" class="lb__close-icon" />
+          <AppIcon name="plus" :size="24" class="lb__x" />
         </button>
-        <button type="button" class="lb__nav lb__nav--prev" :aria-label="copy.prev" @click="step(-1)">
-          <AppIcon name="arrowLeft" :size="26" />
+        <button type="button" class="lb__nav" :aria-label="copy.prev" @click="step(-1)">
+          <AppIcon name="arrowLeft" :size="24" />
         </button>
 
         <figure class="lb__figure">
           <img :src="current.image" :alt="current.location" />
-          <figcaption class="lb__caption">
+          <figcaption class="lb__cap">
             <span class="lb__tag">{{ copy.galleryTag }}</span>
-            <span class="lb__loc">{{ current.location }}</span>
-            <span class="lb__counter">{{ open + 1 }} / {{ copy.items.length }}</span>
+            <span class="lb__name">{{ current.location }}</span>
+            <span class="lb__count">{{ open + 1 }} / {{ copy.items.length }}</span>
           </figcaption>
         </figure>
 
-        <button type="button" class="lb__nav lb__nav--next" :aria-label="copy.next" @click="step(1)">
-          <AppIcon name="arrowRight" :size="26" />
+        <button type="button" class="lb__nav" :aria-label="copy.next" @click="step(1)">
+          <AppIcon name="arrowRight" :size="24" />
         </button>
       </div>
     </Teleport>
@@ -107,124 +119,133 @@ useSeo({ title: copy.meta.title, description: copy.meta.description, path: '/ref
 
 <style scoped>
 .count {
-  margin: 0 0 var(--sp-5);
+  margin: calc(var(--sp-5) * -1) 0 var(--sp-7);
+  text-align: center;
   font-family: var(--font-heading);
   font-size: var(--fs-small);
-  font-weight: var(--fw-semibold);
   letter-spacing: 0.06em;
   text-transform: uppercase;
   color: var(--c-ink-muted);
 }
 
-/* Masonry via CSS columns — mixed portrait/landscape photos keep their aspect. */
-.gallery {
+.count__num {
+  font-weight: var(--fw-bold);
+  color: var(--c-accent-600);
+}
+
+/* --- project cards ------------------------------------------------------ */
+.refs {
   list-style: none;
   padding: 0;
-  margin: 0;
-  column-count: 3;
-  column-gap: var(--sp-5);
+  margin: 0 auto;
+  max-width: 1180px;
+  display: grid;
+  gap: var(--sp-5);
 }
 
-.shot {
-  break-inside: avoid;
-  margin-bottom: var(--sp-5);
-}
-
-.shot__btn {
+.ref__btn {
   display: block;
   width: 100%;
   padding: 0;
-  border: 0;
-  background: none;
+  border: 1px solid var(--c-line);
+  border-radius: 20px;
+  background: var(--c-surface);
+  overflow: hidden;
   cursor: pointer;
   text-align: left;
+  transition: transform var(--dur) var(--ease), box-shadow var(--dur) var(--ease),
+    border-color var(--dur) var(--ease);
 }
 
-.shot__frame {
+.ref__btn:hover {
+  transform: translateY(-4px);
+  border-color: transparent;
+  box-shadow: var(--shadow-lg);
+}
+
+.ref__media {
   position: relative;
   display: block;
-  border-radius: 18px;
+  aspect-ratio: 4 / 3;
   overflow: hidden;
   background: var(--c-surface-alt);
-  box-shadow: 0 1px 2px rgb(0 0 0 / 0.05);
-  transition: box-shadow var(--dur) var(--ease), transform var(--dur) var(--ease);
 }
 
-.shot__btn:hover .shot__frame {
-  transform: translateY(-4px);
-  box-shadow: 0 18px 40px rgb(0 0 0 / 0.18);
-}
-
-.shot__frame img {
+.ref__media img {
   display: block;
   width: 100%;
-  height: auto;
+  height: 100%;
+  object-fit: cover;
   transition: transform 0.6s var(--ease);
 }
 
-.shot__btn:hover .shot__frame img {
+.ref__btn:hover .ref__media img {
   transform: scale(1.05);
 }
 
-/* Legibility gradient behind the caption. */
-.shot__caption {
-  position: absolute;
-  inset: auto 0 0 0;
-  display: flex;
-  flex-direction: column;
-  gap: 3px;
-  padding: var(--sp-7) var(--sp-5) var(--sp-4);
-  color: #fff;
-  background: linear-gradient(to top, rgb(0 0 0 / 0.78), rgb(0 0 0 / 0.15) 60%, rgb(0 0 0 / 0));
-}
-
-.shot__tag {
-  font-family: var(--font-heading);
-  font-size: 0.66rem;
-  font-weight: 600;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-  color: rgba(255, 255, 255, 0.78);
-}
-
-.shot__loc {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  font-family: var(--font-heading);
-  font-size: 1.3rem;
-  font-weight: var(--fw-bold);
-  line-height: 1.15;
-}
-
-.shot__pin {
-  color: var(--c-accent-500);
-}
-
-/* Zoom affordance top-right, revealed on hover. */
-.shot__zoom {
+.ref__zoom {
   position: absolute;
   top: var(--sp-3);
   right: var(--sp-3);
   display: grid;
   place-items: center;
-  width: 38px;
-  height: 38px;
+  width: 36px;
+  height: 36px;
   border-radius: 999px;
-  background: rgb(255 255 255 / 0.9);
+  background: rgb(255 255 255 / 0.92);
   color: var(--c-primary-900);
   opacity: 0;
-  transform: scale(0.8);
+  transform: scale(0.85);
   transition: opacity var(--dur) var(--ease), transform var(--dur) var(--ease);
 }
 
-.shot__btn:hover .shot__zoom,
-.shot__btn:focus-visible .shot__zoom {
+.ref__btn:hover .ref__zoom,
+.ref__btn:focus-visible .ref__zoom {
   opacity: 1;
   transform: scale(1);
 }
 
-/* ---------- Lightbox ---------- */
+.ref__body {
+  display: block;
+  padding: var(--sp-5);
+}
+
+.ref__tag {
+  display: block;
+  font-family: var(--font-heading);
+  font-size: 0.68rem;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--c-ink-muted);
+}
+
+.ref__name {
+  display: block;
+  margin-top: 6px;
+  font-family: var(--font-heading);
+  font-size: 1.3rem;
+  font-weight: var(--fw-bold);
+  line-height: 1.2;
+  color: var(--c-primary-900);
+}
+
+/* The red rule the rest of the site uses under a heading, drawn on hover. */
+.ref__rule {
+  display: block;
+  width: 34px;
+  height: 3px;
+  margin-top: var(--sp-4);
+  border-radius: 3px;
+  background: var(--c-accent-600);
+  transition: width var(--dur) var(--ease);
+}
+
+.ref__btn:hover .ref__rule {
+  width: 64px;
+}
+
+/* --- lightbox ----------------------------------------------------------- */
 .lb {
   position: fixed;
   inset: 0;
@@ -248,12 +269,12 @@ useSeo({ title: copy.meta.title, description: copy.meta.description, path: '/ref
 
 .lb__figure img {
   max-width: 100%;
-  max-height: 80vh;
-  border-radius: 12px;
+  max-height: 78vh;
+  border-radius: 14px;
   object-fit: contain;
 }
 
-.lb__caption {
+.lb__cap {
   display: flex;
   align-items: center;
   gap: var(--sp-4);
@@ -262,19 +283,19 @@ useSeo({ title: copy.meta.title, description: copy.meta.description, path: '/ref
 }
 
 .lb__tag {
-  font-size: 0.66rem;
+  font-size: 0.68rem;
   font-weight: 600;
   letter-spacing: 0.12em;
   text-transform: uppercase;
   color: rgba(255, 255, 255, 0.6);
 }
 
-.lb__loc {
+.lb__name {
   font-size: 1.25rem;
   font-weight: var(--fw-bold);
 }
 
-.lb__counter {
+.lb__count {
   font-size: var(--fs-small);
   color: rgba(255, 255, 255, 0.6);
 }
@@ -283,53 +304,50 @@ useSeo({ title: copy.meta.title, description: copy.meta.description, path: '/ref
   position: absolute;
   top: var(--sp-4);
   right: var(--sp-4);
-  display: grid;
-  place-items: center;
   width: 44px;
   height: 44px;
-  border: 0;
-  border-radius: 999px;
-  background: rgb(255 255 255 / 0.12);
-  color: #fff;
-  cursor: pointer;
 }
 
-.lb__close:hover {
-  background: rgb(255 255 255 / 0.24);
-}
-
-.lb__close-icon {
+.lb__x {
   transform: rotate(45deg);
 }
 
 .lb__nav {
-  display: grid;
-  place-items: center;
   width: 48px;
   height: 48px;
+  flex: 0 0 auto;
+}
+
+.lb__close,
+.lb__nav {
+  display: grid;
+  place-items: center;
   border: 0;
   border-radius: 999px;
   background: rgb(255 255 255 / 0.12);
   color: #fff;
   cursor: pointer;
-  flex: 0 0 auto;
+  transition: background-color var(--dur-fast) var(--ease);
 }
 
+.lb__close:hover,
 .lb__nav:hover {
-  background: rgb(255 255 255 / 0.24);
+  background: var(--c-accent-600);
 }
 
-@media (max-width: 900px) {
-  .gallery {
-    column-count: 2;
+@media (min-width: 640px) {
+  .refs {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (min-width: 1000px) {
+  .refs {
+    grid-template-columns: repeat(3, 1fr);
   }
 }
 
 @media (max-width: 560px) {
-  .gallery {
-    column-count: 1;
-  }
-
   .lb {
     grid-template-columns: 1fr;
   }

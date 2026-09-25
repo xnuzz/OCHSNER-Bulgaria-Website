@@ -214,9 +214,11 @@ export const home = {
   /* Live Facebook + Instagram feed. Handles are filled in once the client
      connects their own accounts; see api/_lib/social.js. */
   social: {
-    title: 'Последно от нас',
+    title: 'Последно от OCHSNER',
+    /* The posts come from the manufacturer's official account, not ours — the
+       wording says so plainly rather than implying they are our own. */
     subtitle:
-      'Актуални проекти, монтажи и новини директно от нашите профили във Facebook и Instagram.',
+      'Актуални проекти, монтажи и новини от официалния профил на OCHSNER Wärmepumpen.',
     facebook: 'Facebook',
     instagram: 'Instagram',
     /*

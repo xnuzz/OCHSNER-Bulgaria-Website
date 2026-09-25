@@ -124,7 +124,7 @@ onMounted(load)
                 fit="cover"
                 inset="0%"
                 surface="alt"
-                :ratio="post.network === 'instagram' ? '1 / 1' : '1.91 / 1'"
+                :ratio="post.network === 'instagram' ? '4 / 5' : '1.91 / 1'"
               />
             </div>
 

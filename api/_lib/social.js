@@ -10,11 +10,13 @@
  *   Instagram GET /{ig-user-id}/media     needs an IG Business/Creator account
  *                                         linked to that same Page
  *
- * So this reads from env vars the client fills in with their OWN accounts:
+ * Setup is ONE env var — the Page and Instagram ids are discovered from the
+ * token automatically (see resolveAccounts), so nothing else must be looked up:
  *
- *   META_ACCESS_TOKEN   long-lived Page access token
- *   FB_PAGE_ID          numeric Page id
- *   IG_USER_ID          numeric Instagram Business account id
+ *   META_ACCESS_TOKEN   access token (User OR Page token both work) — REQUIRED
+ *   FB_PAGE_ID          optional — only if auto-discovery picks the wrong Page
+ *   IG_USER_ID          optional — only to override the discovered IG account
+ *   IG_DISCOVER_USERNAME optional — also pull a public Business account's posts
  *   SOCIAL_CACHE_TTL    optional, seconds (default 900 = 15 min)
  *
  * DEMO MODE
@@ -36,10 +38,9 @@ let cache = { at: 0, payload: null }
 const ttlMs = () => (Number(process.env.SOCIAL_CACHE_TTL) || 900) * 1000
 
 function isConfigured() {
-  return Boolean(
-    process.env.META_ACCESS_TOKEN &&
-      (process.env.FB_PAGE_ID || process.env.IG_USER_ID)
-  )
+  // A token alone is enough: the Page id and Instagram id are discovered from
+  // it (see resolveAccounts), so the client only ever pastes ONE value.
+  return Boolean(process.env.META_ACCESS_TOKEN)
 }
 
 async function getJson(url) {
@@ -50,6 +51,68 @@ async function getJson(url) {
     throw new Error(msg)
   }
   return body
+}
+
+/*
+ * Work out which Page and Instagram account the token can read, so the client
+ * does not have to look up numeric ids by hand. Explicit env vars always win;
+ * otherwise we discover them from the token — handling BOTH a User token
+ * (via /me/accounts) and a Page token (via /me). The result is cached for a few
+ * hours because these ids never change between posts.
+ */
+let accounts = { at: 0, data: null }
+const ACCOUNTS_TTL = 6 * 60 * 60 * 1000
+
+async function resolveAccounts(token, force = false) {
+  const envPage = process.env.FB_PAGE_ID || null
+  const envIg = process.env.IG_USER_ID || null
+
+  // Both supplied by hand — nothing to discover.
+  if (envPage && envIg) return { pageId: envPage, igUserId: envIg, pageToken: token }
+
+  if (!force && accounts.data && Date.now() - accounts.at < ACCOUNTS_TTL) {
+    return accounts.data
+  }
+
+  let pageId = envPage
+  let igUserId = envIg
+  let pageToken = token
+
+  // Path 1: a User access token can list the Pages it manages, each of which
+  // carries its own Page token and its linked Instagram account.
+  try {
+    const body = await getJson(
+      `${GRAPH}/me/accounts?fields=id,name,access_token,instagram_business_account{id,username}&access_token=${token}`
+    )
+    const pages = body.data || []
+    const page = envPage ? pages.find((p) => p.id === envPage) : pages[0]
+    if (page) {
+      pageId = page.id
+      pageToken = page.access_token || token
+      if (!igUserId) igUserId = page.instagram_business_account?.id || null
+    }
+  } catch {
+    // Not a user token (or missing pages_show_list) — try the Page-token path.
+  }
+
+  // Path 2: a Page access token resolves /me to the Page itself.
+  if (!pageId || !igUserId) {
+    try {
+      const me = await getJson(
+        `${GRAPH}/me?fields=id,instagram_business_account{id,username}&access_token=${token}`
+      )
+      if (me.id) {
+        pageId = pageId || me.id
+        if (!igUserId) igUserId = me.instagram_business_account?.id || null
+      }
+    } catch {
+      // Leave whatever we have; explicit env ids (if any) still apply.
+    }
+  }
+
+  const data = { pageId, igUserId, pageToken }
+  accounts = { at: Date.now(), data }
+  return data
 }
 
 /** Trim a caption to a card-friendly length without cutting mid-word. */
@@ -183,6 +246,25 @@ async function fetchCurated(entries) {
     entries.map(async (entry, i) => {
       const network = /instagram\.com/i.test(entry.url) ? 'instagram' : 'facebook'
       let og = {}
+
+      // Entry already carries its own copy + image: nothing to look up. This is
+      // the normal case now that Instagram serves a login wall to servers, and
+      // it keeps the endpoint fast instead of timing out on every refresh.
+      if (entry.text && entry.image) {
+        return {
+          id: `cur_${i}`,
+          network,
+          curated: true,
+          author: entry.author || null,
+          text: excerpt(entry.text),
+          image: entry.image,
+          permalink: entry.url,
+          postedAt: entry.date || null,
+          likes: entry.likes ?? null,
+          comments: entry.comments ?? null
+        }
+      }
+
       try {
         // A crawler UA is what makes Meta serve the preview tags.
         const res = await fetch(entry.url, {
@@ -214,7 +296,7 @@ async function fetchCurated(entries) {
         id: `cur_${i}`,
         network,
         curated: true,
-        author: (og.title || '').split('(')[0].trim() || null,
+        author: entry.author || (og.title || '').split('(')[0].trim() || null,
         text: excerpt(text),
         image,
         permalink: entry.url,
@@ -271,18 +353,21 @@ export async function getSocialPosts({ limit = 6, force = false } = {}) {
   }
 
   const token = process.env.META_ACCESS_TOKEN
+  // One value in, both ids out — the client never looks these up by hand.
+  const acct = await resolveAccounts(token, force)
+  const pageToken = acct.pageToken || token
   const jobs = []
-  if (process.env.FB_PAGE_ID) {
-    jobs.push(['facebook', fetchFacebook(token, process.env.FB_PAGE_ID)])
+  if (acct.pageId) {
+    jobs.push(['facebook', fetchFacebook(pageToken, acct.pageId)])
   }
-  if (process.env.IG_USER_ID) {
-    jobs.push(['instagram', fetchInstagram(token, process.env.IG_USER_ID)])
+  if (acct.igUserId) {
+    jobs.push(['instagram', fetchInstagram(pageToken, acct.igUserId)])
   }
   // Optional: a second Instagram source, read from a public Business account.
-  if (process.env.IG_USER_ID && process.env.IG_DISCOVER_USERNAME) {
+  if (acct.igUserId && process.env.IG_DISCOVER_USERNAME) {
     jobs.push([
       'instagram-discovery',
-      fetchInstagramDiscovery(token, process.env.IG_USER_ID, process.env.IG_DISCOVER_USERNAME)
+      fetchInstagramDiscovery(pageToken, acct.igUserId, process.env.IG_DISCOVER_USERNAME)
     ])
   }
 
@@ -291,6 +376,16 @@ export async function getSocialPosts({ limit = 6, force = false } = {}) {
   const posts = []
   const sources = []
   const errors = []
+
+  // Token set but no account could be resolved — surface why, for debugging.
+  if (!jobs.length) {
+    errors.push({
+      network: 'setup',
+      message:
+        'Токенът не върна нито Facebook страница, нито Instagram акаунт. ' +
+        'Проверете, че токенът е за правилната страница и че Instagram е Business/Creator акаунт, свързан с нея.'
+    })
+  }
 
   settled.forEach((result, i) => {
     const network = jobs[i][0]

@@ -5,7 +5,6 @@
  * price list) once the client supplies them.
  */
 import { ref } from 'vue'
-import PageHero from '@/components/ui/PageHero.vue'
 import BaseButton from '@/components/ui/BaseButton.vue'
 import AppIcon from '@/components/ui/AppIcon.vue'
 import RedirectNotice from '@/components/ui/RedirectNotice.vue'
@@ -13,6 +12,7 @@ import { useExternalLink } from '@/composables/useExternalLink.js'
 import { useSeo } from '@/composables/useSeo.js'
 import { useI18n } from '@/i18n'
 import { downloadCenterUrl } from '@/i18n/bg/common.js'
+import PageHero from '@/components/ui/PageHero.vue'
 
 const { download: copy } = useI18n()
 const page = ref(null)
