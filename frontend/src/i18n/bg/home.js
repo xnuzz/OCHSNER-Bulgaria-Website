@@ -244,6 +244,61 @@ export const home = {
       'Примерни публикации. Секцията ще показва реалните ви публикации веднага след свързване на профилите във Facebook и Instagram.'
   },
 
+  brochures: {
+    strong: 'Актуални',
+    light: 'брошури',
+    intro: 'Каталозите на OCHSNER на български — онлайн или за изтегляне.',
+    view: 'Разгледай',
+    download: 'Изтегли',
+    pagesLabel: 'стр.',
+    more: 'Всички брошури и технически документи',
+    reader: {
+      prev: 'Предишна страница',
+      next: 'Следваща страница',
+      page: 'Страница',
+      zoomIn: 'Увеличи',
+      zoomOut: 'Намали',
+      download: 'Изтегли PDF',
+      close: 'Затвори',
+      rotate: 'Завъртете телефона, за да четете като книга'
+    },
+    items: [
+      {
+        tag: 'Каталог 2026',
+        title: 'Високотехнологични термопомпи',
+        pages: 36,
+        size: '6,4 MB',
+        file: '/brochures/ochsner-termopompi-2026.pdf',
+        fileName: 'OCHSNER-termopompi-2026.pdf',
+        cover: '/images/brochures/termopompi-2026-1.jpg',
+        inside: '/images/brochures/termopompi-2026-2.jpg',
+        pagesDir: '/images/brochures/pages/termopompi-2026/'
+      },
+      {
+        tag: 'Енергийна техника 2024',
+        title: 'Големи термопомпи за индустрията',
+        pages: 28,
+        size: '6,1 MB',
+        file: '/brochures/ochsner-golemi-termopompi-2024.pdf',
+        fileName: 'OCHSNER-golemi-termopompi-2024.pdf',
+        cover: '/images/brochures/golemi-termopompi-2024-1.jpg',
+        inside: '/images/brochures/golemi-termopompi-2024-2.jpg',
+        pagesDir: '/images/brochures/pages/golemi-termopompi-2024/'
+      },
+      {
+        tag: 'Продуктова брошура',
+        title: 'OCHSNER AIR HAWK',
+        pages: 4,
+        size: '1,8 MB',
+        file: '/brochures/ochsner-air-hawk.pdf',
+        fileName: 'OCHSNER-AIR-HAWK.pdf',
+        cover: '/images/brochures/air-hawk-1.jpg',
+        inside: '/images/brochures/air-hawk-2.jpg',
+        pagesDir: '/images/brochures/pages/air-hawk/'
+      }
+    ]
+  },
+
   finalCta: {
     title: 'Готови ли сте да намалите сметките за отопление?',
     text: 'Изпратете запитване и ще се свържем с вас за консултация и ориентировъчна оферта.',

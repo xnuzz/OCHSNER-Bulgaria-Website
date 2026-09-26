@@ -1,46 +1,45 @@
 /*
  * „Център за изтегляне“ page.
  *
- * Two parts, as the client described:
- *   1. Detailed technical documentation and manuals live in OCHSNER Austria's
- *      download centre — a button there sends the visitor on, via the redirect
- *      notice.
- *   2. Files hosted on our own site (catalogue, price list). The client will
- *      supply the actual PDFs; each entry shows a „предстои“ state until its
- *      `file` path is filled in and the PDF is dropped in /public/downloads/.
+ * Two parts:
+ *   1. The Bulgarian brochures, hosted on our own site and readable in the
+ *      book viewer (data in home.js → brochures, shared with the home page).
+ *   2. Technical documentation — data sheets, manuals, certificates — lives in
+ *      OCHSNER Austria's download centre; every link there goes through the
+ *      redirect notice.
  */
 export const download = {
   meta: {
     title: 'Център за изтегляне | OCHSNER България',
     description:
-      'Технически документи, каталози и ценова листа за термопомпите OCHSNER, както и връзка към пълния център за изтегляне на OCHSNER Австрия.'
+      'Брошури на OCHSNER на български за разглеждане и изтегляне, и връзка към техническите документи в центъра за изтегляне на OCHSNER Австрия.'
   },
-  title: 'Център за изтегляне',
-  intro:
-    'Тук ще намерите каталозите и материалите на OCHSNER България, както и връзка към пълния архив с техническа документация на производителя.',
+  hero: {
+    eyebrow: 'Документи',
+    title: 'Център за изтегляне',
+    subtitle:
+      'Брошурите на OCHSNER на български — за разглеждане онлайн или изтегляне. Техническите документи се поддържат от производителя в Австрия.'
+  },
+
+  brochures: {
+    strong: 'Брошури',
+    light: 'на български',
+    intro: 'Отворете брошурата като книга или я изтеглете като PDF.'
+  },
 
   /* Redirect to OCHSNER Austria for the full technical archive. */
-  external: {
-    strong: 'Подробна техническа',
-    title: 'информация и инструкции',
-    text: 'Пълните технически листове, схеми и инструкции за монтаж и експлоатация се поддържат от OCHSNER Австрия. Ще ви пренасочим към техния център за изтегляне.',
-    cta: 'Към центъра на OCHSNER'
-  },
-
-  /* Files served from our own site. */
-  filesTitle: 'Файлове за изтегляне',
-  soon: 'Предстои',
-  download: 'Изтегли',
-  files: [
-    {
-      title: 'Продуктов каталог',
-      text: 'Пълната гама термопомпи OCHSNER за България в един файл.',
-      file: null
-    },
-    {
-      title: 'Ценова листа',
-      text: 'Актуални ориентировъчни цени по серии и модели.',
-      file: null
-    }
-  ]
+  technical: {
+    eyebrow: 'OCHSNER Австрия',
+    strong: 'Технически',
+    light: 'документи',
+    text: 'Технически листове, схеми и инструкции за всички модели се поддържат актуални директно от производителя. Ще ви пренасочим към центъра за изтегляне на OCHSNER.',
+    cta: 'Към центъра за изтегляне',
+    note: 'Отваря се ochsner.com',
+    types: [
+      { icon: 'file', title: 'Технически листове', text: 'Данни и размери по модел' },
+      { icon: 'file', title: 'Инструкции за монтаж', text: 'За инсталатори и проектанти' },
+      { icon: 'file', title: 'Инструкции за експлоатация', text: 'За ежедневна употреба' },
+      { icon: 'quality', title: 'Сертификати', text: 'Енергийни етикети и декларации' }
+    ]
+  }
 }

@@ -9,6 +9,7 @@ import AccordionList from '@/components/ui/AccordionList.vue'
 import AppIcon from '@/components/ui/AppIcon.vue'
 import BaseButton from '@/components/ui/BaseButton.vue'
 import CtaBand from '@/components/ui/CtaBand.vue'
+import BrochureShelf from '@/components/home/BrochureShelf.vue'
 import { fetchProducts, useAsyncData } from '@/api/catalog.js'
 import { useSeo } from '@/composables/useSeo.js'
 import { useI18n } from '@/i18n'
@@ -211,6 +212,8 @@ onMounted(load)
     <!-- Social feed removed at the client's request. SocialFeed.vue, the
          /api/v1/social endpoint and the collected posts are all kept — drop
          <SocialFeed /> back in here to restore it. -->
+
+    <BrochureShelf />
 
     <CtaBand :title="home.finalCta.title" :text="home.finalCta.text" />
   </div>

@@ -9,7 +9,6 @@ import { fetchProducts, useAsyncData } from '@/api/catalog.js'
 import { useI18n } from '@/i18n'
 import RedirectNotice from '@/components/ui/RedirectNotice.vue'
 import { useExternalLink } from '@/composables/useExternalLink.js'
-import { downloadCenterUrl } from '@/i18n/bg/common.js'
 
 const { common, nav, contactDetails } = useI18n()
 const route = useRoute()
@@ -99,12 +98,10 @@ const { leavingFor, confirmLeave, cancelLeave } = useExternalLink()
         <p class="utility__role">{{ common.brandTagline }}</p>
         <nav class="utility__nav" :aria-label="nav.utilityLabel">
           <!-- Service and the partner portal are still to be confirmed with
-               OCHSNER Austria; the download centre is theirs and goes through
-               the redirect notice. -->
+               OCHSNER Austria. Downloads opens our own page, which carries the
+               brochures and the way on to OCHSNER's technical archive. -->
           <a href="#">{{ nav.utility.service }}</a>
-          <a :href="downloadCenterUrl" @click="confirmLeave($event, downloadCenterUrl)">
-            {{ nav.utility.downloads }}
-          </a>
+          <RouterLink :to="{ name: 'downloads' }">{{ nav.utility.downloads }}</RouterLink>
           <a href="#">{{ nav.utility.partnerPortal }}</a>
           <a class="utility__phone" :href="contactDetails.phoneHref">
             <AppIcon name="phone" :size="15" />

@@ -2,7 +2,6 @@
 import { ref } from 'vue'
 import SectionHeading from '@/components/ui/SectionHeading.vue'
 import CtaBand from '@/components/ui/CtaBand.vue'
-import PlaceholderImage from '@/components/ui/PlaceholderImage.vue'
 import AppIcon from '@/components/ui/AppIcon.vue'
 import { useSeo } from '@/composables/useSeo.js'
 import { useI18n } from '@/i18n'
@@ -22,12 +21,9 @@ useSeo({ title: about.meta.title, description: about.meta.description, path: '/z
       :subtitle="about.hero.subtitle"
     />
 
-    <!-- The local representative — placeholder bio for the client to complete -->
+    <!-- The local representative: text beside the credentials card -->
     <section class="section">
       <div class="container rep">
-        <div class="rep__media">
-          <PlaceholderImage label="Портретна снимка" tone="deep" ratio="3 / 4" />
-        </div>
         <div class="rep__body">
           <SectionHeading
             :strong="about.representative.title.split(' ').slice(0, 2).join(' ')"
@@ -38,43 +34,58 @@ useSeo({ title: about.meta.title, description: about.meta.description, path: '/z
           <p v-for="paragraph in about.representative.body" :key="paragraph" class="rep__paragraph">
             {{ paragraph }}
           </p>
+        </div>
 
-          <div class="creds">
-            <h3 class="creds__title">{{ about.representative.credentials.title }}</h3>
-            <ul class="creds__list">
-              <li v-for="item in about.representative.credentials.items" :key="item">
-                <AppIcon name="check" :size="16" class="creds__tick" />
-                <span>{{ item }}</span>
-              </li>
-            </ul>
-            <p class="creds__note">{{ about.representative.credentials.note }}</p>
-          </div>
+        <div class="creds">
+          <h3 class="creds__title">{{ about.representative.credentials.title }}</h3>
+          <ul class="creds__list">
+            <li v-for="item in about.representative.credentials.items" :key="item">
+              <AppIcon name="check" :size="16" class="creds__tick" />
+              <span>{{ item }}</span>
+            </li>
+          </ul>
+          <p class="creds__note">{{ about.representative.credentials.note }}</p>
         </div>
       </div>
     </section>
 
-    <!-- Official partnership -->
+    <!-- OCHSNER: tradition, production, range — and the Bulgarian representative -->
     <section class="section section--alt">
       <div class="container">
         <SectionHeading
-          :strong="about.partnership.title.split(' ').slice(0, 2).join(' ')"
-          :title="about.partnership.title.split(' ').slice(2).join(' ')"
+          :strong="about.tradition.strong"
+          :title="about.tradition.light"
           level="h2"
+          align="center"
           rule
         />
-        <div class="partnership">
-          <div>
-            <p v-for="paragraph in about.partnership.body" :key="paragraph" class="partnership__paragraph">
-              {{ paragraph }}
-            </p>
-          </div>
-          <dl class="facts">
-            <div v-for="fact in about.partnership.facts" :key="fact.label" class="fact">
-              <dt class="fact__value">{{ fact.value }}</dt>
-              <dd class="fact__label">{{ fact.label }}</dd>
-            </div>
-          </dl>
+        <div class="story">
+          <p v-for="paragraph in about.tradition.body" :key="paragraph">{{ paragraph }}</p>
         </div>
+
+        <div class="duo">
+          <article v-for="(col, i) in about.tradition.columns" :key="col.title" class="duo__col">
+            <h3 class="duo__title">{{ col.title }}</h3>
+            <p class="duo__text">{{ col.text }}</p>
+            <RouterLink v-if="col.cta && i === 0" class="duo__cta" :to="{ name: 'products' }">
+              {{ col.cta }}
+              <AppIcon name="arrowRight" :size="16" />
+            </RouterLink>
+          </article>
+        </div>
+
+        <p class="exclusive">
+          <span>{{ about.tradition.exclusive.before }}</span>
+          <a
+            class="exclusive__name"
+            :href="about.tradition.exclusive.href"
+            target="_blank"
+            rel="noopener"
+          >
+            {{ about.tradition.exclusive.name }}
+            <AppIcon name="arrowRight" :size="16" />
+          </a>
+        </p>
       </div>
     </section>
 
@@ -137,24 +148,17 @@ useSeo({ title: about.meta.title, description: about.meta.description, path: '/z
 </template>
 
 <style scoped>
-.rep,
-.partnership {
+.rep {
+  max-width: 1082px;
   display: grid;
   gap: var(--sp-6);
 }
 
-.rep__media :deep(.ph) {
-  border-radius: 20px;
-  overflow: hidden;
-}
-
-.rep__paragraph + .rep__paragraph,
-.partnership__paragraph + .partnership__paragraph {
+.rep__paragraph + .rep__paragraph {
   margin-top: var(--sp-4);
 }
 
-.rep__paragraph,
-.partnership__paragraph {
+.rep__paragraph {
   color: var(--c-ink-soft);
   line-height: var(--lh-body);
   max-width: 62ch;
@@ -162,7 +166,6 @@ useSeo({ title: about.meta.title, description: about.meta.description, path: '/z
 
 /* Credentials in their own card rather than a bare bullet list. */
 .creds {
-  margin-top: var(--sp-6);
   padding: clamp(var(--sp-5), 2vw, var(--sp-6));
   background: var(--c-surface-alt);
   border-radius: 20px;
@@ -202,32 +205,112 @@ useSeo({ title: about.meta.title, description: about.meta.description, path: '/z
   color: var(--c-ink-muted);
 }
 
-.facts {
-  margin: 0;
+/* --- tradition ------------------------------------------------------- */
+.story {
+  max-width: 820px;
+  margin: 0 auto;
+  text-align: center;
+  color: var(--c-ink-soft);
+  line-height: var(--lh-body);
+}
+
+.story p + p {
+  margin-top: var(--sp-4);
+}
+
+/* Two columns in one card, split by the red rule from the client's layout. */
+.duo {
+  max-width: 1082px;
+  margin: var(--sp-7) auto 0;
   display: grid;
-  gap: var(--sp-4);
-  align-self: start;
-}
-
-.fact {
-  padding: var(--sp-5);
   background: var(--c-surface);
-  border: 1px solid var(--c-line);
   border-radius: 20px;
+  box-shadow: 0 1px 2px rgb(0 0 0 / 0.05);
+  overflow: hidden;
 }
 
-.fact__value {
-  font-family: var(--font-heading);
-  font-size: 2rem;
+.duo__col {
+  display: flex;
+  flex-direction: column;
+  padding: clamp(var(--sp-5), 3vw, 44px);
+}
+
+.duo__col + .duo__col {
+  border-top: 2px solid var(--c-accent-600);
+}
+
+.duo__title {
+  font-size: 1.25rem;
   font-weight: var(--fw-bold);
-  line-height: 1.1;
+  line-height: 1.3;
+  color: var(--c-primary-900);
+  text-wrap: balance;
+}
+
+.duo__text {
+  margin-top: var(--sp-4);
+  color: var(--c-ink-soft);
+  line-height: var(--lh-body);
+}
+
+.duo__cta {
+  align-self: flex-start;
+  margin-top: auto;
+  display: inline-flex;
+  align-items: center;
+  gap: var(--sp-2);
+  min-height: 46px;
+  padding: 12px 24px;
+  border-radius: 999px;
+  background: var(--c-accent-600);
+  font-family: var(--font-heading);
+  font-size: 0.875rem;
+  font-weight: var(--fw-bold);
+  text-transform: uppercase;
+  color: #fff;
+  text-decoration: none;
+  transition: background-color var(--dur-fast) var(--ease), gap var(--dur-fast) var(--ease);
+}
+
+.duo__text + .duo__cta {
+  margin-top: var(--sp-6);
+}
+
+.duo__cta:hover {
+  gap: var(--sp-3);
+  background: var(--c-accent-700);
+}
+
+/* the representative: the company name is the link to its site */
+.exclusive {
+  margin-top: var(--sp-7);
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  gap: var(--sp-2) var(--sp-3);
+  text-align: center;
+  font-family: var(--font-heading);
+  font-size: 1.125rem;
+  font-weight: var(--fw-bold);
   color: var(--c-primary-900);
 }
 
-.fact__label {
-  margin: var(--sp-2) 0 0;
-  font-size: var(--fs-small);
-  color: var(--c-ink-muted);
+.exclusive__name {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--sp-2);
+  padding: 8px 18px;
+  border: 1px solid var(--c-accent-600);
+  border-radius: 999px;
+  color: var(--c-accent-600);
+  text-decoration: none;
+  transition: background-color var(--dur-fast) var(--ease), color var(--dur-fast) var(--ease);
+}
+
+.exclusive__name:hover {
+  background: var(--c-accent-600);
+  color: #fff;
 }
 
 .services {
@@ -359,14 +442,18 @@ useSeo({ title: about.meta.title, description: about.meta.description, path: '/z
 
 @media (min-width: 960px) {
   .rep {
-    grid-template-columns: 1fr 1.6fr;
-    gap: var(--sp-7);
-    align-items: start;
+    grid-template-columns: 1.5fr 1fr;
+    gap: var(--sp-8);
+    align-items: center;
   }
 
-  .partnership {
-    grid-template-columns: 1.5fr 1fr;
-    gap: var(--sp-7);
+  .duo {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .duo__col + .duo__col {
+    border-top: 0;
+    border-left: 2px solid var(--c-accent-600);
   }
 }
 
