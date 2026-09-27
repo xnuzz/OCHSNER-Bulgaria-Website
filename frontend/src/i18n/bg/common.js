@@ -90,12 +90,13 @@ export const contactDetails = {
   serviceEmailHref: 'mailto:service@ochsner.bg',
   address: 'ул. „Панорама София“ 5, XS Tower, София 1766',
   addressNote: '',
-  /* Keyless Google Maps embed for the office address. */
-  mapQuery: 'XS Tower, 5 Panorama Sofia str., Sofia 1766, Bulgaria',
+  /* Keyless Google Maps embed. The pin is Omnia Contractors' listing — same
+     building (XS Tower), so it lands on the office rather than the street. */
+  mapQuery: 'Omnia Contractors, 5 Panorama Sofia str., Sofia 1766, Bulgaria',
   mapEmbed:
-    'https://www.google.com/maps?q=XS%20Tower%2C%205%20Panorama%20Sofia%20str.%2C%20Sofia%201766%2C%20Bulgaria&output=embed',
+    'https://www.google.com/maps?q=Omnia%20Contractors%2C%205%20Panorama%20Sofia%20str.%2C%20Sofia%201766%2C%20Bulgaria&output=embed',
   mapLink:
-    'https://www.google.com/maps/search/?api=1&query=XS%20Tower%2C%205%20Panorama%20Sofia%20str.%2C%20Sofia%201766%2C%20Bulgaria',
+    'https://www.google.com/maps/search/?api=1&query=Omnia%20Contractors%2C%205%20Panorama%20Sofia%20str.%2C%20Sofia%201766%2C%20Bulgaria',
   hours: 'Понеделник – петък, 09:00 – 17:00'
 }
 
