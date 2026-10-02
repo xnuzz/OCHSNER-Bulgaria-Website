@@ -1,4 +1,3 @@
-import { downloadCenterUrl } from './common.js'
 /*
  * Long-form content for the four product category pages.
  *
@@ -676,11 +675,13 @@ export const categoryCommon = {
     { title: 'Всички продукти', text: 'Сравнение на четирите технологии на едно място.', to: 'products' },
     { title: 'Референции', text: 'Реализирани инсталации и типове сгради.', to: 'references' },
     { title: 'За нас', text: 'Официален представител на OCHSNER за България.', to: 'about' },
-    /* Run by OCHSNER Austria — opened through the redirect notice. */
+    /* Our own download page, which in turn links on to OCHSNER Austria's
+       archive behind the redirect notice. Keeping the visitor on the site
+       first means they get the Bulgarian framing before leaving. */
     {
       title: 'Център за изтегляне',
       text: 'Технически данни, описания и документи за проектиране.',
-      href: downloadCenterUrl
+      to: 'downloads'
     }
   ]
 }
