@@ -3,15 +3,22 @@ backend/target/
 backend/data/
 *.class
 
-# Node / Vite
-frontend/node_modules/
-frontend/dist/
-frontend/.vite/
+# Node / Vite — match at any depth, not just under frontend/
+node_modules/
+dist/
+.vite/
+npm-debug.log*
 
-# Env & secrets
+# Env & secrets. Broad by design: anything .env* is ignored except the
+# committed template, so a new .env.production can never slip in by accident.
 .env
-.env.local
+.env.*
+!.env.local.example
 *.local
+*.pem
+*.key
+*.p12
+*.keystore
 
 # Raw asset dump from the manufacturer — staging only. Finals are copied
 # into frontend/public/images/ and committed from there.
@@ -23,3 +30,8 @@ assets-inbox/
 *.iml
 .DS_Store
 Thumbs.db
+
+# Client-facing commercial documents (pricing, proposal). Deliberately kept out
+# of the repo: this code ships to the client and may become public.
+/*.txt
+/*.pdf

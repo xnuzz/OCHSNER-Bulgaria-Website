@@ -1,4 +1,5 @@
 import { readBody, sendJson, methodNotAllowed, validationError, accepted, checks, collect } from '../_lib/http.js'
+import { rateLimit, tooManyRequests } from '../_lib/ratelimit.js'
 import { notify } from '../_lib/notify.js'
 
 const ACTIVITIES = ['INSTALLER', 'HVAC_COMPANY', 'BUILDER', 'ARCHITECT', 'OTHER']
@@ -6,6 +7,10 @@ const ACTIVITIES = ['INSTALLER', 'HVAC_COMPANY', 'BUILDER', 'ARCHITECT', 'OTHER'
 // POST /api/v1/partner-applications
 export default async function handler(req, res) {
   if (req.method !== 'POST') return methodNotAllowed(res, 'POST')
+
+  // Throttle before any parsing or mail work.
+  const limit = rateLimit(req)
+  if (!limit.ok) return tooManyRequests(res, limit.retryAfter)
 
   const b = readBody(req)
 
