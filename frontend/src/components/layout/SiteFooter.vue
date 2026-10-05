@@ -1,5 +1,6 @@
 <script setup>
 import BrandMark from './BrandMark.vue'
+import BitPilotCredit from './BitPilotCredit.vue'
 import AppIcon from '@/components/ui/AppIcon.vue'
 import { useI18n } from '@/i18n'
 
@@ -78,6 +79,17 @@ const year = new Date().getFullYear()
     <div class="container footer__bottom">
       <p class="footer__legal">{{ footer.legalNote }}</p>
       <p class="footer__copy">© {{ year }} {{ contactDetails.companyName }}. {{ footer.copyright }}</p>
+    </div>
+
+    <!-- Developer credit: a quiet strip, deliberately below the client's own
+         legal line so it never competes with the OCHSNER brand. -->
+    <div class="container">
+      <BitPilotCredit
+        :label="footer.credit.label"
+        :tagline="footer.credit.tagline"
+        :cta="footer.credit.cta"
+        :url="footer.credit.url"
+      />
     </div>
   </footer>
 </template>
@@ -190,6 +202,7 @@ const year = new Date().getFullYear()
 .footer__legal {
   max-width: 80ch;
 }
+
 
 @media (min-width: 700px) {
   .footer__grid {

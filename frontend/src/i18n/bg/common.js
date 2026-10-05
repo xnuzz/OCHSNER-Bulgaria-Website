@@ -126,7 +126,17 @@ export const footer = {
   cookies: 'Бисквитки',
   legalNote:
     'OCHSNER® е регистрирана марка на OCHSNER Wärmepumpen GmbH, Австрия. Този сайт се поддържа от местния представител за България.',
-  copyright: 'Всички права запазени.'
+  copyright: 'Всички права запазени.',
+
+  /* Developer credit in the strip under the footer. */
+  credit: {
+    label: 'Изработка',
+    name: 'BitPilot',
+    tagline: 'Уебсайтове, приложения и софтуер по поръчка',
+    cta: 'Искате такъв сайт?',
+    /* UTM tags so BitPilot can see enquiries that came from this site. */
+    url: 'https://bitpilot.dev/?utm_source=ochsner.bg&utm_medium=referral&utm_campaign=footer-credit'
+  }
 }
 
 /* The download centre is run by OCHSNER Austria; every link to it goes through
