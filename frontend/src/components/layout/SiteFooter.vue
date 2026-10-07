@@ -79,18 +79,9 @@ const year = new Date().getFullYear()
     <div class="container footer__bottom">
       <p class="footer__legal">{{ footer.legalNote }}</p>
       <p class="footer__copy">© {{ year }} {{ contactDetails.companyName }}. {{ footer.copyright }}</p>
+      <BitPilotCredit />
     </div>
 
-    <!-- Developer credit: a quiet strip, deliberately below the client's own
-         legal line so it never competes with the OCHSNER brand. -->
-    <div class="container">
-      <BitPilotCredit
-        :label="footer.credit.label"
-        :tagline="footer.credit.tagline"
-        :cta="footer.credit.cta"
-        :url="footer.credit.url"
-      />
-    </div>
   </footer>
 </template>
 
@@ -217,7 +208,8 @@ const year = new Date().getFullYear()
   }
 
   .footer__bottom {
-    grid-template-columns: 1fr auto;
+    grid-template-columns: 1fr auto auto;
+    column-gap: var(--sp-6);
     align-items: center;
   }
 }

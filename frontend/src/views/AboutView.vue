@@ -34,6 +34,19 @@ useSeo({ title: about.meta.title, description: about.meta.description, path: '/z
           <p v-for="paragraph in about.representative.body" :key="paragraph" class="rep__paragraph">
             {{ paragraph }}
           </p>
+
+          <p class="rep__firm">
+            <span class="rep__firm-label">{{ about.representative.company.label }}</span>
+            <a
+              class="exclusive__name"
+              :href="about.representative.company.href"
+              target="_blank"
+              rel="noopener"
+            >
+              {{ about.representative.company.name }}
+              <AppIcon name="arrowRight" :size="16" />
+            </a>
+          </p>
         </div>
 
         <div class="creds">
@@ -44,7 +57,6 @@ useSeo({ title: about.meta.title, description: about.meta.description, path: '/z
               <span>{{ item }}</span>
             </li>
           </ul>
-          <p class="creds__note">{{ about.representative.credentials.note }}</p>
         </div>
       </div>
     </section>
@@ -156,6 +168,21 @@ useSeo({ title: about.meta.title, description: about.meta.description, path: '/z
 
 .rep__paragraph + .rep__paragraph {
   margin-top: var(--sp-4);
+}
+
+.rep__firm {
+  margin-top: var(--sp-6);
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: var(--sp-3) var(--sp-4);
+  font-family: var(--font-heading);
+  font-weight: var(--fw-bold);
+}
+
+.rep__firm-label {
+  font-size: var(--fs-small);
+  color: var(--c-ink-muted);
 }
 
 .rep__paragraph {
