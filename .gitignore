@@ -35,3 +35,6 @@ Thumbs.db
 # of the repo: this code ships to the client and may become public.
 /*.txt
 /*.pdf
+
+# SuperHosting upload bundle (npm run package:superhosting)
+superhosting.zip

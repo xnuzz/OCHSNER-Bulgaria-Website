@@ -38,11 +38,15 @@ function prune(now) {
  * Vercel puts the real client address first in x-forwarded-for. The header is
  * attacker-controlled in principle, but on Vercel it is rewritten at the edge,
  * so the first entry is trustworthy here.
+ *
+ * Anywhere else (server.js behind SuperHosting's Apache/Passenger) the client
+ * controls the first entry, so take the last one: the address our own proxy
+ * appended, which cannot be forged.
  */
 export function clientIp(req) {
-  const fwd = req.headers?.['x-forwarded-for']
-  if (typeof fwd === 'string' && fwd.length) return fwd.split(',')[0].trim()
-  if (Array.isArray(fwd) && fwd.length) return String(fwd[0]).split(',')[0].trim()
+  const raw = req.headers?.['x-forwarded-for']
+  const fwd = (Array.isArray(raw) ? raw.join(',') : raw || '').split(',').map((s) => s.trim()).filter(Boolean)
+  if (fwd.length) return process.env.VERCEL ? fwd[0] : fwd[fwd.length - 1]
   return req.headers?.['x-real-ip'] || req.socket?.remoteAddress || 'unknown'
 }
 

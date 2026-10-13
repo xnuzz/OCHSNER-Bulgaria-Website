@@ -2,9 +2,13 @@
   "name": "ochsner-bg-site",
   "private": true,
   "type": "module",
-  "description": "Root manifest for Vercel: builds the Vite frontend and serves the /api serverless functions. type:module lets the ES-module functions in /api run.",
+  "description": "Root manifest: builds the Vite frontend and serves the /api functions, on Vercel or via server.js (SuperHosting). type:module lets the ES-module functions in /api run.",
   "engines": {
     "node": ">=20.0.0"
+  },
+  "scripts": {
+    "start": "node server.js",
+    "package:superhosting": "node scripts/package-superhosting.mjs"
   },
   "dependencies": {
     "nodemailer": "^10.0.13"
