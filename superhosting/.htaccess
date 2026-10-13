@@ -1,0 +1,35 @@
+# OCHSNER site on SuperHosting (Apache). Does what vercel.json does on Vercel.
+# The security headers are appended at the end by scripts/package-superhosting.mjs.
+
+Options -Indexes
+DirectoryIndex index.html
+RewriteEngine On
+
+# HTTPS only
+RewriteCond %{HTTPS} !=on
+RewriteRule ^ https://%{HTTP_HOST}%{REQUEST_URI} [R=301,L]
+
+# API: catalog data is pre-built JSON, the two forms are PHP
+RewriteRule ^api/v1/(products|references|social)/?$ api/v1/$1.json [END]
+RewriteRule ^api/v1/(contact|partner-applications)/?$ api/v1/$1.php [END]
+RewriteRule ^api/ - [R=404,L]
+
+# SPA: anything that is not a real file goes to the Vue router
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^ index.html [L]
+
+<IfModule mod_headers.c>
+  # Vite fingerprints everything in /assets, so it can be cached forever
+  <If "%{REQUEST_URI} =~ m#^/assets/#">
+    Header set Cache-Control "public, max-age=31536000, immutable"
+  </If>
+  <FilesMatch "\.(html|json)$">
+    Header set Cache-Control "no-cache"
+  </FilesMatch>
+</IfModule>
+
+<IfModule mod_deflate.c>
+  AddOutputFilterByType DEFLATE text/html text/css text/javascript application/javascript application/json image/svg+xml
+</IfModule>
+
