@@ -10,7 +10,7 @@ keeps working unchanged (`.vercelignore` keeps `server.js` out of it).
 npm run package:superhosting
 ```
 
-This creates `superhosting.zip` (~55 MB, mostly video), which contains `server.js`, `package.json`,
+This creates `superhosting.zip` (~55 MB, mostly video), which contains `app.cjs`, `server.js`, `package.json`,
 `package-lock.json`, `vercel.json`, `api/` and `frontend/dist/`.
 
 ## 2. Create the Node.js app
@@ -23,7 +23,7 @@ In cPanel, open **Setup Node.js App** → **Create Application** and set:
 | Application mode | Production |
 | Application root | e.g. `ochsner` (a folder in your home directory, **not** `public_html`) |
 | Application URL | your domain |
-| Application startup file | `server.js` |
+| Application startup file | `app.cjs` (not `server.js`: Passenger loads it with `require()`) |
 
 ## 3. Upload
 
