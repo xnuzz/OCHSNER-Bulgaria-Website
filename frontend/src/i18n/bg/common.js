@@ -81,8 +81,8 @@ export const nav = {
 /** Phone and email are still to be confirmed by the client before launch. */
 export const contactDetails = {
   companyName: 'ОКСНЕР България',
-  phone: '02 405 9870',
-  phoneHref: 'tel:+35924059870',
+  phone: '+359 877 236 499',
+  phoneHref: 'tel:+359877236499',
   email: 'info@ochsner.bg',
   emailHref: 'mailto:info@ochsner.bg',
   /* Separate inbox for service/after-sales enquiries. */
