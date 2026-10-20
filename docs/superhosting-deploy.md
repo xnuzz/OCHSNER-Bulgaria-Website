@@ -53,3 +53,23 @@ Run `npm run package:superhosting` again. Upload the zip and extract it over the
   or live posts if `META_ACCESS_TOKEN` is set in your shell when you build. Rebuild to refresh it.
 - **Form problems:** failed mails are written to the PHP `error_log` in the same
   folder, together with the full submission, so no lead is lost.
+
+## Automatic deploys (like Vercel)
+
+`.github/workflows/deploy-superhosting.yml` builds the site on every push to `main` and
+uploads only the changed files over FTPS. The Actions tab shows each run.
+
+One-time setup:
+
+1. In cPanel → **FTP Accounts**, create an account, for example `deploy@ochsner.bg`. Set its
+   **Directory** to `public_html/ochsner.bg/public`, so it can reach nothing else on the
+   shared account.
+2. On GitHub → repo → **Settings → Secrets and variables → Actions**, add these secrets:
+   - `FTP_SERVER`: the FTP server from cPanel → FTP Accounts → *Configure FTP Client*
+   - `FTP_USERNAME`: `deploy@ochsner.bg`
+   - `FTP_PASSWORD`: that account's password
+   - `META_ACCESS_TOKEN` (optional): live social posts
+3. Go to **Actions → Deploy to SuperHosting → Run workflow** to deploy for the first time.
+
+The action keeps `.ftp-deploy-sync-state.json` in the document root to know what changed.
+Don't delete it, or the next run re-uploads everything.

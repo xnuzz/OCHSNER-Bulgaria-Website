@@ -31,6 +31,9 @@ for (const rule of JSON.parse(readFileSync('vercel.json', 'utf8')).headers) {
 lines.push('</IfModule>', '')
 appendFileSync(`${DIST}/.htaccess`, lines.join('\n'))
 
+// GitHub Actions uploads frontend/dist over FTP directly, no zip needed.
+if (process.env.CI) process.exit(0)
+
 rmSync('superhosting.zip', { force: true })
 const tar = process.platform === 'win32' ? `"${process.env.SystemRoot}\\System32\\tar.exe"` : 'tar'
 run(`${tar} -a -cf superhosting.zip -C ${DIST} .`)
