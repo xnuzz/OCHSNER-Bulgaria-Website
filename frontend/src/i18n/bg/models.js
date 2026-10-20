@@ -13,6 +13,14 @@
  * are not published on the reference pages, the variant carries only the data
  * that is — nothing is filled in by estimate.
  */
+
+/*
+ * Series withdrawn from the Bulgarian range: their data stays in the bundle so
+ * the series can be restored quickly, but the pages are unreachable (router)
+ * and left out of the sitemap (vite.config.js).
+ */
+export const withdrawnSeries = new Set(['terra-fox'])
+
 export const models = {
   'air-hawk': {
     category: 'vazduh-voda',
@@ -278,7 +286,7 @@ export const models = {
       {
         icon: 'technology',
         title: 'Минимално заемано място',
-        text: 'Целият хладилен кръг е разположен в компактен уред за външен монтаж, а в сградата се внася само вода. В зависимост от нуждата се предлагат различни вътрешни модули, което позволява решението да се побере и в малки технически помещения.'
+        text: 'В зависимост от нуждите се предлагат три вътрешни модула. CONTROL MODULE съдържа управлението и панела за обслужване на термопомпата; в стандартното оборудване са включени циркулационна помпа и сензор за налягане в системата. HYDRO MODULE обединява управлението, панела за обслужване и всички основни хидравлични компоненти за работата на отоплителната система. MULTI TOWER е цялостно решение с управление, 100-литров буферен съд за отопление и охлаждане, 168-литров бойлер за битова гореща вода и всички хидравлични компоненти.'
       },
       {
         image: '/images/models/feature/milan-noise.png',
@@ -315,28 +323,134 @@ export const models = {
       title: 'OCHSNER AIR MILAN — модели от серията',
       items: [
         {
-          name: 'AIR MILAN 612',
-          range: '3 – 12 kW',
+          name: 'AIR MILAN 307 CM',
+          range: '3 – 7 kW',
           image: '/images/models/air-milan-612.png',
-          tags: ['Моноблок за външен монтаж', 'Хладилен агент R290', 'Управление OTS'],
+          tags: ['Control модул', 'Моноблок изпълнение', 'Хладилен агент R290'],
           specs: [
-            { label: 'Макс. температура', value: '70 °C' },
-            { label: 'SCOP', value: '4,9' },
-            { label: 'SEER', value: '4,8' }
+            { label: 'Енергиен клас', value: 'A+++' },
+            { label: 'P rated', value: '6 kW' },
+            { label: 'Ефективност', value: '201,0 %' },
+            { label: 'Lₚ на 3 m', value: '37,5 dB(A)' }
           ],
-          footnote: 'OTS управление | SG-Ready | активно охлаждане'
+          footnote: '70 °C макс. температура на подаване | OTS управление | SG-Ready'
         },
         {
-          name: 'AIR MILAN 1016',
-          range: '10 – 20 kW',
-          image: '/images/models/air-milan.png',
-          tags: ['Моноблок за външен монтаж', 'Хладилен агент R290', 'Управление OTS'],
+          name: 'AIR MILAN 307 HM',
+          range: '3 – 7 kW',
+          image: '/images/models/air-milan-612.png',
+          tags: ['Hydro модул', 'Моноблок изпълнение', 'Хладилен агент R290'],
           specs: [
-            { label: 'Макс. температура', value: '70 °C' },
-            { label: 'SCOP', value: '4,9' },
-            { label: 'SEER', value: '4,8' }
+            { label: 'Енергиен клас', value: 'A+++' },
+            { label: 'P rated', value: '6 kW' },
+            { label: 'Ефективност', value: '201,0 %' },
+            { label: 'Lₚ на 3 m', value: '37,5 dB(A)' }
           ],
-          footnote: 'OTS управление | SG-Ready | активно охлаждане'
+          footnote: '70 °C макс. температура на подаване | OTS управление | SG-Ready'
+        },
+        {
+          name: 'AIR MILAN 612 CM',
+          range: '6 – 11 kW',
+          image: '/images/models/air-milan-612.png',
+          tags: ['Control модул', 'Моноблок изпълнение', 'Хладилен агент R290'],
+          specs: [
+            { label: 'Енергиен клас', value: 'A+++' },
+            { label: 'P rated', value: '8 kW' },
+            { label: 'Ефективност', value: '191,0 %' },
+            { label: 'Lₚ на 3 m', value: '42,5 dB(A)' }
+          ],
+          footnote: '70 °C макс. температура на подаване | OTS управление | SG-Ready'
+        },
+        {
+          name: 'AIR MILAN 612 HM',
+          range: '6 – 11 kW',
+          image: '/images/models/air-milan-612.png',
+          tags: ['Hydro модул', 'Моноблок изпълнение', 'Хладилен агент R290'],
+          specs: [
+            { label: 'Енергиен клас', value: 'A+++' },
+            { label: 'P rated', value: '8 kW' },
+            { label: 'Ефективност', value: '191,0 %' },
+            { label: 'Lₚ на 3 m', value: '42,5 dB(A)' }
+          ],
+          footnote: '70 °C макс. температура на подаване | OTS управление | SG-Ready'
+        },
+        {
+          name: 'AIR MILAN 1016 CM',
+          range: '10 – 17 kW',
+          image: '/images/models/air-milan.png',
+          tags: ['Control модул', 'Моноблок изпълнение', 'Хладилен агент R290'],
+          specs: [
+            { label: 'Енергиен клас', value: 'A+++' },
+            { label: 'P rated', value: '12 kW' },
+            { label: 'Ефективност', value: '193,0 %' },
+            { label: 'Lₚ на 3 m', value: '41,1 dB(A)' }
+          ],
+          footnote: '70 °C макс. температура на подаване | OTS управление | SG-Ready'
+        },
+        {
+          name: 'AIR MILAN 1016 HM',
+          range: '10 – 17 kW',
+          image: '/images/models/air-milan.png',
+          tags: ['Hydro модул', 'Моноблок изпълнение', 'Хладилен агент R290'],
+          specs: [
+            { label: 'Енергиен клас', value: 'A+++' },
+            { label: 'P rated', value: '12 kW' },
+            { label: 'Ефективност', value: '193,0 %' },
+            { label: 'Lₚ на 3 m', value: '41,1 dB(A)' }
+          ],
+          footnote: '70 °C макс. температура на подаване | OTS управление | SG-Ready'
+        },
+        {
+          name: 'AIR MILAN 1220 CM',
+          range: '12 – 20 kW',
+          image: '/images/models/air-milan.png',
+          tags: ['Control модул', 'Моноблок изпълнение', 'Хладилен агент R290'],
+          specs: [
+            { label: 'Енергиен клас', value: 'A+++' },
+            { label: 'P rated', value: '16 kW' },
+            { label: 'Ефективност', value: '185,0 %' },
+            { label: 'Lₚ на 3 m', value: '47,5 dB(A)' }
+          ],
+          footnote: '70 °C макс. температура на подаване | OTS управление | SG-Ready'
+        },
+        {
+          name: 'AIR MILAN 1220 HM',
+          range: '12 – 20 kW',
+          image: '/images/models/air-milan.png',
+          tags: ['Hydro модул', 'Моноблок изпълнение', 'Хладилен агент R290'],
+          specs: [
+            { label: 'Енергиен клас', value: 'A+++' },
+            { label: 'P rated', value: '16 kW' },
+            { label: 'Ефективност', value: '185,0 %' },
+            { label: 'Lₚ на 3 m', value: '47,5 dB(A)' }
+          ],
+          footnote: '70 °C макс. температура на подаване | OTS управление | SG-Ready'
+        },
+        {
+          name: 'AIR MILAN 612 T200',
+          range: '6 – 11 kW',
+          image: '/images/models/air-milan-612.png',
+          tags: ['Multi Tower', 'Моноблок изпълнение', 'Хладилен агент R290'],
+          specs: [
+            { label: 'Енергиен клас', value: 'A+++' },
+            { label: 'P rated', value: '8 kW' },
+            { label: 'Ефективност', value: '191,0 %' },
+            { label: 'Lₚ на 3 m', value: '42,5 dB(A)' }
+          ],
+          footnote: '70 °C макс. температура на подаване | OTS управление | SG-Ready'
+        },
+        {
+          name: 'AIR MILAN 1016 T200',
+          range: '10 – 17 kW',
+          image: '/images/models/air-milan.png',
+          tags: ['Multi Tower', 'Моноблок изпълнение', 'Хладилен агент R290'],
+          specs: [
+            { label: 'Енергиен клас', value: 'A+++' },
+            { label: 'P rated', value: '12 kW' },
+            { label: 'Ефективност', value: '193,0 %' },
+            { label: 'Lₚ на 3 m', value: '41,1 dB(A)' }
+          ],
+          footnote: '70 °C макс. температура на подаване | OTS управление | SG-Ready'
         }
       ]
     },

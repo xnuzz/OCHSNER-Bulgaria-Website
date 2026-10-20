@@ -1,6 +1,9 @@
 import { fileURLToPath, URL } from 'node:url'
 import { defineConfig, loadEnv } from 'vite'
 import vue from '@vitejs/plugin-vue'
+import { categories } from './src/i18n/bg/categories.js'
+import { models, withdrawnSeries } from './src/i18n/bg/models.js'
+import { variants } from './src/i18n/bg/variants.js'
 
 /**
  * Serves /api/v1 during `npm run dev` by running the very same serverless
@@ -93,10 +96,40 @@ function readJson(req) {
   })
 }
 
+/**
+ * Emits sitemap.xml from the same catalogue the router serves, so it can never
+ * list a page that is gone or miss a new product.
+ */
+function sitemap() {
+  return {
+    name: 'ochsner-sitemap',
+    apply: 'build',
+    generateBundle() {
+      const paths = [
+        '/', '/produkti', '/za-nas', '/referencii', '/stani-partnyor', '/kontakti',
+        '/tsentar-za-izteglyane', '/politika-poveritelnost', '/obshti-usloviya', '/politika-biskvitki',
+        ...Object.keys(categories).map((slug) => `/produkti/${slug}`),
+        ...Object.entries(models)
+          .filter(([key]) => !withdrawnSeries.has(key))
+          .map(([key, m]) => `/produkti/${m.category}/${key}`),
+        ...Object.entries(variants)
+          .filter(([, v]) => !withdrawnSeries.has(v.model))
+          .map(([key, v]) => `/produkti/${models[v.model].category}/${v.model}/${key}`)
+      ]
+      const urls = paths.map((p) => `  <url><loc>https://ochsner.bg${p}</loc></url>`).join('\n')
+      this.emitFile({
+        type: 'asset',
+        fileName: 'sitemap.xml',
+        source: `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${urls}\n</urlset>\n`
+      })
+    }
+  }
+}
+
 const useBackend = process.env.VITE_USE_BACKEND === '1'
 
 export default defineConfig({
-  plugins: [vue(), ...(useBackend ? [] : [devApi()])],
+  plugins: [vue(), sitemap(), ...(useBackend ? [] : [devApi()])],
   resolve: {
     alias: {
       '@': fileURLToPath(new URL('./src', import.meta.url))

@@ -1,15 +1,8 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import HomeView from '@/views/HomeView.vue'
 import { categories } from '@/i18n/bg/categories.js'
-import { models } from '@/i18n/bg/models.js'
+import { models, withdrawnSeries } from '@/i18n/bg/models.js'
 import { variants } from '@/i18n/bg/variants.js'
-
-/*
- * Series withdrawn from the Bulgarian range: their data stays in the bundle so
- * the series can be restored quickly, but the pages are unreachable and any
- * stray link falls back to the product overview.
- */
-const withdrawnSeries = new Set(['terra-fox'])
 
 /**
  * Only the home view is bundled eagerly — every other route is code-split so the
@@ -101,6 +94,8 @@ const routes = [
     component: () => import('@/views/LegalView.vue'),
     props: { doc: 'cookies', path: '/politika-biskvitki' }
   },
+  /* Retired page, still indexed by search engines: its content now lives on the home page. */
+  { path: '/zashto-termopompa', redirect: { name: 'home', hash: '#kak-raboti' } },
   {
     path: '/:pathMatch(.*)*',
     name: 'not-found',
