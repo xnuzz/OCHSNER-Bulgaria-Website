@@ -1,29 +1,22 @@
 <script setup>
 /**
- * One page per heat-pump category, mirroring the structure of the corresponding
- * pages on ochsner.com (/en/heat-pumps/air-heat-pumps/ and siblings):
+ * One page per heat-pump category, rebuilt on the corresponding pages on
+ * ochsner.com (/en/heat-pumps/air-heat-pumps/ and siblings):
  *
- *   hero → intro sections → product overview (model cards) → how it works +
- *   consultation CTA → feature block → advantages → choosing → FAQ →
- *   helpful links → closing CTA band
+ *   photo hero with overlapping card → product overview cards → type-colour
+ *   band (function, consultation CTA, quote, feature cards) → advantages and
+ *   choosing cards → FAQ → helpful links → closing CTA band
  *
- * The catalogue entry (title, advantages, datasheet) still comes from the API so
- * the page cannot drift from the product data; the long-form editorial copy
- * lives in i18n/bg/categories.js like every other string on the site.
+ * The editorial copy, images and quotes live in i18n/bg/categories.js; optional
+ * fields (fn.image, quote, item.image) simply drop out where a category has none.
  */
-import { computed, onMounted, ref, watch } from 'vue'
+import { computed, onMounted, watch } from 'vue'
 import { useRoute } from 'vue-router'
 import SectionHeading from '@/components/ui/SectionHeading.vue'
 import BaseButton from '@/components/ui/BaseButton.vue'
 import CtaBand from '@/components/ui/CtaBand.vue'
 import AccordionList from '@/components/ui/AccordionList.vue'
-import AppIcon from '@/components/ui/AppIcon.vue'
-import RedirectNotice from '@/components/ui/RedirectNotice.vue'
-import { useExternalLink } from '@/composables/useExternalLink.js'
-import { downloadCenterUrl } from '@/i18n/bg/common.js'
-import PlaceholderImage from '@/components/ui/PlaceholderImage.vue'
 import HelpfulLinks from '@/components/products/HelpfulLinks.vue'
-import { fetchProducts, useAsyncData } from '@/api/catalog.js'
 import { useSeo } from '@/composables/useSeo.js'
 import { useI18n } from '@/i18n'
 
@@ -33,16 +26,32 @@ const route = useRoute()
 const slug = computed(() => route.params.slug)
 const content = computed(() => categories[slug.value] || null)
 
-/* The catalogue is cached in api/catalog.js, so this is free after the first page. */
-const { data: all, load } = useAsyncData(fetchProducts)
-const product = computed(() => (all.value || []).find((p) => p.slug === slug.value) || null)
-
 /* Category header photo; the two accessory categories have none on the
    reference, so the card simply sits on the tint instead. */
 const withPhoto = ['vazduh-voda', 'zemya-voda', 'voda-voda', 'topla-voda']
 const photo = computed(() =>
   withPhoto.includes(slug.value) ? `/images/categories/${slug.value}.webp` : ''
 )
+
+/* Bold lead + light remainder, as every heading on the reference is set:
+   split at " — " where the title has one, otherwise after the first n words. */
+function split(title, n = 2) {
+  const [a, b] = title.split(' — ')
+  if (b) return { strong: a, title: b }
+  const words = title.split(' ')
+  return { strong: words.slice(0, n).join(' '), title: words.slice(n).join(' ') }
+}
+
+/* Feature items with a picture become image cards; the rest follow as centred
+   text, as on the reference. With no pictures at all, every item is a card. */
+const featureCards = computed(() => {
+  const items = content.value ? content.value.features.items : []
+  return items.some((i) => i.image) ? items.filter((i) => i.image) : items
+})
+const featureNotes = computed(() => {
+  const items = content.value ? content.value.features.items : []
+  return items.some((i) => i.image) ? items.filter((i) => !i.image) : []
+})
 
 const faqItems = computed(() =>
   content.value ? content.value.faq.items.map((i) => ({ title: i.q, text: i.a })) : []
@@ -57,25 +66,15 @@ function applySeo() {
   })
 }
 
-onMounted(() => {
-  load()
-  applySeo()
-})
+onMounted(applySeo)
 
 /* Category pages share a component, so a slug change has to re-run the meta. */
 watch(slug, applySeo)
-
-const page = ref(null)
-
-/* External destinations open behind the redirect notice. */
-const { leavingFor, confirmLeave, cancelLeave } = useExternalLink()
 </script>
 
 <template>
-  <div v-if="content" ref="page" :style="{ '--type-tint': content.tint }">
-    <!-- Hero: full-bleed photo with the intro card overlapping it, as on the
-         reference. The card carries the eyebrow, the two-weight headline, the
-         lead and the introductory sections. -->
+  <div v-if="content" :style="{ '--type-tint': content.tint }">
+    <!-- Hero: full-bleed photo with the intro card overlapping it -->
     <section class="hero">
       <div class="hero__photo">
         <img
@@ -87,7 +86,7 @@ const { leavingFor, confirmLeave, cancelLeave } = useExternalLink()
         />
       </div>
 
-      <div class="container">
+      <div class="container narrow">
         <div class="card">
           <p class="card__eyebrow">{{ content.eyebrow }}</p>
           <h1 class="card__title">
@@ -97,37 +96,29 @@ const { leavingFor, confirmLeave, cancelLeave } = useExternalLink()
 
           <div v-for="block in content.intro" :key="block.title" class="card__block">
             <h2 class="card__heading">{{ block.title }}</h2>
-            <p class="prose">{{ block.body }}</p>
+            <p>{{ block.body }}</p>
           </div>
         </div>
       </div>
     </section>
 
-    <!-- Product overview: one card per model -->
-    <section class="section section--alt">
+    <!-- Product overview: one card per series -->
+    <section class="section">
       <div class="container">
-        <SectionHeading :strong="content.models.title.split(' — ')[0]" :title="content.models.title.split(' — ')[1] || ''" level="h2" align="center" rule />
-        <ul class="models">
-          <li v-for="model in content.models.items" :key="model.name" class="model">
-            <div class="model__media">
-              <PlaceholderImage
-                :src="model.image"
-                :label="model.name"
-                surface="none"
-                inset="6%"
-                ratio="1 / 1"
-              />
+        <SectionHeading v-bind="split(content.models.title)" level="h2" rule />
+        <ul class="pcards">
+          <li v-for="model in content.models.items" :key="model.name" class="pcard">
+            <div class="pcard__media">
+              <img :src="model.image" :alt="model.name" loading="lazy" decoding="async" />
             </div>
-            <div class="model__body">
-              <h3 class="model__name">{{ model.name }}</h3>
-              <p class="model__range">{{ model.range }}</p>
-              <p class="model__text">{{ model.text }}</p>
+            <h3 class="pcard__name">{{ model.name }}</h3>
+            <p class="pcard__range">{{ model.range }}</p>
+            <p class="pcard__text">{{ model.text }}</p>
+            <div v-if="!content.hideModelsCta" class="pcard__cta">
               <BaseButton
-                v-if="!content.hideModelsCta"
                 :to="model.key
                   ? { name: 'product-model', params: { slug, model: model.key } }
                   : { name: 'contact' }"
-                size="sm"
               >
                 {{ categoryCommon.modelsCta }}
               </BaseButton>
@@ -137,71 +128,76 @@ const { leavingFor, confirmLeave, cancelLeave } = useExternalLink()
       </div>
     </section>
 
-    <!-- How it works — tinted band, as on the reference -->
+    <!-- Type-colour band: how it works, consultation, quote, feature cards -->
     <section class="section section--tint">
-      <div class="container container--narrow">
-        <SectionHeading :strong="content.fn.title.split(' ').slice(0, 2).join(' ')" :title="content.fn.title.split(' ').slice(2).join(' ')" level="h2" />
-        <p v-for="para in content.fn.body" :key="para" class="prose">{{ para }}</p>
-        <BaseButton :to="{ name: 'contact' }" size="lg" class="fn__cta">
-          {{ common.ctaPrimary }}
-        </BaseButton>
+      <div class="container narrow">
+        <SectionHeading v-bind="split(content.fn.title)" level="h2" align="center" />
+        <p class="center">{{ content.fn.body[0] }}</p>
+        <img
+          v-if="content.fn.image"
+          class="fn__image"
+          :src="content.fn.image"
+          alt=""
+          width="2050"
+          height="874"
+          loading="lazy"
+          decoding="async"
+        />
+        <p v-for="para in content.fn.body.slice(1)" :key="para" class="center">{{ para }}</p>
+        <div class="center fn__cta">
+          <BaseButton :to="{ name: 'contact' }" size="lg">{{ common.ctaPrimary }}</BaseButton>
+        </div>
+
+        <figure v-if="content.quote" class="quote">
+          <div class="quote__rule" aria-hidden="true"><span>❝</span></div>
+          <blockquote>
+            <p>{{ content.quote.text }}</p>
+          </blockquote>
+          <figcaption>{{ content.quote.author }}</figcaption>
+          <div class="quote__rule quote__rule--end" aria-hidden="true"><span>❞</span></div>
+        </figure>
+
+        <div class="features">
+          <SectionHeading
+            v-bind="split(content.features.title)"
+            :subtitle="content.features.intro"
+            level="h2"
+            align="center"
+          />
+          <ul class="icards" :class="{ 'icards--3': featureCards.length === 3 }">
+            <li v-for="item in featureCards" :key="item.title" class="icard">
+              <img v-if="item.image" class="icard__img" :src="item.image" alt="" loading="lazy" decoding="async" />
+              <h3 class="icard__title">{{ item.title }}</h3>
+              <p class="icard__text">{{ item.text }}</p>
+            </li>
+          </ul>
+          <div v-for="item in featureNotes" :key="item.title" class="note">
+            <h3 class="note__title">{{ item.title }}</h3>
+            <p class="center">{{ item.text }}</p>
+          </div>
+        </div>
       </div>
     </section>
 
-    <!-- Category-specific feature block -->
+    <!-- Advantages and choosing as two cards, then the FAQ -->
     <section class="section">
-      <div class="container">
-        <SectionHeading :title="content.features.title" :subtitle="content.features.intro" level="h2" />
-        <ul class="features">
-          <li v-for="item in content.features.items" :key="item.title" class="feature">
-            <h3 class="feature__title">{{ item.title }}</h3>
-            <p class="feature__text">{{ item.text }}</p>
+      <div class="container narrow">
+        <ul class="icards">
+          <li v-for="item in [content.advantages, content.choosing]" :key="item.title" class="icard">
+            <img v-if="item.image" class="icard__img" :src="item.image" alt="" loading="lazy" decoding="async" />
+            <h3 class="icard__title">{{ item.title }}</h3>
+            <p class="icard__text">{{ item.body }}</p>
           </li>
         </ul>
-      </div>
-    </section>
 
-    <!-- Advantages: prose from i18n, bullet list from the catalogue -->
-    <section class="section">
-      <div class="container advantages">
-        <div>
-          <SectionHeading :strong="content.advantages.title.split(' ')[0]" :title="content.advantages.title.split(' ').slice(1).join(' ')" level="h2" />
-          <p class="prose">{{ content.advantages.body }}</p>
+        <div class="faq">
+          <SectionHeading v-bind="split(content.faq.title, 3)" level="h2" align="center" />
+          <AccordionList :items="faqItems" :default-open="-1" />
         </div>
-        <ul v-if="product" class="advantages__list">
-          <li v-for="item in product.advantages" :key="item">{{ item }}</li>
-        </ul>
       </div>
     </section>
 
-    <!-- Choosing / suitability -->
-    <section class="section section--alt">
-      <div class="container container--narrow">
-        <SectionHeading :strong="content.choosing.title.split(' ').slice(0, 2).join(' ')" :title="content.choosing.title.split(' ').slice(2).join(' ')" level="h2" />
-        <p class="prose">{{ content.choosing.body }}</p>
-        <p v-if="product" class="prose prose--note">{{ product.suitableFor }}</p>
-        <!-- The datasheets live in OCHSNER Austria's download centre. -->
-        <a
-          v-if="product"
-          class="datasheet"
-          :href="downloadCenterUrl"
-          @click="confirmLeave($event, downloadCenterUrl)"
-        >
-          {{ common.downloadSpec }}
-          <AppIcon name="arrowRight" :size="16" />
-        </a>
-      </div>
-    </section>
-
-    <!-- FAQ -->
-    <section class="section">
-      <div class="container container--narrow">
-        <SectionHeading :strong="content.faq.title.split(' ').slice(0, 2).join(' ')" :title="content.faq.title.split(' ').slice(2).join(' ')" level="h2" rule />
-        <AccordionList :items="faqItems" :default-open="-1" />
-      </div>
-    </section>
-
-    <!-- Helpful links — tinted band, as on the reference -->
+    <!-- Helpful links on the type-colour band -->
     <section class="section section--tint">
       <div class="container">
         <HelpfulLinks />
@@ -209,25 +205,33 @@ const { leavingFor, confirmLeave, cancelLeave } = useExternalLink()
     </section>
 
     <CtaBand :title="copy.ctaBand.title" :text="copy.ctaBand.text" />
-
-    <RedirectNotice :url="leavingFor" @close="cancelLeave" />
   </div>
 </template>
 
 <style scoped>
-/* --- hero: photo with an overlapping white card ------------------------- */
 /*
- * Measured on the reference at a 1920 viewport: photo band 700px tall, card
- * inset ~22% from each side, 20px radius, 70px padding, lifted so it overlaps
- * the lower half of the photo.
+ * Measured on the reference at 1440: narrow sections hold a 1082px column,
+ * cards are white with a 20px radius and a soft 0 6px 20px shadow.
  */
+.narrow {
+  max-width: calc(1082px + 2 * var(--gutter));
+}
+
+.center {
+  text-align: center;
+}
+
+p + p {
+  margin-top: 20px;
+}
+
+/* --- hero: photo with an overlapping white card ------------------------- */
 .hero {
   position: relative;
   /* Padding rather than a margin on the card: a margin would collapse through
      the container and push the whole band down instead of the card. */
   padding-top: clamp(96px, 9vw, 172px);
-  padding-bottom: var(--section-y);
-  background: color-mix(in srgb, var(--type-tint, #6b8fa3) 10%, #fff);
+  padding-bottom: var(--sp-6);
 }
 
 .hero__photo {
@@ -235,20 +239,18 @@ const { leavingFor, confirmLeave, cancelLeave } = useExternalLink()
   inset: 0 0 auto;
   height: clamp(280px, 36vw, 700px);
   overflow: hidden;
-  background: var(--c-surface-deep);
+  background: color-mix(in srgb, var(--type-tint) 10%, #fff);
 }
 
 .hero__photo img {
   width: 100%;
   height: 100%;
   object-fit: cover;
-  display: block;
 }
 
 .card {
   position: relative;
-  margin-top: 0;
-  padding: clamp(var(--sp-5), 3.6vw, 70px);
+  padding: clamp(var(--sp-5), 4.9vw, 70px);
   background: #fff;
   border-radius: 20px;
 }
@@ -257,72 +259,36 @@ const { leavingFor, confirmLeave, cancelLeave } = useExternalLink()
   font-family: var(--font-heading);
   font-size: 1.25rem;
   font-weight: var(--fw-medium);
-  color: var(--c-ink);
   margin-bottom: 8px;
 }
 
-/* Bold line over light line, both at h1 size. */
+/* Bold line over light line, both at h1 size: 54px on a 64px line box. */
 .card__title {
-  font-size: var(--fs-h1);
   font-weight: var(--fw-light);
   line-height: 1.19;
-  color: var(--c-ink);
-  max-width: none;
+  margin-bottom: var(--sp-6);
 }
 
-.card__title strong {
-  font-weight: var(--fw-bold);
-}
-
+/* The reference sets the lead as an h3: 20.7px, medium. */
 .card__lead {
-  margin-top: var(--sp-5);
-  max-width: 68ch;
-  color: var(--c-ink);
-  line-height: var(--lh-body);
+  font-family: var(--font-heading);
+  font-size: var(--fs-h3);
+  font-weight: var(--fw-medium);
+  line-height: var(--lh-h3);
 }
 
 .card__block {
-  margin-top: var(--sp-7);
+  margin-top: var(--sp-6);
 }
 
+/* Intro headings are light on the reference, without a bold lead. */
 .card__heading {
-  margin-bottom: var(--sp-4);
+  font-weight: var(--fw-light);
+  margin-bottom: 20px;
 }
 
-@media (min-width: 900px) {
-  /* Inset so the card spans ~63% of the viewport, as on the reference, leaving
-     the photo visible either side. */
-  .card {
-    margin-inline: 18.4%;
-  }
-}
-
-/*
- * Each heat-pump type carries its own accent on the reference site
- * (--heatpumptype-color), painted as a full-bleed band at 10% alpha:
- *   air #6b8fa3 · ground #7d6e5a · groundwater #4a5e6b · hot water #5a7875
- * colour-mix keeps the tint honest against whatever the band sits on.
- */
-.section--tint {
-  background: color-mix(in srgb, var(--type-tint, #6b8fa3) 10%, #fff);
-}
-
-.prose {
-  color: var(--c-ink);
-  line-height: var(--lh-body);
-  max-width: 62ch;
-}
-
-.prose + .prose {
-  margin-top: var(--sp-4);
-}
-
-.prose--note {
-  color: var(--c-ink-muted);
-}
-
-/* --- model cards -------------------------------------------------------- */
-.models {
+/* --- product overview cards -------------------------------------------- */
+.pcards {
   list-style: none;
   padding: 0;
   margin: 0;
@@ -330,42 +296,120 @@ const { leavingFor, confirmLeave, cancelLeave } = useExternalLink()
   gap: var(--sp-5);
 }
 
-.model {
-  display: grid;
-  gap: var(--sp-4);
-  padding: var(--sp-5);
-  background: var(--c-surface);
-  border: 1px solid var(--c-line);
+.pcard {
+  display: flex;
+  flex-direction: column;
+  background: #fff;
+  border-radius: 20px;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
+  text-align: center;
 }
 
-.model__media {
-  background: var(--c-surface-alt);
+/* The reference shots carry the type colour fading to white; our own product
+   cut-outs get the same gradient behind them. */
+.pcard__media {
+  aspect-ratio: 629 / 400;
+  border-radius: 20px;
+  overflow: hidden;
+  background: linear-gradient(var(--type-tint), #fff);
 }
 
-.model__name {
-  color: var(--c-primary-900);
+.pcard__media img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
 }
 
-.model__range {
-  margin-top: var(--sp-1);
-  font-family: var(--font-heading);
+.pcard__name {
+  padding: 24px 32px 0;
+  margin-bottom: 8px;
+  font-size: 1.5rem;
   font-weight: var(--fw-bold);
-  color: var(--c-accent-600);
+  line-height: 34px;
 }
 
-.model__text {
-  margin-block: var(--sp-3) var(--sp-5);
-  font-size: var(--fs-small);
-  color: var(--c-ink);
-  line-height: var(--lh-body);
+.pcard__range,
+.pcard__text {
+  padding-inline: 32px;
+  line-height: 24px;
+  color: var(--c-primary-700);
+}
+
+.pcard__range {
+  margin-bottom: 12px;
+}
+
+.pcard__text {
+  margin: 0 0 24px;
+}
+
+.pcard__cta {
+  margin-top: auto;
+  padding: 24px 32px 32px;
+}
+
+/* --- type-colour band -------------------------------------------------- */
+.section--tint {
+  background: color-mix(in srgb, var(--type-tint) 10%, #fff);
+}
+
+.fn__image {
+  width: 100%;
+  margin-block: var(--sp-6);
+  border-radius: 20px;
 }
 
 .fn__cta {
   margin-top: var(--sp-6);
 }
 
-/* --- features ----------------------------------------------------------- */
+/* Testimonial: hairlines with a quote mark at either end, italic light text. */
+.quote {
+  max-width: 832px;
+  margin: var(--sp-8) auto 0;
+  text-align: center;
+}
+
+.quote__rule {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 56px;
+  font-weight: var(--fw-light);
+  line-height: 1;
+  color: #383838;
+}
+
+.quote__rule::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: var(--c-primary-600);
+}
+
+.quote__rule--end {
+  flex-direction: row-reverse;
+}
+
+.quote blockquote {
+  margin: 24px 16px 0;
+  font-size: clamp(1.375rem, 1rem + 1.2vw, 2rem);
+  font-style: italic;
+  font-weight: var(--fw-light);
+  line-height: 1.31;
+}
+
+.quote figcaption {
+  margin: 12px 0 24px;
+  color: #383838;
+}
+
 .features {
+  margin-top: var(--sp-8);
+}
+
+/* --- image cards ------------------------------------------------------- */
+.icards {
   list-style: none;
   padding: 0;
   margin: 0;
@@ -373,94 +417,59 @@ const { leavingFor, confirmLeave, cancelLeave } = useExternalLink()
   gap: var(--sp-5);
 }
 
-/* The card was white on a white band, so only the red rule showed and the copy
-   read as loose text. A filled, rounded card anchors it. */
-.feature {
-  display: flex;
-  flex-direction: column;
-  padding: var(--sp-6);
-  background: var(--c-surface-alt);
-  border-top: 3px solid var(--c-accent-500);
-  border-radius: 0 0 20px 20px;
-}
-
-.feature__title {
-  color: var(--c-primary-800);
-}
-
-.feature__text {
-  margin-top: var(--sp-3);
-  font-size: var(--fs-small);
-  color: var(--c-ink);
-  line-height: var(--lh-body);
-}
-
-/* --- advantages --------------------------------------------------------- */
-.advantages {
-  display: grid;
-  gap: var(--sp-6);
-  align-items: start;
-}
-
-.advantages__list {
-  align-self: start;
-  list-style: none;
-  margin: 0;
-  padding: var(--sp-6);
-  display: grid;
-  gap: var(--sp-4);
-  background: var(--c-surface-alt);
+.icard {
+  padding: 25px;
+  background: #fff;
   border-radius: 20px;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
+  text-align: center;
 }
 
-.advantages__list li {
-  position: relative;
-  padding-left: var(--sp-5);
+.icard__img {
+  width: 100%;
+  aspect-ratio: 368 / 280;
+  object-fit: cover;
+  margin-bottom: 20px;
+  border-radius: 10px;
+}
+
+.icard__title {
+  margin-bottom: 16px;
+  font-weight: var(--fw-bold);
+  color: #383838;
+}
+
+.icard__text {
   font-size: var(--fs-small);
-  color: var(--c-primary-900);
+  line-height: 1.6;
+  color: #383838;
 }
 
-.advantages__list li::before {
-  content: '';
-  position: absolute;
-  left: 0;
-  top: 0.55em;
-  width: 8px;
-  height: 8px;
-  border-radius: 50%;
-  background: var(--c-accent-600);
+.note {
+  margin-top: var(--sp-7);
 }
 
-.datasheet {
-  margin-top: var(--sp-5);
-  display: inline-flex;
-  align-items: center;
-  gap: var(--sp-2);
-  font-weight: var(--fw-semibold);
-  color: var(--c-accent-600);
-  text-decoration: none;
+.note__title {
+  margin-bottom: 16px;
+  text-align: center;
+  font-weight: var(--fw-bold);
 }
 
-.datasheet:hover {
-  text-decoration: underline;
+.faq {
+  margin-top: var(--sp-9);
 }
 
 @media (min-width: 720px) {
-  .model {
-    grid-template-columns: 260px 1fr;
-    gap: var(--sp-6);
-    align-items: center;
-  }
-
-  .features {
-    grid-template-columns: repeat(3, 1fr);
+  .pcards,
+  .icards {
+    grid-template-columns: repeat(2, 1fr);
   }
 }
 
-@media (min-width: 960px) {
-  .advantages {
-    grid-template-columns: 1.3fr 1fr;
-    gap: var(--sp-8);
+@media (min-width: 1100px) {
+  .pcards,
+  .icards--3 {
+    grid-template-columns: repeat(3, 1fr);
   }
 }
 </style>

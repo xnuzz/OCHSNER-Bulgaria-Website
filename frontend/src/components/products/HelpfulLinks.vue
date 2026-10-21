@@ -16,7 +16,7 @@ const [strong, ...rest] = categoryCommon.linksTitle.split(' ')
     <h2 class="hl__title"><strong>{{ strong }}</strong> {{ rest.join(' ') }}</h2>
     <ul class="hl__cards">
       <li v-for="link in categoryCommon.links" :key="link.title" class="hl__card">
-        <img class="hl__img" :src="link.image" alt="" width="80" height="56" loading="lazy" decoding="async" />
+        <img class="hl__img" :src="link.image" alt="" width="80" height="80" loading="lazy" decoding="async" />
         <div class="hl__body">
           <h3 class="hl__name">
             <RouterLink :to="{ name: link.to }">{{ link.title }}</RouterLink>
@@ -71,7 +71,7 @@ const [strong, ...rest] = categoryCommon.linksTitle.split(' ')
 .hl__img {
   flex: 0 0 auto;
   width: 5rem;
-  height: 3.5rem;
+  height: 5rem;
   object-fit: cover;
   border-radius: 0.625rem;
 }

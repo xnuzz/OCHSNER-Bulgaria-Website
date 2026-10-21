@@ -32,9 +32,13 @@ defineProps({
   margin-bottom: var(--sp-6);
 }
 
-.heading--center .heading__title,
-.heading--center .heading__subtitle {
+.heading--center .heading__title {
   max-width: 34ch;
+}
+
+/* Centred intros run the width of the column on the reference. */
+.heading--center .heading__subtitle {
+  max-width: 80ch;
 }
 
 .heading--center {
@@ -59,7 +63,8 @@ defineProps({
   font-weight: var(--fw-bold);
 }
 
-.heading__title--rule {
+/* Doubled class so the width caps in the media query below cannot shorten the rule. */
+.heading__title.heading__title--rule {
   max-width: none;
   padding-bottom: var(--sp-4);
   border-bottom: 1px solid var(--c-primary-700);

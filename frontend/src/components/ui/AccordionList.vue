@@ -37,10 +37,10 @@ function toggle(index) {
           :id="`accordion-button-${index}`"
           @click="toggle(index)"
         >
-          <span>{{ item.title }}</span>
           <span class="accordion__icon" :class="{ 'accordion__icon--open': isOpen(index) }">
-            <AppIcon name="chevron" :size="18" />
+            <AppIcon name="plus" :size="20" />
           </span>
+          <span>{{ item.title }}</span>
         </button>
       </h3>
       <div
@@ -57,12 +57,19 @@ function toggle(index) {
 </template>
 
 <style scoped>
+/*
+ * The reference's FAQ: each question a white card (12px radius, soft shadow)
+ * with a circled plus on the left that turns into a cross when open.
+ */
 .accordion__item {
-  border-bottom: 1px solid var(--c-line);
+  margin-bottom: 16px;
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
 }
 
-.accordion__item:first-child {
-  border-top: 1px solid var(--c-line);
+.accordion__item:last-child {
+  margin-bottom: 0;
 }
 
 .accordion__heading {
@@ -71,50 +78,66 @@ function toggle(index) {
 }
 
 .accordion__button {
+  position: relative;
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  gap: var(--sp-4);
   width: 100%;
-  padding: var(--sp-5) 0;
+  padding: 24px 16px 24px 64px;
   background: transparent;
   border: 0;
   text-align: left;
   cursor: pointer;
   font-family: var(--font-heading);
   font-size: 1.0625rem;
-  font-weight: var(--fw-bold);
-  color: var(--c-primary-900);
+  font-weight: var(--fw-medium);
+  line-height: var(--lh-body);
+  color: var(--c-ink);
   transition: color var(--dur-fast) var(--ease);
 }
 
-.accordion__button:hover {
-  color: var(--c-accent-600);
+.accordion__button:hover,
+.accordion__button[aria-expanded='true'] {
+  color: var(--c-accent-700);
 }
 
 .accordion__icon {
-  flex-shrink: 0;
+  position: absolute;
+  left: 16px;
+  top: 50%;
   display: grid;
   place-items: center;
-  width: 28px;
-  height: 28px;
+  width: 32px;
+  height: 32px;
+  border: 1.5px solid currentColor;
   border-radius: 50%;
-  background: var(--c-accent-600);
-  color: #fff;
+  transform: translateY(-50%);
   transition: transform var(--dur) var(--ease);
 }
 
 .accordion__icon--open {
-  transform: rotate(180deg);
+  transform: translateY(-50%) rotate(45deg);
 }
 
 .accordion__panel {
-  padding-bottom: var(--sp-5);
-  color: var(--c-ink-soft);
-  max-width: 76ch;
+  padding: 0 24px 20px;
+  font-size: 0.9rem;
+  color: var(--c-primary-700);
 }
 
 .accordion__panel[hidden] {
   display: none;
+}
+
+@media (min-width: 720px) {
+  .accordion__button {
+    padding: 40px 24px 40px 80px;
+    font-size: 1.25rem;
+  }
+
+  .accordion__icon {
+    left: 20px;
+    width: 40px;
+    height: 40px;
+  }
 }
 </style>

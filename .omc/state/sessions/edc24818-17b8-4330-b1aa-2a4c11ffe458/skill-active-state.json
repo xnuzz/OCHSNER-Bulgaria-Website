@@ -1,0 +1,10 @@
+{
+  "active": true,
+  "skill_name": "built-in-browser",
+  "session_id": "edc24818-17b8-4330-b1aa-2a4c11ffe458",
+  "started_at": "2026-10-21T23:24:47.984Z",
+  "last_checked_at": "2026-10-21T23:24:47.984Z",
+  "reinforcement_count": 0,
+  "max_reinforcements": 3,
+  "stale_ttl_ms": 300000
+}

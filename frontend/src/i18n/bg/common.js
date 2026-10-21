@@ -25,7 +25,6 @@ export const common = {
   openMenu: 'Отвори менюто',
   closeMenu: 'Затвори менюто',
   required: 'задължително поле',
-  downloadSpec: 'Технически документи',
   imagePlaceholder: 'Тук ще бъде добавена реална продуктова снимка.'
 }
 
