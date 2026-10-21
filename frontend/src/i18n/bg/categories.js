@@ -14,8 +14,12 @@ export const categories = {
   'vazduh-voda': {
     /* Small card on the home page product strip. */
     strip: '/images/categories/strip-vazduh-voda.jpg',
-    /* Image for the card on the product overview page. */
-    card: { image: '/images/categories/vazduh-voda.webp', fit: 'cover' },
+    /* Card on the product overview page: the reference's product shot and copy. */
+    card: {
+      image: '/images/overview/vazduh-voda.webp',
+      subtitle: 'Въздухът като топлинен източник',
+      text: 'Използват околния въздух като топлинен източник — монтират се гъвкаво и са идеални за ново строителство и реновация. Въздушните термопомпи OCHSNER съчетават най-висока ефективност с най-ниски нива на шум.'
+    },
     /* Two-weight headline: bold line over light line, as on the reference. */
     heading: { strong: 'Въздушни термопомпи', light: 'Термопомпи въздух-вода' },
     /* --heatpumptype-color on the reference page */
@@ -149,8 +153,12 @@ export const categories = {
   'zemya-voda': {
     /* Small card on the home page product strip. */
     strip: '/images/categories/strip-zemya-voda.jpg',
-    /* Image for the card on the product overview page. */
-    card: { image: '/images/categories/zemya-voda.webp', fit: 'cover' },
+    /* Card on the product overview page: the reference's product shot and copy. */
+    card: {
+      image: '/images/overview/zemya-voda.webp',
+      subtitle: 'Земята като топлинен източник',
+      text: 'Използват постоянната температура в земята чрез хоризонтални колектори или земни сонди — с особено високи сезонни коефициенти на ефективност и безшумна работа в сградата.'
+    },
     /* Two-weight headline: bold line over light line, as on the reference. */
     heading: { strong: 'Геотермални термопомпи', light: 'Термопомпи земя-вода' },
     /* --heatpumptype-color on the reference page */
@@ -258,8 +266,12 @@ export const categories = {
   'voda-voda': {
     /* Small card on the home page product strip. */
     strip: '/images/categories/strip-voda-voda.jpg',
-    /* Image for the card on the product overview page. */
-    card: { image: '/images/categories/voda-voda.webp', fit: 'cover' },
+    /* Card on the product overview page: the reference's product shot and copy. */
+    card: {
+      image: '/images/overview/voda-voda.webp',
+      subtitle: 'Подземните води като топлинен източник',
+      text: 'Подземните води са най-постоянният от всички топлинни източници — с температура, стабилна през цялата година и независима от външния въздух и времето. Това прави термопомпите с подземни води най-ефективното решение.'
+    },
     /* Two-weight headline: bold line over light line, as on the reference. */
     heading: { strong: 'Термопомпи за подземни води', light: 'Термопомпи вода-вода' },
     /* --heatpumptype-color on the reference page */
@@ -363,8 +375,12 @@ export const categories = {
   'topla-voda': {
     /* Small card on the home page product strip. */
     strip: '/images/categories/strip-topla-voda.jpg',
-    /* Image for the card on the product overview page. */
-    card: { image: '/images/categories/topla-voda.webp', fit: 'cover' },
+    /* Card on the product overview page: the reference's product shot and copy. */
+    card: {
+      image: '/images/overview/topla-voda.webp',
+      subtitle: 'Приготвяне на топла вода',
+      text: 'Термопомпите за топла вода OCHSNER снабдяват дома с битова гореща вода изключително ефективно и хигиенично. Работят независимо от отоплителната система.'
+    },
     /* Two-weight headline: bold line over light line, as on the reference. */
     heading: { strong: 'Термопомпи за топла вода', light: 'Битова гореща вода' },
     /* --heatpumptype-color on the reference page */
@@ -477,8 +493,12 @@ export const categories = {
     hideModelsCta: true,
     /* Small card on the home page product strip. */
     strip: '/images/categories/strip-akumulatori.jpg',
-    /* Image for the card on the product overview page. */
-    card: { image: '/images/products/storage.png', fit: 'contain' },
+    /* Card on the product overview page: the reference's product shot and copy. */
+    card: {
+      image: '/images/overview/akumulatori.webp',
+      subtitle: 'Системни компоненти',
+      text: 'Решения за съхранение, оптимално съгласувани с термопомпите OCHSNER — за максимална ефективност, хигиена на питейната вода и интелигентно използване на излишъци от фотоволтаици.'
+    },
     /* Two-weight headline: bold line over light line, as on the reference. */
     heading: { strong: 'Буферни съдове', light: 'и бойлери за термопомпи' },
     /* --heatpumptype-color on the reference page */
@@ -573,8 +593,12 @@ export const categories = {
     hideModelsCta: true,
     /* Small card on the home page product strip. */
     strip: '/images/categories/strip-golemi-termopompi.jpg',
-    /* Image for the card on the product overview page. */
-    card: { image: '/images/products/large.jpg', fit: 'cover' },
+    /* Card on the product overview page: the reference's product shot and copy. */
+    card: {
+      image: '/images/overview/golemi-termopompi.webp',
+      subtitle: 'Търговия · Индустрия · Инфраструктура',
+      text: 'Термопомпи, разработени от самото начало за изисквания за висока мощност. За жилищни комплекси, хотелиерство, общини и индустриални приложения.'
+    },
     /* Two-weight headline: bold line over light line, as on the reference. */
     heading: { strong: 'Големи термопомпи', light: 'Енергийна техника' },
     /* --heatpumptype-color on the reference page */

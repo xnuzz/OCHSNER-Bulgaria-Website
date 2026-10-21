@@ -16,6 +16,7 @@ export const products = {
 
   jumpLabel: 'Бърз преход:',
   cardCta: 'Научи повече',
+  cardSeries: 'Към моделните серии',
   cardModels: 'Модели:',
   advantagesLabel: 'Предимства',
   suitableForLabel: 'Подходящо за',

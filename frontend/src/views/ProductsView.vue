@@ -3,12 +3,12 @@
  * Product overview, mirroring ochsner.com/en/heat-pumps/.
  *
  * The reference lays the range out as six white cards on a light field, two per
- * row: photo on top, then the category heading, a short description, a red pill
- * linking into the category page, and a row of model pills tinted with that
- * category's own --heatpumptype-color.
+ * row: product shot on top, then a source line, the category heading, a short
+ * description, a red button into the category page, and — under a hairline — a
+ * row of model-series pills tinted with that category's --heatpumptype-color.
  *
- * Card copy comes from the catalogue API so it cannot drift from the product
- * data; the imagery and the model list come from i18n/bg/categories.js.
+ * The heading comes from the catalogue API; the shot, source line and
+ * description are the reference's own card copy, kept in i18n/bg/categories.js.
  */
 import { computed, onMounted, ref } from 'vue'
 import SectionHeading from '@/components/ui/SectionHeading.vue'
@@ -65,39 +65,43 @@ onMounted(() => load())
             class="card"
             :style="{ '--type-tint': content.tint }"
           >
-            <div class="card__media">
-              <img
-                :src="content.card.image"
-                :alt="product.title"
-                :style="{ objectFit: content.card.fit }"
-                loading="lazy"
-                decoding="async"
-              />
-            </div>
+            <img
+              class="card__img"
+              :src="content.card.image"
+              :alt="product.title"
+              width="836"
+              height="458"
+              loading="lazy"
+              decoding="async"
+            />
 
             <div class="card__body">
+              <p class="card__subtitle">{{ content.card.subtitle }}</p>
               <h2 class="card__title">{{ product.title }}</h2>
-              <p class="card__text">{{ product.shortDescription }}</p>
+              <p class="card__text">{{ content.card.text }}</p>
 
               <BaseButton
                 :to="{ name: 'product-category', params: { slug: product.slug } }"
                 class="card__cta"
               >
-                {{ copy.cardCta }}
+                {{ copy.cardCta }} за {{ product.title.toLowerCase() }}
               </BaseButton>
 
-              <ul v-if="content.models.items.some((m) => m.key)" class="pills">
-                <li v-for="model in content.models.items" :key="model.name">
-                  <RouterLink
-                    v-if="model.key"
-                    class="pill"
-                    :to="{ name: 'product-model', params: { slug: product.slug, model: model.key } }"
-                  >
-                    {{ model.name.replace('OCHSNER ', '') }}
-                    <AppIcon name="arrowRight" :size="14" />
-                  </RouterLink>
-                </li>
-              </ul>
+              <div v-if="content.models.items.some((m) => m.key)" class="series">
+                <p class="series__label">{{ copy.cardSeries }}</p>
+                <ul class="pills">
+                  <li v-for="model in content.models.items" :key="model.name">
+                    <RouterLink
+                      v-if="model.key"
+                      class="pill"
+                      :to="{ name: 'product-model', params: { slug: product.slug, model: model.key } }"
+                    >
+                      {{ model.name.replace('OCHSNER ', '') }}
+                      <AppIcon name="arrowRight" :size="14" />
+                    </RouterLink>
+                  </li>
+                </ul>
+              </div>
             </div>
           </li>
         </ul>
@@ -190,70 +194,101 @@ onMounted(() => load())
   gap: var(--sp-5);
 }
 
+/* Values below are the reference's own (.hpo-card). */
 .card {
   display: flex;
   flex-direction: column;
   overflow: hidden;
   background: var(--c-surface);
   border-radius: 20px;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
+  transition: box-shadow 0.2s ease;
 }
 
-.card__media {
-  aspect-ratio: 835 / 457;
-  background: color-mix(in srgb, var(--type-tint, #6b8fa3) 10%, #fff);
+.card:hover {
+  box-shadow: 0 6px 30px rgba(0, 0, 0, 0.19);
 }
 
-.card__media img {
+.card__img {
   display: block;
   width: 100%;
-  height: 100%;
+  height: auto;
 }
 
 .card__body {
   display: flex;
   flex-direction: column;
   flex: 1;
-  padding: clamp(var(--sp-5), 2.4vw, var(--sp-7));
+  padding: 1.25rem 1.5rem 1.5rem;
+}
+
+.card__subtitle {
+  margin-bottom: 0.25rem;
+  font-size: 1.25rem;
+  line-height: 1.5rem;
+  font-weight: var(--fw-light);
+  text-transform: uppercase;
+  color: #000;
 }
 
 .card__title {
+  margin-bottom: 1.25rem;
+  font-weight: var(--fw-bold);
   color: var(--c-primary-900);
 }
 
 .card__text {
-  margin-top: var(--sp-4);
-  flex: 1;
-  color: var(--c-ink);
-  line-height: var(--lh-body);
+  margin-bottom: 2rem;
+  font-size: 1.125rem;
+  line-height: 1.75rem;
+  font-weight: var(--fw-light);
+  color: #4a4a4a;
 }
 
 .card__cta {
-  margin-top: var(--sp-5);
+  margin-top: auto;
+  margin-bottom: 3rem;
   align-self: flex-start;
 }
 
-/* The reference sets the card's primary action at 18px with 20/30 padding. */
 .card__cta :deep(.btn),
 .card__cta.btn {
   font-size: 1.125rem;
-  padding: 20px 30px;
+  font-weight: var(--fw-semibold);
+  padding: 0.875rem 1.25rem;
+  white-space: normal;
+}
+
+/* "Go to model series", over a hairline. */
+.series {
+  padding-top: 0.75rem;
+  border-top: 1px solid #e6e6e6;
+}
+
+.series__label {
+  margin-bottom: 1.2rem;
+  font-size: 1rem;
+  line-height: 1.625rem;
+  font-weight: var(--fw-light);
+  text-transform: uppercase;
+  color: #000;
 }
 
 /* Model pills carry the category's own accent, as on the reference. */
 .pills {
-  margin-top: var(--sp-4);
   list-style: none;
   padding: 0;
+  margin: 0;
   display: flex;
   flex-wrap: wrap;
-  gap: var(--sp-3);
+  gap: 0.5rem;
 }
 
 .pill {
   display: inline-flex;
   align-items: center;
   gap: var(--sp-2);
-  padding: 14px 24px;
+  padding: 0.875rem 1.25rem;
   border-radius: 999px;
   background: color-mix(in srgb, var(--type-tint, #6b8fa3) 10%, #fff);
   color: var(--type-tint, #6b8fa3);
@@ -317,6 +352,18 @@ onMounted(() => load())
   .cards {
     grid-template-columns: repeat(2, 1fr);
     gap: var(--sp-6);
+  }
+}
+
+@media (min-width: 1240px) {
+  .card__body {
+    padding: 60px 60px 100px;
+  }
+
+  .card__cta :deep(.btn),
+  .card__cta.btn,
+  .pill {
+    padding: 1.25rem 1.875rem;
   }
 }
 </style>
