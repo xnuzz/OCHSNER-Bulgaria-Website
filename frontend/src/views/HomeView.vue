@@ -3,7 +3,6 @@ import { onMounted } from 'vue'
 import HomeHero from '@/components/home/HomeHero.vue'
 import BrandStatement from '@/components/home/BrandStatement.vue'
 import HeatPumpDiagram from '@/components/why/HeatPumpDiagram.vue'
-import TestimonialSlider from '@/components/home/TestimonialSlider.vue'
 import SectionHeading from '@/components/ui/SectionHeading.vue'
 import AccordionList from '@/components/ui/AccordionList.vue'
 import AppIcon from '@/components/ui/AppIcon.vue'
@@ -200,14 +199,9 @@ onMounted(load)
       </div>
     </section>
 
-    <!-- Testimonials (placeholder content, see i18n/bg/home.js) -->
-    <section class="section section--alt">
-      <div class="container">
-        <SectionHeading :eyebrow="home.testimonials.eyebrow" :title="home.testimonials.title" />
-        <TestimonialSlider :items="home.testimonials.items" />
-        <p class="disclaimer">{{ home.testimonials.disclaimer }}</p>
-      </div>
-    </section>
+    <!-- Testimonials removed at the client's request: the placeholder reviews
+         were fictional. TestimonialSlider.vue is kept — give it real customer
+         quotes ({ quote, author, location }) to restore the section. -->
 
     <!-- Social feed removed at the client's request. SocialFeed.vue, the
          /api/v1/social endpoint and the collected posts are all kept — drop
@@ -511,12 +505,6 @@ onMounted(load)
   margin-top: var(--sp-2);
   color: var(--c-ink-soft);
   font-size: 0.9375rem;
-}
-
-.disclaimer {
-  margin-top: var(--sp-5);
-  font-size: 0.78rem;
-  color: var(--c-ink-muted);
 }
 
 @media (min-width: 760px) {

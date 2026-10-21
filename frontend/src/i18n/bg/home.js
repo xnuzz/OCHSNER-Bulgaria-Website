@@ -182,34 +182,6 @@ export const home = {
     cta: 'Как работи термопомпата при затворен цикъл'
   },
 
-  /* Placeholder testimonials — fictional, written to show the layout.
-     Replace with real, documented customer quotes before launch. */
-  testimonials: {
-    eyebrow: 'Клиенти',
-    title: 'Какво казват хората, които вече отопляват с термопомпа',
-    disclaimer: 'Примерни отзиви — ще бъдат заменени с реални клиентски мнения.',
-    items: [
-      {
-        quote:
-          'Отоплявахме на нафта и всяка есен беше стрес колко ще струва зимата. Втора година сме с термопомпа и сметката е предвидима, а къщата е по-топла от преди.',
-        author: 'Инж. Николай Д.',
-        location: 'София'
-      },
-      {
-        quote:
-          'Най-много ме притесняваше шумът, защото сме на калкан със съседите. Външното тяло практически не се чува, а през лятото ползваме и охлаждането.',
-        author: 'Мария П.',
-        location: 'Пловдив'
-      },
-      {
-        quote:
-          'Оцениха реално какво може да поеме старата инсталация и не ни продадоха повече мощност, отколкото ни трябва. Радиаторите останаха същите.',
-        author: 'Семейство Георгиеви',
-        location: 'Велико Търново'
-      }
-    ]
-  },
-
   /* Live Facebook + Instagram feed. Handles are filled in once the client
      connects their own accounts; see api/_lib/social.js. */
   social: {
