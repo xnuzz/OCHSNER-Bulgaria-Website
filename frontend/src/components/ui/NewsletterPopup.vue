@@ -3,12 +3,13 @@
  * Newsletter subscribe pop-up. Appears once, a short while after the visitor
  * lands, and never again in the same browser once dismissed or submitted.
  *
- * Design-only for now (per client): the email is validated and a thank-you is
- * shown, but nothing is posted to a mailing-list service yet. When a list
- * provider is chosen, POST the address in `subscribe()` where marked.
+ * There is no mailing-list service yet: POST /newsletter mails the address to
+ * the same inbox as the contact form, and the team adds it to their list.
  */
 import { onBeforeUnmount, onMounted, ref } from 'vue'
 import AppIcon from '@/components/ui/AppIcon.vue'
+import { submitNewsletter } from '@/api/catalog.js'
+import { toFormError } from '@/api/client.js'
 import { newsletter } from '@/i18n/bg/common.js'
 
 /* Bumping the version re-shows the pop-up to everyone (e.g. after a redesign). */
@@ -19,6 +20,7 @@ const open = ref(false)
 const email = ref('')
 const done = ref(false)
 const error = ref('')
+const sending = ref(false)
 let timer = null
 
 function seen() {
@@ -42,7 +44,8 @@ function close() {
   remember()
 }
 
-function subscribe() {
+async function subscribe() {
+  if (sending.value) return
   const value = email.value.trim()
   // Same shape of check the contact form uses — good enough for a signup field.
   if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value)) {
@@ -50,9 +53,17 @@ function subscribe() {
     return
   }
   error.value = ''
-  // TODO: POST `value` to the chosen mailing-list service here.
-  done.value = true
-  remember()
+  sending.value = true
+  try {
+    await submitNewsletter(value)
+    done.value = true
+    remember()
+  } catch (err) {
+    const { fieldErrors, message } = toFormError(err, newsletter.failed)
+    error.value = fieldErrors.email || message
+  } finally {
+    sending.value = false
+  }
 }
 
 function onKey(event) {
@@ -99,7 +110,7 @@ onBeforeUnmount(() => {
                 :aria-label="newsletter.placeholder"
                 autocomplete="email"
               />
-              <button type="submit" class="np__submit">{{ newsletter.submit }}</button>
+              <button type="submit" class="np__submit" :disabled="sending">{{ newsletter.submit }}</button>
             </form>
 
             <p v-if="error" class="np__error" role="alert">{{ error }}</p>

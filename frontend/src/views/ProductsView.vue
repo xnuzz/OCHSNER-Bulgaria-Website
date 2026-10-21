@@ -15,16 +15,12 @@ import SectionHeading from '@/components/ui/SectionHeading.vue'
 import BaseButton from '@/components/ui/BaseButton.vue'
 import CtaBand from '@/components/ui/CtaBand.vue'
 import AppIcon from '@/components/ui/AppIcon.vue'
-import RedirectNotice from '@/components/ui/RedirectNotice.vue'
-import { useExternalLink } from '@/composables/useExternalLink.js'
+import HelpfulLinks from '@/components/products/HelpfulLinks.vue'
 import { fetchProducts, useAsyncData } from '@/api/catalog.js'
 import { useSeo } from '@/composables/useSeo.js'
 import { useI18n } from '@/i18n'
 
-const { common, products: copy, categories, categoryCommon } = useI18n()
-
-/* External destinations open behind the redirect notice. */
-const { leavingFor, confirmLeave, cancelLeave } = useExternalLink()
+const { common, products: copy, categories } = useI18n()
 const page = ref(null)
 
 const { data: items, loading, failed, load } = useAsyncData(fetchProducts)
@@ -136,37 +132,11 @@ onMounted(() => load())
     <!-- Helpful links, as the reference closes its overview page -->
     <section class="section section--tintless">
       <div class="container">
-        <SectionHeading :title="categoryCommon.linksTitle" level="h2" align="center" />
-        <ul class="links">
-          <li v-for="link in categoryCommon.links" :key="link.title">
-            <a
-              v-if="link.href"
-              class="link-card"
-              :href="link.href"
-              @click="confirmLeave($event, link.href)"
-            >
-              <h3 class="link-card__title">{{ link.title }}</h3>
-              <p class="link-card__text">{{ link.text }}</p>
-              <span class="link-card__more">
-                {{ common.ctaMore }}
-                <AppIcon name="arrowRight" :size="16" />
-              </span>
-            </a>
-            <RouterLink v-else class="link-card" :to="{ name: link.to }">
-              <h3 class="link-card__title">{{ link.title }}</h3>
-              <p class="link-card__text">{{ link.text }}</p>
-              <span class="link-card__more">
-                {{ common.ctaMore }}
-                <AppIcon name="arrowRight" :size="16" />
-              </span>
-            </RouterLink>
-          </li>
-        </ul>
+        <HelpfulLinks />
       </div>
     </section>
 
     <CtaBand :title="copy.ctaBand.title" :text="copy.ctaBand.text" />
-    <RedirectNotice :url="leavingFor" @close="cancelLeave" />
   </div>
 </template>
 
@@ -342,67 +312,11 @@ onMounted(() => load())
   background: var(--c-surface-alt);
 }
 
-.links {
-  list-style: none;
-  padding: 0;
-  margin: 0;
-  display: grid;
-  gap: var(--sp-4);
-}
-
-.link-card {
-  display: flex;
-  flex-direction: column;
-  height: 100%;
-  padding: var(--sp-5);
-  background: var(--c-surface);
-  border-radius: 20px;
-  text-decoration: none;
-  color: inherit;
-  transition: transform var(--dur) var(--ease);
-}
-
-.link-card:hover {
-  transform: translateY(-3px);
-}
-
-.link-card__title {
-  color: var(--c-primary-800);
-}
-
-.link-card__text {
-  margin-top: var(--sp-2);
-  flex: 1;
-  font-size: var(--fs-small);
-  color: var(--c-ink-muted);
-}
-
-.link-card__more {
-  margin-top: var(--sp-4);
-  display: inline-flex;
-  align-items: center;
-  gap: var(--sp-2);
-  font-family: var(--font-heading);
-  font-weight: var(--fw-bold);
-  font-size: var(--fs-small);
-  color: var(--c-accent-600);
-}
-
-@media (min-width: 720px) {
-  .links {
-    grid-template-columns: repeat(2, 1fr);
-  }
-}
-
 @media (min-width: 1000px) {
   /* Two cards per row, three rows — the reference layout. */
   .cards {
     grid-template-columns: repeat(2, 1fr);
     gap: var(--sp-6);
-  }
-
-  .links {
-    grid-template-columns: repeat(4, 1fr);
   }
 }
 </style>

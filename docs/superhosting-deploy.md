@@ -4,7 +4,7 @@ On SuperHosting the site runs as plain files on Apache. There is no Node.js app:
 
 - the built Vue site (`frontend/dist`)
 - `/api/v1/products`, `/references` and `/social` as pre-built JSON (taken from `api/_lib`)
-- `/api/v1/contact` and `/partner-applications` as PHP (`superhosting/api/v1/*.php`).
+- `/api/v1/contact`, `/partner-applications` and `/newsletter` as PHP (`superhosting/api/v1/*.php`).
   These have the same validation and responses as the Vercel functions, and send mail
   with PHP `mail()`, so no SMTP password is needed.
 - `.htaccess`: HTTPS redirect, API routes, SPA fallback, caching, and the security

@@ -47,6 +47,10 @@ export function submitPartnerApplication(payload) {
   return client.post('/partner-applications', payload).then((response) => response.data)
 }
 
+export function submitNewsletter(email) {
+  return client.post('/newsletter', { email }).then((response) => response.data)
+}
+
 /**
  * Small async-resource helper: `data`, `loading`, `error` plus a `load` trigger.
  * Keeps every view's fetch handling identical without pulling in Pinia.

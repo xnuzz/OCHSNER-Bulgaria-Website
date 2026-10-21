@@ -1,0 +1,62 @@
+ 
+ Air - Water
+ OCHSNER AIR EAGLE 1830 HM 
+ 18 - 30 kW
+ (HM1)
+The heat pump works with a speed controlled compressor and delivers heat and DHW up to 70°C. It can also be used for energy saving surface cooling and for active air conditioning and room dehumidification via fan coils. The AIR EAGLE 1830 impresses with an unrivalled SCOP (5.3 at 35°C flow temperature). The compact wall mounted indoor unit houses the controller and user interface, as well as all the essential hydraulic components for operating the heating system. The OCHSNER R290 safety concept includes system separation by means of a brine-filled intermediate circuit. This separation of the refrigerant circuit and heating circuit ensures maximum operational reliability and dependable protection of the heating system. It is controlled with the leading-edge Ochsner Tronic Smart (OTS) and can be operated either on the 7" touchscreen of the heat pump indoor unit or using the OCHSNER Smart app.
+ Climate zone (middle) 
+ Energy efficient 
+ A+++ Energy efficiency class (D to A+++) 
+ 20 kW P rated 
+ 209.4 % Efficiency ETAs 
+ 37 dB(A) Sound pressure level (at 3 m) 
+Suitable for
+ Detached and two-family houses 
+ Apartment and commercial buildings 
+ Underfloor heating 
+ Radiators up to 65°C 
+ Technical details AIR EAGLE 1830 HM
+ Technical data 
+A7/W35
+Heating output (EN14511)
+11.17 kW
+Power consumption (EN14511)
+2.03 kW
+Coefficient of performance COP (EN14511)
+5.51
+Energy efficiency (average climate zone)
+at max. flow temperature (heating)
+35 °C
+Energy efficiency class (D to A+++)
+A+++
+P rated
+20 kW
+Efficiency ETAs
+209.4 %
+SCOP
+5.31
+Indoor unit
+Dimensions (HxWxD)
+757x442x343 mm
+Weight (excl. packaging)
+33 kg
+Outdoor unit
+Dimensions (HxWxD)
+1474x2300x1100 mm
+Weight (excl. packaging)
+415 kg
+Sound pressure level (at 3 m)
+37 dB(A)
+Sound power level (EN12102)
+54 dB(A)
+Electrical data
+Phases/nominal voltage/frequency
+3/~380-400/50 ~/V/Hz
+Variable speed compressor
+ Properties 
+ Refrigerant R290 
+ Heating or heating/cooling 
+ 70 °C Max. flow temp. 
+ OTS controller 
+ SG Ready 
+ OCHSNER AIR EAGLE 

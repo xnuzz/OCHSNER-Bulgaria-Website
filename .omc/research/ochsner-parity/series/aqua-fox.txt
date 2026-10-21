@@ -1,0 +1,110 @@
+ 
+WATER/WATER HEAT PUMP
+ OCHSNER AQUA FOX 
+Groundwater is the most efficient heat source available. Constantly between 8 and 12°C, regardless of weather or season. Due to this consistently high source temperature, the temperature level for heating purposes needs to be raised less compared to other heat sources. This enables the highest performance figures. Less energy expenditure, higher performance figures, lower operating costs.
+ Top Energy Efficiency in Three Performance Sizes 
+The water/water series AQUA FOX is available in three performance sizes. All models are at the top of the competitive environment with SCOPs of 5.6 to 5.8 and meet the highest energy efficiency class A+++ . For the use of the heat source groundwater, an intermediate heat exchanger (OCHSNER accessory) is required for system separation.
+ User-friendly touch display, Modbus interface, and app 
+The control is carried out via the OCHSNER Tronic Fox (OTF), with operation optionally on the touch display of the heat pump or via the OCHSNER Easy App. Integration into building management systems or smart home systems is easily possible via the Modbus interface. For extremely low energy costs, the heat pumps are SG-ready and can utilize solar power and the intelligent power grids of the future.
+ Compact Tower S200 or Heat Pump Indoor Unit S1
+The OCHSNER AQUA FOX is available in two versions. As a compact tower S200, it combines heat pump and hot water storage in less than 0.5 m² of floor space. The even more compact indoor unit S1 without its own hot water storage is available for external hot water preparation or storage.
+ Request a quote now 
+ Minimal Noise Emission 
+The low sound power level of 32–38 dB(A) according to the ErP label allows installation in hallway areas, utility rooms, or ancillary rooms.
+ Multi-stage Performance Adjustment 
+AQUA FOX operates with inverter technology and adjusts to the current heat demand. An additional heating buffer storage is not required. This saves money, time, and space.
+ Heating, Hot Water, and Cooling 
+The AQUA FOX models can also be used for passive cooling with optional additional equipment.
+ Official Approval 
+The use of groundwater as a heat source for the heat pump must be approved by the respective water rights authority. The well builder, drilling company, or your OCHSNER system partner can assist with the application to the authority. To utilize the heat source groundwater, several conditions must be met: sufficient water quantity, water quality (analysis), water rights approval, and supply and drainage wells.
+ OCHSNER AQUA FOX All models of the series
+ Show all 2 - 11 kW 3 - 14 kW 4 - 18 kW 
+AQUA FOX 208
+ 2 - 11 kW
+ (S200)
+ Compact unit incl. tank Refrigerant R452B OTF controller 
+ Energy efficiency A+++ 
+ P rated 9 kW 
+ Efficiency 294.0 % 
+ Load profile XL 
+65 °C Max. flow temp. | OTF controller | SG-Ready
+ View product
+AQUA FOX 208
+ 2 - 11 kW
+ (S1)
+ Refrigerant R452B OTF controller 
+ Energy efficiency A+++ 
+ P rated 9 kW 
+ Efficiency 294.0 % 
+65 °C Max. flow temp. | OTF controller | SG-Ready
+ View product
+AQUA FOX 312
+ 3 - 14 kW
+ (S200)
+ Compact unit incl. tank Refrigerant R452B OTF controller 
+ Energy efficiency A+++ 
+ P rated 12 kW 
+ Efficiency 292.0 % 
+ Load profile XL 
+65 °C Max. flow temp. | OTF controller | SG-Ready
+ View product
+AQUA FOX 312
+ 3 - 14 kW
+ (S1)
+ Refrigerant R452B OTF controller 
+ Energy efficiency A+++ 
+ P rated 12 kW 
+ Efficiency 292.0 % 
+65 °C Max. flow temp. | OTF controller | SG-Ready
+ View product
+AQUA FOX 416
+ 4 - 18 kW
+ (S200)
+ Compact unit incl. tank Refrigerant R452B OTF controller 
+ Energy efficiency A+++ 
+ P rated 13 kW 
+ Efficiency 303.0 % 
+ Load profile XL 
+65 °C Max. flow temp. | OTF controller | SG-Ready
+ View product
+AQUA FOX 416
+ 4 - 18 kW
+ (S1)
+ Refrigerant R452B OTF controller 
+ Energy efficiency A+++ 
+ P rated 13 kW 
+ Efficiency 303.0 % 
+65 °C Max. flow temp. | OTF controller | SG-Ready
+ View product
+ Frequently Asked Questions about OCHSNER AQUA FOX
+ Why is groundwater particularly efficient as a heat source?
+Groundwater maintains a constant temperature of 8 to 12 °C year-round – regardless of outside temperature or season. This small temperature difference to the desired heating temperature significantly reduces the energy consumption of the heat pump. The AQUA FOX thus achieves SCOPs of 5.6 to 5.8 – top values compared to all other heat sources.
+ What conditions must be met for the use of a groundwater heat pump?
+Four conditions are necessary for using groundwater as a heat source: sufficient water quantity, a water quality analysis, a water law permit from the responsible authority, and the installation of extraction and injection wells. The well builder, drilling company, or OCHSNER system partner supports the permit application.
+ What is an intermediate heat exchanger and what is its purpose?
+To utilize groundwater, a system separation between the groundwater and heating circuit is required. An intermediate heat exchanger – available as OCHSNER accessories – takes care of this separation and protects the heat pump from mineral deposits or contaminants from the groundwater.
+ In what performance sizes is the AQUA FOX available?
+The AQUA FOX is available in three models: 208 (2–11 kW), 312 (3–14 kW), and 416 (4–18 kW). For larger properties and commercial buildings with heating loads of 28 to 99 kW, OCHSNER offers the AQUA series 36, 54, and 97 with SCOPs of 5.5 to 6.3.
+ What versions of the indoor unit are available?
+The AQUA FOX is available in two variants: As Tower S200 , it combines heat pump and hot water storage in less than 0.5 m² of floor space. The Indoor Unit S1 comes without its own hot water storage and is suitable for systems with external hot water preparation or storage.
+ How loud is the AQUA FOX in operation?
+The sound power level is rated at 32 to 38 dB(A) according to the ErP label. This allows for installation in hallway areas, utility rooms, or ancillary rooms – directly in the residential building, without disturbing noise development.
+ Is a heating buffer storage required?
+No. The AQUA FOX operates with inverter technology and adjusts its output in multiple stages to the current heat demand. An additional heating buffer storage is not required.
+ Can the AQUA FOX also cool?
+Yes, with optional additional equipment, passive cooling is possible.
+ How is the AQUA FOX controlled?
+The control is done via the OCHSNER Tronic Fox (OTF), with operation optionally via the touch display of the heat pump or the OCHSNER Easy App. Integration into building management systems and smart home systems is possible via a Modbus interface. SG-Ready is integrated as standard.
+ OCHSNER AQUA: HIGHLY EFFICIENT FOR HIGH PERFORMANCE
+For high performance requirements, OCHSNER offers the proven water/water heat pumps AQUA 36, AQUA 54, and AQUA 97. They operate with high-quality and durable scroll compressors and achieve high SCOPs of 5.5 to 6.3 at a flow temperature of 35°C. The series is suitable for larger properties and commercial buildings with heating loads from 28 to 99 kW, and through cascading, also for much higher heating loads. 
+ Show all models 
+ Helpful Links
+ Planning Notes 
+Learn how to optimally plan and design your heat pump.
+ Areas of Application 
+Discover the ideal application areas for this heat pump in detail.
+ Download Center 
+Download technical data sheets, descriptions, and planning documents.
+ Company 
+Get to know us as a competent partner for heat pump solutions.
+ 

@@ -1,0 +1,10 @@
+{
+  "active": true,
+  "skill_name": "verify",
+  "session_id": "e1d868e6-67a4-4144-82cb-9cfd5d13b3aa",
+  "started_at": "2026-10-20T18:47:07.819Z",
+  "last_checked_at": "2026-10-20T18:47:07.819Z",
+  "reinforcement_count": 0,
+  "max_reinforcements": 3,
+  "stale_ttl_ms": 300000
+}

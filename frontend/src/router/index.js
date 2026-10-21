@@ -43,6 +43,10 @@ const routes = [
     component: () => import('@/views/ProductVariantView.vue'),
     beforeEnter: (to) => {
       const v = variants[to.params.variant]
+      /* A retired unit URL still indexed by search engines lands on its series. */
+      if (!v && models[to.params.model] && !withdrawnSeries.has(to.params.model)) {
+        return { name: 'product-model', params: { slug: models[to.params.model].category, model: to.params.model } }
+      }
       if (!v || withdrawnSeries.has(v.model)) return { name: 'products' }
       const m = models[v.model]
       // Keep the URL honest: category and series in the path must own the unit.

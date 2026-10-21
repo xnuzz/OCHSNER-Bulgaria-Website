@@ -670,18 +670,21 @@ export const categoryCommon = {
   modelsCta: 'Виж продукта',
   backToAll: 'Всички продукти',
   linksTitle: 'Полезни връзки',
+  /* Photos are the reference's own link images, except Референции, which uses
+     one of our installations. */
   links: [
-    { title: 'Заяви консултация', text: 'Персонална консултация за вашия обект.', to: 'contact' },
-    { title: 'Всички продукти', text: 'Сравнение на четирите технологии на едно място.', to: 'products' },
-    { title: 'Референции', text: 'Реализирани инсталации и типове сгради.', to: 'references' },
-    { title: 'За нас', text: 'Официален представител на OCHSNER за България.', to: 'about' },
+    { title: 'Заяви консултация', text: 'Персонална консултация за вашия обект.', to: 'contact', image: '/images/links/consultation.jpg' },
+    { title: 'Всички продукти', text: 'Сравнение на четирите технологии на едно място.', to: 'products', image: '/images/links/products.jpg' },
+    { title: 'Референции', text: 'Реализирани инсталации и типове сгради.', to: 'references', image: '/images/references/boyana.jpg' },
+    { title: 'За нас', text: 'Официален представител на OCHSNER за България.', to: 'about', image: '/images/links/company.jpg' },
     /* Our own download page, which in turn links on to OCHSNER Austria's
        archive behind the redirect notice. Keeping the visitor on the site
        first means they get the Bulgarian framing before leaving. */
     {
       title: 'Център за изтегляне',
       text: 'Технически данни, описания и документи за проектиране.',
-      to: 'downloads'
+      to: 'downloads',
+      image: '/images/links/downloads.jpg'
     }
   ]
 }

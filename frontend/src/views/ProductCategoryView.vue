@@ -22,6 +22,7 @@ import RedirectNotice from '@/components/ui/RedirectNotice.vue'
 import { useExternalLink } from '@/composables/useExternalLink.js'
 import { downloadCenterUrl } from '@/i18n/bg/common.js'
 import PlaceholderImage from '@/components/ui/PlaceholderImage.vue'
+import HelpfulLinks from '@/components/products/HelpfulLinks.vue'
 import { fetchProducts, useAsyncData } from '@/api/catalog.js'
 import { useSeo } from '@/composables/useSeo.js'
 import { useI18n } from '@/i18n'
@@ -203,32 +204,7 @@ const { leavingFor, confirmLeave, cancelLeave } = useExternalLink()
     <!-- Helpful links — tinted band, as on the reference -->
     <section class="section section--tint">
       <div class="container">
-        <SectionHeading :title="categoryCommon.linksTitle" level="h2" align="center" />
-        <ul class="links">
-          <li v-for="link in categoryCommon.links" :key="link.title">
-            <a
-              v-if="link.href"
-              class="link-card"
-              :href="link.href"
-              @click="confirmLeave($event, link.href)"
-            >
-              <h3 class="link-card__title">{{ link.title }}</h3>
-              <p class="link-card__text">{{ link.text }}</p>
-              <span class="link-card__more">
-                {{ common.ctaMore }}
-                <AppIcon name="arrowRight" :size="16" />
-              </span>
-            </a>
-            <RouterLink v-else class="link-card" :to="{ name: link.to }">
-              <h3 class="link-card__title">{{ link.title }}</h3>
-              <p class="link-card__text">{{ link.text }}</p>
-              <span class="link-card__more">
-                {{ common.ctaMore }}
-                <AppIcon name="arrowRight" :size="16" />
-              </span>
-            </RouterLink>
-          </li>
-        </ul>
+        <HelpfulLinks />
       </div>
     </section>
 
@@ -469,54 +445,6 @@ const { leavingFor, confirmLeave, cancelLeave } = useExternalLink()
   text-decoration: underline;
 }
 
-/* --- helpful links ------------------------------------------------------ */
-.links {
-  list-style: none;
-  padding: 0;
-  margin: 0;
-  display: grid;
-  gap: var(--sp-4);
-}
-
-.link-card {
-  display: flex;
-  flex-direction: column;
-  height: 100%;
-  padding: var(--sp-5);
-  background: var(--c-surface);
-  border: 1px solid var(--c-line);
-  text-decoration: none;
-  color: inherit;
-  transition: border-color var(--dur) var(--ease), transform var(--dur) var(--ease);
-}
-
-.link-card:hover {
-  border-color: var(--c-accent-500);
-  transform: translateY(-3px);
-}
-
-.link-card__title {
-  color: var(--c-primary-800);
-}
-
-.link-card__text {
-  margin-top: var(--sp-2);
-  flex: 1;
-  font-size: var(--fs-small);
-  color: var(--c-ink-muted);
-}
-
-.link-card__more {
-  margin-top: var(--sp-4);
-  display: inline-flex;
-  align-items: center;
-  gap: var(--sp-2);
-  font-family: var(--font-heading);
-  font-weight: var(--fw-bold);
-  font-size: var(--fs-small);
-  color: var(--c-accent-600);
-}
-
 @media (min-width: 720px) {
   .model {
     grid-template-columns: 260px 1fr;
@@ -527,20 +455,12 @@ const { leavingFor, confirmLeave, cancelLeave } = useExternalLink()
   .features {
     grid-template-columns: repeat(3, 1fr);
   }
-
-  .links {
-    grid-template-columns: repeat(2, 1fr);
-  }
 }
 
 @media (min-width: 960px) {
   .advantages {
     grid-template-columns: 1.3fr 1fr;
     gap: var(--sp-8);
-  }
-
-  .links {
-    grid-template-columns: repeat(4, 1fr);
   }
 }
 </style>

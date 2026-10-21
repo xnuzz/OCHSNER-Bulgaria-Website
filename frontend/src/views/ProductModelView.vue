@@ -4,12 +4,8 @@
  * (/en/heat-pumps/air-heat-pumps/air-hawk/):
  *
  *   dark hero with the product cut-out and two CTAs → alternating highlight
- *   sections → feature grid → awards → "all models of the series" spec cards →
+ *   sections → feature grid → awards → "all models of the series" grid →
  *   FAQ → back to category
- *
- * The spec cards are the distinctive element of the reference design: a chip row
- * of properties (refrigerant, controller, evaporator) over a small grid of
- * measured values, with a footnote strip underneath.
  */
 import { computed, reactive, ref, watch } from 'vue'
 import { useRoute } from 'vue-router'
@@ -18,13 +14,12 @@ import SectionHeading from '@/components/ui/SectionHeading.vue'
 import AccordionList from '@/components/ui/AccordionList.vue'
 import CtaBand from '@/components/ui/CtaBand.vue'
 import AppIcon from '@/components/ui/AppIcon.vue'
-import RedirectNotice from '@/components/ui/RedirectNotice.vue'
-import { useExternalLink } from '@/composables/useExternalLink.js'
-import PlaceholderImage from '@/components/ui/PlaceholderImage.vue'
+import SeriesModels from '@/components/products/SeriesModels.vue'
+import HelpfulLinks from '@/components/products/HelpfulLinks.vue'
 import { useSeo } from '@/composables/useSeo.js'
 import { useI18n } from '@/i18n'
 
-const { common, products: copy, models, modelCommon, categories, categoryCommon, heroes, variants } = useI18n()
+const { products: copy, models, modelCommon, categories, heroes } = useI18n()
 const route = useRoute()
 
 const key = computed(() => route.params.model)
@@ -48,15 +43,6 @@ const pct = (box, h) => ({
   height: (box.h / h.h) * 100 + '%'
 })
 
-/* Series variants that have their own detail page, keyed by display name. */
-const variantKeyByName = computed(() => {
-  const map = {}
-  for (const [k, v] of Object.entries(variants)) {
-    if (v.model === key.value) map[v.name.replace('OCHSNER ', '')] = k
-  }
-  return map
-})
-
 const faqItems = computed(() =>
   model.value ? model.value.faq.map((i) => ({ title: i.q, text: i.a })) : []
 )
@@ -74,9 +60,6 @@ applySeo()
 watch(key, applySeo)
 
 const page = ref(null)
-
-/* External destinations open behind the redirect notice. */
-const { leavingFor, confirmLeave, cancelLeave } = useExternalLink()
 
 /* Artwork that fails to load is dropped rather than left as a broken image. */
 const failed = reactive({})
@@ -213,42 +196,14 @@ const failed = reactive({})
       </div>
     </section>
 
-    <!-- All models of the series: spec cards -->
+    <!-- All models of the series -->
     <section id="modeli" class="section section--tint">
       <div class="container">
-        <SectionHeading :strong="model.variants.title.split(' — ')[0]" :title="model.variants.title.split(' — ')[1] || ''" level="h2" align="center" rule />
-        <ul class="variants">
-          <li v-for="v in model.variants.items" :key="v.name" class="variant">
-            <div class="variant__media">
-              <PlaceholderImage :src="v.image" :label="v.name" surface="alt" inset="8%" ratio="1 / 1" />
-            </div>
-
-            <h3 class="variant__name">{{ v.name }}</h3>
-            <p class="variant__range">{{ v.range }}</p>
-
-            <ul class="chips">
-              <li v-for="tag in v.tags" :key="tag" class="chip">{{ tag }}</li>
-            </ul>
-
-            <dl class="specs">
-              <div v-for="s in v.specs" :key="s.label" class="specs__row">
-                <dt>{{ s.label }}</dt>
-                <dd>{{ s.value }}</dd>
-              </div>
-            </dl>
-
-            <p class="variant__footnote">{{ v.footnote }}</p>
-
-            <BaseButton
-              :to="variantKeyByName[v.name]
-                ? { name: 'product-variant', params: { slug: model.category, model: key, variant: variantKeyByName[v.name] } }
-                : { name: 'contact' }"
-              size="sm"
-            >
-              {{ modelCommon.viewProduct }}
-            </BaseButton>
-          </li>
-        </ul>
+        <SeriesModels
+          :model="key"
+          :strong="model.variants.title.split(' — ')[0]"
+          :title="model.variants.title.split(' — ')[1] || ''"
+        />
       </div>
     </section>
 
@@ -260,44 +215,10 @@ const failed = reactive({})
       </div>
     </section>
 
-    <!-- Helpful links -->
-    <section class="section section--alt">
+    <!-- Helpful links, on the light band of the type colour as on the reference -->
+    <section class="section section--tint">
       <div class="container">
-        <SectionHeading
-          :strong="categoryCommon.linksTitle.split(' ')[0]"
-          :title="categoryCommon.linksTitle.split(' ').slice(1).join(' ')"
-          level="h2"
-          rule
-        />
-        <ul class="links">
-          <li v-for="link in categoryCommon.links" :key="link.title">
-            <a
-              v-if="link.href"
-              class="link"
-              :href="link.href"
-              @click="confirmLeave($event, link.href)"
-            >
-              <span class="link__thumb" aria-hidden="true"></span>
-              <span class="link__body">
-                <span class="link__title">
-                  {{ link.title }}
-                  <AppIcon name="arrowRight" :size="16" />
-                </span>
-                <span class="link__text">{{ link.text }}</span>
-              </span>
-            </a>
-            <RouterLink v-else class="link" :to="{ name: link.to }">
-              <span class="link__thumb" aria-hidden="true"></span>
-              <span class="link__body">
-                <span class="link__title">
-                  {{ link.title }}
-                  <AppIcon name="arrowRight" :size="16" />
-                </span>
-                <span class="link__text">{{ link.text }}</span>
-              </span>
-            </RouterLink>
-          </li>
-        </ul>
+        <HelpfulLinks />
       </div>
     </section>
 
@@ -312,8 +233,6 @@ const failed = reactive({})
     </section>
 
     <CtaBand :title="copy.ctaBand.title" :text="copy.ctaBand.text" />
-
-    <RedirectNotice :url="leavingFor" @close="cancelLeave" />
   </div>
 </template>
 
@@ -684,60 +603,6 @@ const failed = reactive({})
   line-height: var(--lh-body);
 }
 
-/* --- helpful links ------------------------------------------------------ */
-.links {
-  list-style: none;
-  padding: 0;
-  margin: 0;
-  display: grid;
-  gap: var(--sp-4);
-}
-
-.link {
-  display: flex;
-  gap: var(--sp-4);
-  height: 100%;
-  padding: var(--sp-5);
-  background: var(--c-surface);
-  border-radius: 16px;
-  text-decoration: none;
-  color: inherit;
-  transition: transform var(--dur) var(--ease);
-}
-
-.link:hover {
-  transform: translateY(-3px);
-}
-
-.link__thumb {
-  flex: 0 0 auto;
-  width: 76px;
-  height: 76px;
-  border-radius: 12px;
-  background: color-mix(in srgb, var(--type-tint, #6b8fa3) 18%, #fff);
-}
-
-.link__body {
-  display: flex;
-  flex-direction: column;
-}
-
-.link__title {
-  display: inline-flex;
-  align-items: center;
-  gap: var(--sp-2);
-  font-family: var(--font-heading);
-  font-weight: var(--fw-bold);
-  color: var(--c-primary-900);
-}
-
-.link__text {
-  margin-top: var(--sp-2);
-  font-size: var(--fs-small);
-  color: var(--c-ink-muted);
-  line-height: var(--lh-body);
-}
-
 /* --- awards ------------------------------------------------------------- */
 /* White card on a light band, bold lead-in per line, as on the reference. */
 .awards {
@@ -772,95 +637,6 @@ const failed = reactive({})
   font-weight: var(--fw-bold);
 }
 
-/* --- variant spec cards ------------------------------------------------- */
-.variants {
-  list-style: none;
-  padding: 0;
-  margin: 0;
-  display: grid;
-  gap: var(--sp-5);
-}
-
-.variant {
-  display: flex;
-  flex-direction: column;
-  padding: var(--sp-5);
-  background: var(--c-surface);
-  border: 1px solid var(--c-line);
-}
-
-.variant__media {
-  margin-bottom: var(--sp-4);
-}
-
-.variant__name {
-  /* The reference sets unit names bold at 24px, not in the medium h3 weight. */
-  font-size: 1.5rem;
-  font-weight: var(--fw-bold);
-  line-height: 1.3;
-  color: var(--c-primary-900);
-}
-
-.variant__range {
-  margin-top: var(--sp-1);
-  font-family: var(--font-heading);
-  font-weight: var(--fw-bold);
-  color: var(--c-accent-600);
-}
-
-.chips {
-  margin-top: var(--sp-4);
-  list-style: none;
-  padding: 0;
-  display: flex;
-  flex-wrap: wrap;
-  gap: var(--sp-2);
-}
-
-.chip {
-  padding: 4px 10px;
-  background: var(--c-primary-50);
-  border: 1px solid var(--c-line);
-  font-size: 0.75rem;
-  color: var(--c-ink-muted);
-}
-
-.specs {
-  margin: var(--sp-4) 0 0;
-  display: grid;
-  gap: 0;
-  border-top: 1px solid var(--c-line);
-}
-
-.specs__row {
-  display: flex;
-  justify-content: space-between;
-  gap: var(--sp-3);
-  padding-block: var(--sp-2);
-  border-bottom: 1px solid var(--c-line);
-}
-
-.specs__row dt {
-  font-size: var(--fs-small);
-  color: var(--c-ink-muted);
-}
-
-.specs__row dd {
-  margin: 0;
-  font-family: var(--font-heading);
-  font-weight: var(--fw-bold);
-  font-size: var(--fs-small);
-  color: var(--c-primary-900);
-}
-
-.variant__footnote {
-  margin: var(--sp-4) 0 var(--sp-5);
-  flex: 1;
-  font-size: 0.75rem;
-  color: var(--c-ink-muted);
-  line-height: 1.5;
-}
-
 /* --- back link ---------------------------------------------------------- */
 .back {
   display: inline-flex;
@@ -885,24 +661,12 @@ const failed = reactive({})
   .features {
     grid-template-columns: repeat(2, 1fr);
   }
-
-  .links {
-    grid-template-columns: repeat(2, 1fr);
-  }
-
-  .variants {
-    grid-template-columns: repeat(2, 1fr);
-  }
 }
 
 @media (min-width: 960px) {
   .hero__inner {
     grid-template-columns: 1.25fr 1fr;
     gap: var(--sp-8);
-  }
-
-  .variants {
-    grid-template-columns: repeat(4, 1fr);
   }
 }
 </style>

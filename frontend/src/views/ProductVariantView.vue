@@ -1,12 +1,12 @@
 <script setup>
 /**
- * Individual unit page, mirroring the reference's numbered product pages
- * (/en/heat-pumps/air-heat-pumps/air-hawk/397/):
+ * Individual unit page, mirroring the reference's product pages
+ * (/en/heat-pumps/air-heat-pumps/air-milan/air-milan-612-c11a-cm1/):
  *
- *   full-strength band of the category colour with a centred kicker, name,
- *   output range and description → white card with the product render beside
- *   four colour-coded spec tiles → "suitable for" → the rest of the series →
- *   back to the series
+ *   band of the category colour with a centred kicker, name, output range and
+ *   description → image gallery lifted onto the band, beside the four
+ *   colour-coded spec tiles and "suitable for" → technical details (data and
+ *   properties) → the rest of the series
  */
 import { computed, ref, watch } from 'vue'
 import { useRoute } from 'vue-router'
@@ -14,11 +14,12 @@ import BaseButton from '@/components/ui/BaseButton.vue'
 import SectionHeading from '@/components/ui/SectionHeading.vue'
 import CtaBand from '@/components/ui/CtaBand.vue'
 import AppIcon from '@/components/ui/AppIcon.vue'
-import PlaceholderImage from '@/components/ui/PlaceholderImage.vue'
+import SeriesModels from '@/components/products/SeriesModels.vue'
+import HelpfulLinks from '@/components/products/HelpfulLinks.vue'
 import { useSeo } from '@/composables/useSeo.js'
 import { useI18n } from '@/i18n'
 
-const { common, products: copy, variants, variantCommon, models, categories } = useI18n()
+const { products: copy, variants, variantCommon, models, modelCommon, categories } = useI18n()
 const route = useRoute()
 
 const key = computed(() => route.params.variant)
@@ -26,28 +27,16 @@ const unit = computed(() => variants[key.value] || null)
 const series = computed(() => (unit.value ? models[unit.value.model] : null))
 const category = computed(() => (series.value ? categories[series.value.category] : null))
 const tint = computed(() => (category.value && category.value.tint) || '#6b8fa3')
+const shortName = computed(() => unit.value.name.replace('OCHSNER ', ''))
 
-/* The rest of the series, for the cards at the foot of the page. */
-const siblings = computed(() =>
-  Object.entries(variants)
-    .filter(([k, v]) => unit.value && v.model === unit.value.model && k !== key.value)
-    .map(([k, v]) => ({ key: k, ...v }))
-)
+/* Gallery: the thumbnails swap the large image, as on the reference. */
+const current = ref(0)
+watch(key, () => (current.value = 0))
 
-/* "Properties" mirrors the reference's second accordion: the series-level
-   characteristics rather than measured figures. */
-const properties = computed(() => {
-  if (!series.value) return []
-  const v = series.value.variants.items.find((x) => x.name === unit.value.name.replace('OCHSNER ', ''))
-  const rows = []
-  if (v) {
-    v.tags.forEach((t) => rows.push(['Изпълнение', t]))
-    if (v.footnote) rows.push(['Допълнително', v.footnote])
-  }
-  rows.push(['Серия', series.value.name])
-  rows.push(['Диапазон на серията', series.value.range])
-  return rows
-})
+const techGroups = computed(() => unit.value.tech.filter((g) => g.rows.length))
+
+/* "Properties" mirrors the reference's second panel, one property per row. */
+const properties = computed(() => unit.value.props || [])
 
 function applySeo() {
   if (!unit.value) return
@@ -60,41 +49,58 @@ function applySeo() {
 
 applySeo()
 watch(key, applySeo)
-
-const page = ref(null)
 </script>
 
 <template>
-  <div v-if="unit" ref="page" :style="{ '--type-tint': tint }">
-    <!-- Band of the category colour carrying the whole introduction -->
+  <div v-if="unit" :style="{ '--type-tint': tint }">
+    <!-- Band of the category colour carrying the introduction -->
     <section class="intro">
-      <div class="container container--narrow intro__inner">
+      <div class="container wrap intro__inner">
         <p class="intro__kicker">{{ series.kicker }}</p>
         <h1 class="intro__title">{{ unit.name }}</h1>
         <p class="intro__range">{{ unit.range }}</p>
         <p class="intro__text">{{ unit.description }}</p>
+        <!-- Award line, where the reference has one -->
+        <p v-if="unit.note" class="intro__text">{{ unit.note }}</p>
       </div>
+    </section>
 
-      <!-- Product render beside the specification tiles -->
-      <div class="container">
-        <div class="panel">
-          <div class="panel__media">
-            <PlaceholderImage
-              :src="unit.image"
-              :label="unit.name"
-              surface="none"
-              inset="6%"
-              ratio="1 / 1"
-              eager
+    <!-- Gallery lifted onto the band, spec tiles and "suitable for" beside it -->
+    <section class="product">
+      <div class="container wrap product__grid">
+        <div class="gallery">
+          <div class="gallery__main">
+            <img
+              :src="unit.gallery[current]"
+              :alt="unit.name"
+              fetchpriority="high"
+              decoding="async"
             />
           </div>
 
-          <div class="panel__specs">
-            <p class="climate">
-              <span class="climate__note">{{ variantCommon.climateNote }}</span>
-              <span class="climate__value">
+          <div v-if="unit.gallery.length > 1" class="gallery__thumbs">
+            <button
+              v-for="(src, i) in unit.gallery"
+              :key="src"
+              type="button"
+              class="gallery__thumb"
+              :class="{ 'is-active': i === current }"
+              :aria-label="`${unit.name} — ${i + 1}`"
+              :aria-pressed="i === current"
+              @click="current = i"
+            >
+              <img :src="src" alt="" loading="lazy" decoding="async" />
+            </button>
+          </div>
+        </div>
+
+        <div class="side">
+          <div class="energy">
+            <p class="energy__head">
+              <span class="energy__note">{{ variantCommon.climateNote }}</span>
+              <span class="energy__title">
                 {{ variantCommon.climateValue }}
-                <AppIcon name="ecology" :size="22" />
+                <AppIcon name="ecology" :size="30" class="energy__leaf" />
               </span>
             </p>
 
@@ -104,63 +110,60 @@ const page = ref(null)
                 <span class="tile__label">{{ t.label }}</span>
               </li>
             </ul>
-
-            <div class="panel__actions">
-              <BaseButton :to="{ name: 'contact' }" size="lg">{{ variantCommon.quote }}</BaseButton>
-            </div>
           </div>
+
+          <div class="suitable">
+            <h2 class="suitable__title">{{ variantCommon.suitableTitle }}</h2>
+            <ul class="suitable__list">
+              <li v-for="s in unit.suitableFor" :key="s">
+                <AppIcon name="check" :size="16" class="suitable__icon" />
+                <span>{{ s }}</span>
+              </li>
+            </ul>
+          </div>
+
+          <BaseButton :to="{ name: 'contact' }" size="lg" class="side__cta">
+            {{ variantCommon.quote }}
+          </BaseButton>
         </div>
       </div>
     </section>
 
-    <!-- Suitable for -->
-    <section class="section">
-      <div class="container container--narrow">
-        <SectionHeading strong="Подходяща" title="за" level="h2" />
-        <ul class="suitable">
-          <li v-for="s in unit.suitableFor" :key="s">
-            <AppIcon name="check" :size="18" />
-            <span>{{ s }}</span>
-          </li>
-        </ul>
-      </div>
-    </section>
-
-    <!-- Technical details, as the reference presents them -->
-    <section class="section">
-      <div class="container container--narrow">
-        <SectionHeading
-          :strong="variantCommon.techTitleStrong"
-          :title="unit.name.replace('OCHSNER ', '')"
-          level="h2"
-          rule
-        />
+    <!-- Technical details: one panel of measured data, one of properties -->
+    <section class="section tech">
+      <div class="container wrap">
+        <SectionHeading :strong="variantCommon.techTitleStrong" :title="shortName" level="h2" rule />
 
         <div class="acc">
-          <details v-for="(g, gi) in unit.tech" :key="g.title" class="acc__item">
+          <details v-if="techGroups.length" class="acc__item">
             <summary class="acc__head">
               <span class="acc__icon" aria-hidden="true"></span>
-              <span>{{ g.title }}</span>
+              <span>{{ variantCommon.specsTitle }}</span>
             </summary>
-            <dl class="acc__body">
-              <div v-for="row in g.rows" :key="row[0]" class="acc__row">
-                <dt>{{ row[0] }}</dt>
-                <dd>{{ row[1] }}</dd>
+            <div class="acc__body">
+              <div v-for="g in techGroups" :key="g.title" class="acc__group">
+                <p class="acc__group-title">{{ g.title }}</p>
+                <dl>
+                  <div v-for="row in g.rows" :key="row[0]" class="acc__row">
+                    <dt>{{ row[0] }}</dt>
+                    <dd>{{ row[1] }}</dd>
+                  </div>
+                </dl>
               </div>
-            </dl>
+            </div>
           </details>
 
-          <details class="acc__item">
+          <details v-if="properties.length" class="acc__item">
             <summary class="acc__head">
               <span class="acc__icon" aria-hidden="true"></span>
               <span>{{ variantCommon.propsTitle }}</span>
             </summary>
-            <dl class="acc__body">
-              <div v-for="(row, i) in properties" :key="i" class="acc__row">
-                <dt>{{ row[0] }}</dt>
-                <dd>{{ row[1] }}</dd>
-              </div>
-            </dl>
+            <ul class="acc__body props">
+              <li v-for="p in properties" :key="p">
+                <AppIcon name="check" :size="16" />
+                <span>{{ p }}</span>
+              </li>
+            </ul>
           </details>
         </div>
 
@@ -173,47 +176,20 @@ const page = ref(null)
     </section>
 
     <!-- The rest of the series -->
-    <section v-if="siblings.length" class="section section--tint">
+    <section v-if="series.variants.items.length > 1" class="section section--tint">
       <div class="container">
-        <SectionHeading
-          :title="`${series.name} — ${variantCommon.seriesTitle}`"
-          level="h2"
-          align="center"
+        <SeriesModels
+          :model="unit.model"
+          :exclude="key"
+          :strong="series.name"
+          :title="modelCommon.moreModels"
         />
-        <ul class="series">
-          <li v-for="sib in siblings" :key="sib.key" class="sib">
-            <div class="sib__media">
-              <PlaceholderImage :src="sib.image" :label="sib.name" surface="alt" inset="8%" ratio="1 / 1" />
-            </div>
-            <h3 class="sib__name">{{ sib.name.replace('OCHSNER ', '') }}</h3>
-            <p class="sib__range">{{ sib.range }}</p>
-            <dl class="sib__specs">
-              <div v-for="t in sib.tiles.slice(0, 3)" :key="t.label" class="sib__row">
-                <dt>{{ t.label.split('(')[0].trim() }}</dt>
-                <dd>{{ t.value }}</dd>
-              </div>
-            </dl>
-            <BaseButton
-              :to="{ name: 'product-variant', params: { slug: series.category, model: sib.model, variant: sib.key } }"
-              size="sm"
-            >
-              {{ common.ctaMore }}
-            </BaseButton>
-          </li>
-        </ul>
       </div>
     </section>
 
-    <!-- Back to the series -->
-    <section class="section">
-      <div class="container container--narrow">
-        <RouterLink
-          class="back"
-          :to="{ name: 'product-model', params: { slug: series.category, model: unit.model } }"
-        >
-          <AppIcon name="arrowLeft" :size="18" />
-          {{ variantCommon.backToModel }}: {{ series.name }}
-        </RouterLink>
+    <section class="section section--tint">
+      <div class="container">
+        <HelpfulLinks />
       </div>
     </section>
 
@@ -222,86 +198,144 @@ const page = ref(null)
 </template>
 
 <style scoped>
+/*
+ * The reference's narrow section: a 1082px column. The band stops part-way
+ * down the gallery — its bottom padding equals the gallery's negative top
+ * margin — so the white image card sits half on the colour, half below it.
+ */
+.wrap {
+  max-width: calc(1082px + 2 * var(--gutter));
+}
+
 /* --- intro band --------------------------------------------------------- */
 .intro {
-  padding-block: var(--section-y);
+  padding-bottom: 100px;
   background: var(--type-tint, #6b8fa3);
   color: #fff;
 }
 
 .intro__inner {
+  padding-block: var(--sp-7);
   text-align: center;
 }
 
 .intro__kicker {
   font-family: var(--font-heading);
-  font-size: 0.8rem;
-  font-weight: var(--fw-light);
+  font-size: var(--fs-small);
   letter-spacing: 0.1em;
   text-transform: uppercase;
-  color: rgba(255, 255, 255, 0.92);
+  opacity: 0.85;
 }
 
 .intro__title {
   margin-top: var(--sp-4);
-  font-size: var(--fs-h1);
+  font-size: clamp(2.25rem, 1.5rem + 2.4vw, 3.375rem);
   font-weight: var(--fw-bold);
-  line-height: 1.1;
+  line-height: 1.05;
   color: #fff;
   max-width: none;
   text-transform: uppercase;
 }
 
 .intro__range {
-  margin-top: var(--sp-3);
-  font-size: var(--fs-lead);
-  color: rgba(255, 255, 255, 0.94);
+  margin-top: var(--sp-4);
+  font-size: 1.125rem;
+  opacity: 0.9;
 }
 
 .intro__text {
   margin: var(--sp-5) auto 0;
-  max-width: 76ch;
-  color: rgba(255, 255, 255, 0.94);
-  line-height: var(--lh-body);
+  max-width: 900px;
+  font-size: clamp(1.0625rem, 1rem + 0.3vw, 1.25rem);
+  font-weight: var(--fw-light);
+  line-height: 1.6;
+  opacity: 0.9;
 }
 
-/* --- product panel ------------------------------------------------------ */
-.panel {
-  margin-top: var(--sp-7);
+/* --- product row -------------------------------------------------------- */
+.product__grid {
+  position: relative;
+  margin-top: -100px;
   display: grid;
-  gap: var(--sp-5);
+  gap: var(--sp-6);
 }
 
-.panel__media {
-  background: #fff;
+.gallery__main {
+  position: relative;
+  aspect-ratio: 1;
   border-radius: 20px;
   overflow: hidden;
+  background: #fff;
+  box-shadow: var(--shadow-sm);
 }
 
-.panel__specs {
+.gallery__main img {
+  position: absolute;
+  inset: 20px;
+  width: calc(100% - 40px);
+  height: calc(100% - 40px);
+  object-fit: contain;
+  border-radius: 10px;
+}
+
+.gallery__thumbs {
+  margin-top: var(--sp-4);
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: var(--sp-2);
+}
+
+.gallery__thumb {
+  display: block;
+  padding: 0;
+  border: 0;
+  border-radius: 10px;
+  overflow: hidden;
+  background: #fff;
+  cursor: pointer;
+  transition: opacity var(--dur) var(--ease);
+}
+
+.gallery__thumb:hover {
+  opacity: 0.8;
+}
+
+.gallery__thumb.is-active {
+  opacity: 0.6;
+}
+
+.gallery__thumb img {
+  display: block;
+  width: 100%;
+  aspect-ratio: 1;
+  object-fit: contain;
+}
+
+/* --- energy block ------------------------------------------------------- */
+.energy__head {
   display: flex;
   flex-direction: column;
-  justify-content: center;
+  margin-bottom: var(--sp-5);
+  color: var(--type-tint, #6b8fa3);
 }
 
-.climate {
-  display: flex;
-  flex-direction: column;
-  margin-bottom: var(--sp-4);
-  color: #fff;
+.energy__note {
+  font-size: 1.125rem;
+  line-height: 1.1;
 }
 
-.climate__note {
-  font-size: var(--fs-small);
-}
-
-.climate__value {
+.energy__title {
   display: inline-flex;
   align-items: center;
   gap: var(--sp-2);
   font-family: var(--font-heading);
-  font-size: var(--fs-h3);
+  font-size: 1.625rem;
   font-weight: var(--fw-bold);
+  line-height: 1.2;
+}
+
+.energy__leaf {
+  opacity: 0.4;
 }
 
 .tiles {
@@ -309,7 +343,8 @@ const page = ref(null)
   padding: 0;
   margin: 0;
   display: grid;
-  gap: var(--sp-4);
+  grid-template-columns: 1fr 1fr;
+  gap: 0.9375rem 1.875rem;
 }
 
 /* Tone palette taken from the reference's own tiles. */
@@ -318,8 +353,8 @@ const page = ref(null)
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: var(--sp-1);
-  padding: var(--sp-5) var(--sp-4);
+  min-height: 6rem;
+  padding: 0.75rem 1rem;
   border-radius: 10px;
   color: #fff;
   text-align: center;
@@ -343,66 +378,88 @@ const page = ref(null)
 
 .tile__value {
   font-family: var(--font-heading);
-  font-size: clamp(1.4rem, 1rem + 1.4vw, 2rem);
+  font-size: clamp(1.4rem, 1rem + 1.2vw, 2.125rem);
   font-weight: var(--fw-bold);
-  line-height: 1.1;
+  line-height: 1.2;
 }
 
 .tile__label {
-  font-size: 0.8rem;
-  line-height: 1.3;
-  color: rgba(255, 255, 255, 0.9);
-}
-
-.panel__actions {
-  margin-top: var(--sp-5);
+  margin-top: var(--sp-1);
+  font-size: 0.8125rem;
+  line-height: 1.2;
+  opacity: 0.8;
 }
 
 /* --- suitable for ------------------------------------------------------- */
 .suitable {
-  list-style: none;
-  padding: 0;
-  margin: 0;
-  display: grid;
-  gap: var(--sp-3);
-}
-
-.suitable li {
-  display: flex;
-  align-items: flex-start;
-  gap: var(--sp-3);
-  color: var(--c-ink);
-}
-
-.suitable :deep(svg) {
-  flex: 0 0 auto;
-  margin-top: 4px;
+  margin-top: var(--sp-7);
   color: var(--type-tint, #6b8fa3);
 }
 
+.suitable__title {
+  margin-bottom: var(--sp-4);
+  font-size: 1.625rem;
+  font-weight: var(--fw-bold);
+  color: inherit;
+}
+
+.suitable__list {
+  list-style: none;
+  margin: 0;
+  padding: 1.25rem;
+  border-radius: 10px;
+  background: rgba(0, 0, 0, 0.03);
+}
+
+.suitable__list li {
+  display: flex;
+  align-items: center;
+  gap: var(--sp-3);
+  padding-block: 0.375rem;
+  font-weight: var(--fw-medium);
+}
+
+/* Outlined circle around the tick, as the reference's icon draws it. */
+.suitable__icon {
+  flex: 0 0 auto;
+  box-sizing: content-box;
+  padding: 3px;
+  border: 1.5px solid currentColor;
+  border-radius: 50%;
+}
+
+.side__cta {
+  margin-top: var(--sp-6);
+}
+
 /* --- technical details accordion ---------------------------------------- */
-.acc {
-  display: grid;
-  gap: var(--sp-4);
+/* One line over a full-width hairline, as on the reference. */
+.tech :deep(.heading__title) {
+  max-width: none;
 }
 
 .acc__item {
-  background: var(--c-surface);
-  border-radius: 14px;
-  box-shadow: var(--shadow-sm);
+  margin-bottom: var(--sp-3);
+  background: #fff;
+  border-radius: 0.75rem;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
 }
 
 .acc__head {
   display: flex;
   align-items: center;
-  gap: var(--sp-5);
-  padding: 40px var(--sp-5);
-  font-family: var(--font-heading);
-  font-size: 1.25rem;
-  font-weight: var(--fw-regular);
-  color: var(--c-primary-800);
+  gap: var(--sp-4);
+  padding: 1.25rem 1rem 1.25rem 0.75rem;
+  font-size: 0.9375rem;
+  color: #383838;
   cursor: pointer;
   list-style: none;
+  transition: color var(--dur) var(--ease);
+}
+
+.acc__head:hover {
+  color: var(--c-accent-600);
 }
 
 .acc__head::-webkit-details-marker {
@@ -413,9 +470,9 @@ const page = ref(null)
 .acc__icon {
   position: relative;
   flex: 0 0 auto;
-  width: 34px;
-  height: 34px;
-  border: 2px solid var(--c-primary-800);
+  width: 1.75rem;
+  height: 1.75rem;
+  border: 2px solid currentColor;
   border-radius: 50%;
 }
 
@@ -423,9 +480,9 @@ const page = ref(null)
 .acc__icon::after {
   content: '';
   position: absolute;
-  inset: 50% 24% auto;
+  inset: 50% 22% auto;
   height: 2px;
-  background: var(--c-primary-800);
+  background: currentColor;
   transform: translateY(-50%);
 }
 
@@ -441,129 +498,56 @@ const page = ref(null)
 
 .acc__body {
   margin: 0;
-  padding: 0 var(--sp-5) var(--sp-5);
+  padding: 0 1.5rem 1.25rem;
+  color: #383838;
 }
 
+.acc__group + .acc__group {
+  margin-top: var(--sp-6);
+}
+
+.acc__group-title {
+  margin-bottom: var(--sp-4);
+  font-weight: var(--fw-bold);
+}
+
+.acc__group dl {
+  margin: 0;
+}
+
+/* Label and value in an 8 : 4 split, as the reference's two columns. */
 .acc__row {
-  display: flex;
-  justify-content: space-between;
+  display: grid;
+  grid-template-columns: 2fr 1fr;
   gap: var(--sp-4);
-  padding-block: var(--sp-3);
-  border-top: 1px solid var(--c-line);
-}
-
-.acc__row dt {
-  color: var(--c-ink-muted);
-  font-size: var(--fs-small);
+  margin-bottom: var(--sp-1);
 }
 
 .acc__row dd {
   margin: 0;
-  text-align: right;
-  font-family: var(--font-heading);
-  font-weight: var(--fw-semibold);
-  font-size: var(--fs-small);
-  color: var(--c-primary-900);
 }
 
-/* --- rest of the series ------------------------------------------------- */
-.section--tint {
-  background: color-mix(in srgb, var(--type-tint, #6b8fa3) 10%, #fff);
-}
-
-.series {
+.props {
   list-style: none;
-  padding: 0;
-  margin: 0;
-  display: grid;
-  gap: var(--sp-5);
 }
 
-.sib {
+.props li {
   display: flex;
-  flex-direction: column;
-  padding: var(--sp-5);
-  background: var(--c-surface);
-  border-radius: 20px;
-}
-
-.sib__media {
-  margin-bottom: var(--sp-4);
-}
-
-.sib__name {
-  color: var(--c-primary-900);
-}
-
-.sib__range {
-  margin-top: var(--sp-1);
-  font-family: var(--font-heading);
-  font-weight: var(--fw-bold);
-  color: var(--type-tint, #6b8fa3);
-}
-
-.sib__specs {
-  margin: var(--sp-4) 0 var(--sp-5);
-  flex: 1;
-  border-top: 1px solid var(--c-line);
-}
-
-.sib__row {
-  display: flex;
-  justify-content: space-between;
+  align-items: center;
   gap: var(--sp-3);
   padding-block: var(--sp-2);
   border-bottom: 1px solid var(--c-line);
 }
 
-.sib__row dt {
-  font-size: var(--fs-small);
-  color: var(--c-ink-muted);
+.props li:last-child {
+  border-bottom: 0;
 }
 
-.sib__row dd {
-  margin: 0;
-  font-family: var(--font-heading);
-  font-weight: var(--fw-bold);
-  font-size: var(--fs-small);
-  color: var(--c-primary-900);
+.props :deep(svg) {
+  flex: 0 0 auto;
+  color: var(--type-tint, #6b8fa3);
 }
 
-.back {
-  display: inline-flex;
-  align-items: center;
-  gap: var(--sp-2);
-  font-family: var(--font-heading);
-  font-weight: var(--fw-bold);
-  color: var(--c-accent-600);
-  text-decoration: none;
-}
-
-.back:hover {
-  text-decoration: underline;
-}
-
-@media (min-width: 720px) {
-  .tiles {
-    grid-template-columns: repeat(2, 1fr);
-  }
-
-  .series {
-    grid-template-columns: repeat(2, 1fr);
-  }
-}
-
-@media (min-width: 1000px) {
-  .panel {
-    grid-template-columns: 1fr 1fr;
-    gap: var(--sp-7);
-    align-items: center;
-  }
-
-  .series {
-    grid-template-columns: repeat(3, 1fr);
-  }
-}
 .tech-more {
   margin-top: var(--sp-5);
   font-size: var(--fs-small);
@@ -573,5 +557,84 @@ const page = ref(null)
 .tech-more a {
   color: var(--c-accent-500);
   font-weight: var(--fw-medium);
+}
+
+/* --- rest of the series ------------------------------------------------- */
+.section--tint {
+  background: color-mix(in srgb, var(--type-tint, #6b8fa3) 10%, #fff);
+}
+
+@media (min-width: 576px) {
+  .gallery__thumbs {
+    grid-template-columns: repeat(5, 1fr);
+  }
+}
+
+@media (min-width: 1024px) {
+  .intro {
+    padding-bottom: 200px;
+  }
+
+  .intro__inner {
+    padding-block: 5rem;
+  }
+
+  .product__grid {
+    margin-top: -200px;
+    grid-template-columns: 1fr 1fr;
+    gap: 0;
+  }
+
+  .gallery {
+    padding-right: 2.5rem;
+  }
+
+  .gallery__main img {
+    inset: 30px;
+    width: calc(100% - 60px);
+    height: calc(100% - 60px);
+  }
+
+  /* The heading sits on the band from here up. */
+  .energy__head {
+    color: #fff;
+  }
+
+  .acc__head {
+    gap: var(--sp-5);
+    padding: 2.5rem 1.5rem 2.5rem 1.25rem;
+    font-size: 1.25rem;
+  }
+
+  .acc__icon {
+    width: 2.5rem;
+    height: 2.5rem;
+  }
+}
+
+@media (min-width: 1240px) {
+  .intro {
+    padding-bottom: 330px;
+  }
+
+  .product__grid {
+    margin-top: -330px;
+  }
+
+  .gallery__main img {
+    inset: 50px;
+    width: calc(100% - 100px);
+    height: calc(100% - 100px);
+  }
+
+  /* Exactly the band's overlap, so the tiles end where the colour does. */
+  .energy {
+    height: 330px;
+    padding-bottom: 3.125rem;
+  }
+
+  .tile {
+    height: 6rem;
+  }
 }
 </style>
