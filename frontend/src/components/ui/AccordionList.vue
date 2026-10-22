@@ -6,8 +6,9 @@ import AppIcon from './AppIcon.vue'
  * Accessible disclosure list — the corporate site presents "Why OCHSNER" as a
  * collapsed FAQ rather than a tile grid.
  *
- * Panels are rendered in the DOM at all times and hidden with [hidden] so the
- * copy stays available to search engines and to find-in-page.
+ * Panels are rendered in the DOM at all times so the copy stays available to
+ * search engines; closed ones collapse to zero height and visibility: hidden,
+ * which also keeps them out of the tab order and the accessibility tree.
  */
 const props = defineProps({
   items: { type: Array, required: true },
@@ -27,7 +28,12 @@ function toggle(index) {
 
 <template>
   <div class="accordion">
-    <div v-for="(item, index) in items" :key="item.title" class="accordion__item">
+    <div
+      v-for="(item, index) in items"
+      :key="item.title"
+      class="accordion__item"
+      :class="{ 'accordion__item--open': isOpen(index) }"
+    >
       <h3 class="accordion__heading">
         <button
           type="button"
@@ -37,7 +43,7 @@ function toggle(index) {
           :id="`accordion-button-${index}`"
           @click="toggle(index)"
         >
-          <span class="accordion__icon" :class="{ 'accordion__icon--open': isOpen(index) }">
+          <span class="accordion__icon">
             <AppIcon name="plus" :size="20" />
           </span>
           <span>{{ item.title }}</span>
@@ -48,9 +54,10 @@ function toggle(index) {
         class="accordion__panel"
         role="region"
         :aria-labelledby="`accordion-button-${index}`"
-        :hidden="!isOpen(index)"
       >
-        <p>{{ item.text }}</p>
+        <div class="accordion__body">
+          <p>{{ item.text }}</p>
+        </div>
       </div>
     </div>
   </div>
@@ -59,13 +66,21 @@ function toggle(index) {
 <style scoped>
 /*
  * The reference's FAQ: each question a white card (12px radius, soft shadow)
- * with a circled plus on the left that turns into a cross when open.
+ * with a circled plus on the left that turns into a cross when open. The open
+ * card is marked in OCHSNER red — a filled icon and an accent bar on its edge.
  */
 .accordion__item {
   margin-bottom: 16px;
   background: #fff;
   border-radius: 12px;
   box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
+  transition: box-shadow var(--dur) var(--ease);
+}
+
+.accordion__item--open {
+  box-shadow:
+    inset 4px 0 0 var(--c-accent-600),
+    0 6px 20px rgba(0, 0, 0, 0.1);
 }
 
 .accordion__item:last-child {
@@ -111,21 +126,78 @@ function toggle(index) {
   border: 1.5px solid currentColor;
   border-radius: 50%;
   transform: translateY(-50%);
-  transition: transform var(--dur) var(--ease);
+  transition:
+    transform var(--dur-slow) var(--ease),
+    background-color var(--dur) var(--ease),
+    border-color var(--dur) var(--ease),
+    color var(--dur) var(--ease);
 }
 
-.accordion__icon--open {
+.accordion__item--open .accordion__icon {
+  background: var(--c-accent-600);
+  border-color: var(--c-accent-600);
+  color: var(--c-surface);
   transform: translateY(-50%) rotate(45deg);
 }
 
+/*
+ * The answer sits in the question's text column (same left inset as the
+ * button), pulled up into the button's bottom padding and opened by a hairline
+ * that fades from the accent red into the neutral line.
+ *
+ * Height animates both ways by transitioning the grid row between 0fr and 1fr;
+ * vertical padding therefore lives inside .accordion__body, never on the panel.
+ * visibility flips at the end of the close so the text fades out first.
+ */
 .accordion__panel {
-  padding: 0 24px 20px;
-  font-size: 0.9rem;
-  color: var(--c-primary-700);
+  display: grid;
+  grid-template-rows: 0fr;
+  padding: 0 16px 0 64px;
+  visibility: hidden;
+  transition:
+    grid-template-rows var(--dur-slow) var(--ease),
+    margin-top var(--dur-slow) var(--ease),
+    visibility 0s linear var(--dur-slow);
 }
 
-.accordion__panel[hidden] {
-  display: none;
+.accordion__item--open .accordion__panel {
+  grid-template-rows: 1fr;
+  margin-top: -8px;
+  visibility: visible;
+  transition-delay: 0s;
+}
+
+.accordion__body {
+  min-height: 0;
+  overflow: hidden;
+  opacity: 0;
+  transform: translateY(-8px);
+  transition:
+    opacity var(--dur) var(--ease),
+    transform var(--dur-slow) var(--ease);
+}
+
+.accordion__item--open .accordion__body {
+  opacity: 1;
+  transform: none;
+  transition-delay: 80ms, 0s;
+}
+
+.accordion__body::before {
+  content: '';
+  display: block;
+  height: 1px;
+  margin-bottom: var(--sp-4);
+  background: linear-gradient(90deg, var(--c-accent-300), var(--c-line) 45%);
+}
+
+.accordion__body p {
+  max-width: 72ch;
+  margin: 0;
+  padding-bottom: 24px;
+  font-size: var(--fs-body);
+  line-height: var(--lh-body);
+  color: var(--c-primary-700);
 }
 
 @media (min-width: 720px) {
@@ -138,6 +210,22 @@ function toggle(index) {
     left: 20px;
     width: 40px;
     height: 40px;
+  }
+
+  .accordion__panel {
+    padding: 0 24px 0 80px;
+  }
+
+  .accordion__item--open .accordion__panel {
+    margin-top: -16px;
+  }
+
+  .accordion__body::before {
+    margin-bottom: var(--sp-5);
+  }
+
+  .accordion__body p {
+    padding-bottom: 32px;
   }
 }
 </style>
