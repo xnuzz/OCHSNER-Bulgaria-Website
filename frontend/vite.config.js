@@ -151,6 +151,8 @@ export default defineConfig({
   },
   build: {
     target: 'es2020',
-    cssCodeSplit: true
+    cssCodeSplit: true,
+    // Maps each component to its CSS/JS chunks, so prerender.js can link a page's styles.
+    ssrManifest: true
   }
 })

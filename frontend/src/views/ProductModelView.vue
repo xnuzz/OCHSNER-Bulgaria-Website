@@ -51,7 +51,7 @@ function applySeo() {
   if (!model.value) return
   useSeo({
     title: `${model.value.name} | OCHSNER България`,
-    description: model.value.tagline.slice(0, 155),
+    description: model.value.tagline,
     path: `/produkti/${model.value.category}/${key.value}`
   })
 }

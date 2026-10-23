@@ -58,10 +58,11 @@ function onKey(event) {
 
 watch(
   () => props.url,
-  (url) => {
+  (url, previous) => {
     stop()
     if (!url) {
-      window.removeEventListener('keydown', onKey)
+      // Nothing to undo on the first, closed run — which is also the prerender, with no window.
+      if (previous) window.removeEventListener('keydown', onKey)
       return
     }
     left.value = props.seconds

@@ -1,3 +1,5 @@
+import { useSSRContext } from 'vue'
+
 const SITE_URL = import.meta.env.VITE_SITE_URL || 'https://ochsner.bg'
 
 function upsertMeta(attr, key, content) {
@@ -21,12 +23,26 @@ function upsertCanonical(path) {
   link.setAttribute('href', `${SITE_URL}${path}`)
 }
 
+/* Cyrillic is wide: ~140 characters is what fits a search snippet. Cut on a word, not mid-word. */
+function clip(text, max = 140) {
+  if (!text || text.length <= max) return text
+  const cut = text.lastIndexOf(' ', max - 1)
+  return text.slice(0, cut > 0 ? cut : max - 1).replace(/[\s,.;:—–-]+$/, '') + '…'
+}
+
 /**
  * Per-route title, description, canonical and Open Graph tags.
  * A hand-rolled 20-line helper beats adding a head-management dependency for a
- * seven-page site; if the site ever goes SSR this is the single place to swap out.
+ * seven-page site. During the build-time prerender (prerender.js) there is no
+ * document, so the tags are handed to the SSR context and written into the HTML.
  */
-export function useSeo({ title, description, path = window.location.pathname, image = '/og-image.jpg' }) {
+export function useSeo({ title, description, path, image = '/og-image.jpg' }) {
+  description = clip(description)
+  if (import.meta.env.SSR) {
+    useSSRContext().seo = { title, description, url: path && `${SITE_URL}${path}`, image: `${SITE_URL}${image}` }
+    return
+  }
+  path ??= window.location.pathname
   document.title = title
   upsertMeta('name', 'description', description)
   upsertMeta('property', 'og:title', title)

@@ -4,7 +4,10 @@ import BitPilotCredit from './BitPilotCredit.vue'
 import AppIcon from '@/components/ui/AppIcon.vue'
 import { useI18n } from '@/i18n'
 
-const { common, nav, footer, contactDetails } = useI18n()
+const { common, nav, footer, contactDetails, categories } = useI18n()
+
+/* Every category from every page: crawlers reach the whole range in one hop. */
+const productLinks = Object.entries(categories).map(([slug, c]) => ({ slug, label: c.title }))
 
 const links = [
   { name: 'products', label: nav.products },
@@ -31,6 +34,15 @@ const year = new Date().getFullYear()
         </RouterLink>
         <p class="footer__about">{{ footer.about }}</p>
       </div>
+
+      <nav class="footer__col" :aria-label="nav.products">
+        <h2 class="footer__heading">{{ nav.products }}</h2>
+        <ul class="footer__list">
+          <li v-for="link in productLinks" :key="link.slug">
+            <RouterLink :to="{ name: 'product-category', params: { slug: link.slug } }">{{ link.label }}</RouterLink>
+          </li>
+        </ul>
+      </nav>
 
       <nav class="footer__col" :aria-label="nav.footerLabel">
         <h2 class="footer__heading">{{ footer.navHeading }}</h2>
@@ -203,7 +215,7 @@ const year = new Date().getFullYear()
 
 @media (min-width: 1000px) {
   .footer__grid {
-    grid-template-columns: 2fr 1fr 1.2fr 1fr;
+    grid-template-columns: 1.6fr 1.2fr 1fr 1.2fr 1fr;
     gap: var(--sp-7);
   }
 

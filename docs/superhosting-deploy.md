@@ -7,7 +7,7 @@ On SuperHosting the site runs as plain files on Apache. There is no Node.js app:
 - `/api/v1/contact`, `/partner-applications` and `/newsletter` as PHP (`superhosting/api/v1/*.php`).
   These have the same validation and responses as the Vercel functions, and send mail
   with PHP `mail()`, so no SMTP password is needed.
-- `.htaccess`: HTTPS redirect, API routes, SPA fallback, caching, and the security
+- `.htaccess`: HTTPS + www→non-www redirect, prerendered pages, API routes, SPA fallback, caching, and the security
   headers generated from `vercel.json`
 
 The Vercel deployment is unaffected (`.vercelignore`).

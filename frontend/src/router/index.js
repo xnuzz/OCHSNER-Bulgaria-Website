@@ -1,4 +1,4 @@
-import { createRouter, createWebHistory } from 'vue-router'
+import { createMemoryHistory, createRouter, createWebHistory } from 'vue-router'
 import HomeView from '@/views/HomeView.vue'
 import { categories } from '@/i18n/bg/categories.js'
 import { models, withdrawnSeries } from '@/i18n/bg/models.js'
@@ -108,7 +108,8 @@ const routes = [
 ]
 
 export default createRouter({
-  history: createWebHistory(),
+  // The build-time prerender (entry-server.js) runs in Node, which has no window.
+  history: import.meta.env.SSR ? createMemoryHistory() : createWebHistory(),
   routes,
   scrollBehavior(to, from, savedPosition) {
     if (savedPosition) return savedPosition

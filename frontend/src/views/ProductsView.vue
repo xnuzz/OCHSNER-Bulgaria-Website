@@ -16,14 +16,14 @@ import BaseButton from '@/components/ui/BaseButton.vue'
 import CtaBand from '@/components/ui/CtaBand.vue'
 import AppIcon from '@/components/ui/AppIcon.vue'
 import HelpfulLinks from '@/components/products/HelpfulLinks.vue'
-import { fetchProducts, useAsyncData } from '@/api/catalog.js'
+import { cachedProducts, fetchProducts, useAsyncData } from '@/api/catalog.js'
 import { useSeo } from '@/composables/useSeo.js'
 import { useI18n } from '@/i18n'
 
 const { common, products: copy, categories } = useI18n()
 const page = ref(null)
 
-const { data: items, loading, failed, load } = useAsyncData(fetchProducts)
+const { data: items, loading, failed, load } = useAsyncData(fetchProducts, cachedProducts())
 
 /* Catalogue entry + editorial content, joined on the slug. */
 const cards = computed(() =>

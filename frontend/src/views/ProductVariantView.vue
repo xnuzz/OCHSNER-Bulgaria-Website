@@ -42,7 +42,7 @@ function applySeo() {
   if (!unit.value) return
   useSeo({
     title: `${unit.value.name} | OCHSNER България`,
-    description: unit.value.description.slice(0, 155),
+    description: unit.value.description,
     path: `/produkti/${series.value.category}/${unit.value.model}/${key.value}`
   })
 }

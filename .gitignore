@@ -6,6 +6,7 @@ backend/data/
 # Node / Vite — match at any depth, not just under frontend/
 node_modules/
 dist/
+dist-ssr/
 .vite/
 npm-debug.log*
 

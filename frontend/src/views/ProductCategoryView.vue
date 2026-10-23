@@ -10,7 +10,7 @@
  * The editorial copy, images and quotes live in i18n/bg/categories.js; optional
  * fields (fn.image, quote, item.image) simply drop out where a category has none.
  */
-import { computed, onMounted, watch } from 'vue'
+import { computed, watch } from 'vue'
 import { useRoute } from 'vue-router'
 import SectionHeading from '@/components/ui/SectionHeading.vue'
 import BaseButton from '@/components/ui/BaseButton.vue'
@@ -61,12 +61,12 @@ function applySeo() {
   if (!content.value) return
   useSeo({
     title: `${content.value.title} | OCHSNER България`,
-    description: content.value.lead.slice(0, 155),
+    description: content.value.lead,
     path: `/produkti/${slug.value}`
   })
 }
 
-onMounted(applySeo)
+applySeo()
 
 /* Category pages share a component, so a slug change has to re-run the meta. */
 watch(slug, applySeo)

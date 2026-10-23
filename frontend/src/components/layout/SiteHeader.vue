@@ -5,7 +5,7 @@ import BaseButton from '@/components/ui/BaseButton.vue'
 import AppIcon from '@/components/ui/AppIcon.vue'
 import PlaceholderImage from '@/components/ui/PlaceholderImage.vue'
 import BrandMark from './BrandMark.vue'
-import { fetchProducts, useAsyncData } from '@/api/catalog.js'
+import { cachedProducts, fetchProducts, useAsyncData } from '@/api/catalog.js'
 import { useI18n } from '@/i18n'
 import RedirectNotice from '@/components/ui/RedirectNotice.vue'
 import { useExternalLink } from '@/composables/useExternalLink.js'
@@ -29,7 +29,7 @@ const links = [
 ]
 
 // Product categories come from the API so the menu never drifts from the catalog.
-const { data: products, load } = useAsyncData(fetchProducts)
+const { data: products, load } = useAsyncData(fetchProducts, cachedProducts())
 
 // Anchors into the "Защо термопомпа" page.
 

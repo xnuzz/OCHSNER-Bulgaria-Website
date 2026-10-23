@@ -8,6 +8,23 @@ import client from './client.js'
 const productsCache = shallowRef(null)
 let inFlight = null
 
+/*
+ * Prerendered pages carry the catalogue (prerender.js), so the first client render
+ * already has it and does not flash a loading state over the prerendered markup.
+ */
+if (!import.meta.env.SSR) {
+  const embedded = document.getElementById('catalog-products')
+  if (embedded) productsCache.value = JSON.parse(embedded.textContent)
+}
+
+/** Products available without a request, if any — the initial value for useAsyncData. */
+export const cachedProducts = () => productsCache.value
+
+/** Build-time prerender: hands the catalogue in, since there is no API to fetch from. */
+export function primeProducts(list) {
+  productsCache.value = list
+}
+
 export function fetchProducts() {
   if (productsCache.value) return Promise.resolve(productsCache.value)
   if (inFlight) return inFlight
@@ -55,13 +72,14 @@ export function submitNewsletter(email) {
  * Small async-resource helper: `data`, `loading`, `error` plus a `load` trigger.
  * Keeps every view's fetch handling identical without pulling in Pinia.
  */
-export function useAsyncData(loader) {
-  const data = ref(null)
+export function useAsyncData(loader, initial = null) {
+  const data = ref(initial)
   const loading = ref(false)
   const failed = ref(false)
 
   async function load() {
-    loading.value = true
+    // A refresh of data already on screen keeps showing it rather than "loading".
+    loading.value = !data.value
     failed.value = false
     try {
       data.value = await loader()

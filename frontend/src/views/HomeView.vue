@@ -9,13 +9,16 @@ import AppIcon from '@/components/ui/AppIcon.vue'
 import BaseButton from '@/components/ui/BaseButton.vue'
 import CtaBand from '@/components/ui/CtaBand.vue'
 import BrochureShelf from '@/components/home/BrochureShelf.vue'
-import { fetchProducts, useAsyncData } from '@/api/catalog.js'
+import { cachedProducts, fetchProducts, useAsyncData } from '@/api/catalog.js'
 import { useSeo } from '@/composables/useSeo.js'
 import { useI18n } from '@/i18n'
 
 const { common, home, why, categories } = useI18n()
 
-const { data: products, loading, failed, load } = useAsyncData(fetchProducts)
+const { data: products, loading, failed, load } = useAsyncData(fetchProducts, cachedProducts())
+
+/* The app replaces the prerendered page on load, so a video playing there would restart. */
+const prerender = import.meta.env.SSR
 
 
 /* Condensed version of the Защо термопомпа page, so the essentials sit on the home
@@ -49,7 +52,7 @@ onMounted(load)
             class="home-video__player"
             :poster="home.video.poster"
             :aria-label="home.video.label"
-            autoplay
+            :autoplay="!prerender"
             muted
             playsinline
             controls
