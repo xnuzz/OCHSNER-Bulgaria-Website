@@ -5,7 +5,8 @@
   "installCommand": "npm install",
   "trailingSlash": false,
   "redirects": [
-    { "source": "/zashto-termopompa", "destination": "/#kak-raboti", "permanent": true }
+    { "source": "/zashto-termopompa", "destination": "/#kak-raboti", "permanent": true },
+    { "source": "/files/:path*", "destination": "/", "permanent": true }
   ],
   "rewrites": [
     { "source": "/((?!api/).*)", "destination": "/404.html" }
