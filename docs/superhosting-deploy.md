@@ -38,7 +38,7 @@ Check each of these in the browser:
 
 - https://ochsner.bg and a deep link, for example `/kontakti` (a reload must not 404)
 - https://ochsner.bg/api/v1/products returns JSON
-- the contact form arrives at `info@ochsner.bg`. Check spam the first time.
+- the contact form arrives at `office@omnia-contractors.com`. Check spam the first time.
 
 Recipient and sender addresses are set at the top of `superhosting/api/v1/_lib.php`
 (`NOTIFY_EMAIL`, `MAIL_FROM`).

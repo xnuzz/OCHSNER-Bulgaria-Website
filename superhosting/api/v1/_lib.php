@@ -7,7 +7,7 @@
  * Mail goes through PHP mail() (the server's own Exim), so no SMTP password is needed.
  */
 
-const NOTIFY_EMAIL = 'info@ochsner.bg';
+const NOTIFY_EMAIL = 'office@omnia-contractors.com';
 const MAIL_FROM = 'no-reply@ochsner.bg';
 
 const RL_WINDOW = 600; // 10 minutes

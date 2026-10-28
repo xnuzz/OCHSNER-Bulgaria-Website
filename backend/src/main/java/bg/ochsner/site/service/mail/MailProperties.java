@@ -12,7 +12,7 @@ public record MailProperties(
 ) {
 
     public MailProperties {
-        recipient = recipient == null ? "office@ochsner.bg" : recipient;
+        recipient = recipient == null ? "office@omnia-contractors.com" : recipient;
         from = from == null ? "no-reply@ochsner.bg" : from;
     }
 }

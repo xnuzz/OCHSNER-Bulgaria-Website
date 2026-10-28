@@ -28,7 +28,7 @@ spring:
 
 site:
   mail:
-    recipient: ${NOTIFY_EMAIL:office@ochsner.bg}
+    recipient: ${NOTIFY_EMAIL:office@omnia-contractors.com}
     from: ${MAIL_FROM:no-reply@ochsner.bg}
   cors:
     allowed-origins:

@@ -134,7 +134,7 @@ Vercel — `api/_lib/notify.js` sends over plain SMTP via nodemailer, using the
 | `SMTP_HOST` | Mail server hostname — required; without it, submissions are only logged |
 | `SMTP_PORT` | Defaults to `587`. Port `465` uses implicit TLS, anything else upgrades with STARTTLS |
 | `SMTP_USERNAME`, `SMTP_PASSWORD` | Mailbox credentials |
-| `NOTIFY_EMAIL` | Address that receives submissions (default `office@ochsner.bg`) |
+| `NOTIFY_EMAIL` | Address that receives submissions (default `office@omnia-contractors.com`) |
 | `MAIL_FROM` | Envelope sender (default `no-reply@ochsner.bg`) |
 
 The notification sets `Reply-To` to the enquirer's address, so replying from the

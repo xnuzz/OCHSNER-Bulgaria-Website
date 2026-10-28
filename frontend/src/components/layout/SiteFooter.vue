@@ -110,9 +110,11 @@ const year = new Date().getFullYear()
   gap: var(--sp-6);
 }
 
+/* Stacked: the OCHSNER + Omnia lockup is too wide to share a row with the name. */
 .footer__logo {
   display: inline-flex;
-  align-items: center;
+  flex-direction: column;
+  align-items: flex-start;
   gap: var(--sp-3);
   color: #fff;
   text-decoration: none;

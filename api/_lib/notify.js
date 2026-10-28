@@ -9,7 +9,7 @@
  *   SMTP_PORT       defaults to 587
  *   SMTP_USERNAME   mailbox login
  *   SMTP_PASSWORD   mailbox password
- *   NOTIFY_EMAIL    address that receives submissions (default office@ochsner.bg)
+ *   NOTIFY_EMAIL    address that receives submissions (default office@omnia-contractors.com)
  *   MAIL_FROM       envelope sender             (default no-reply@ochsner.bg)
  *
  * With no SMTP_HOST set, the submission is written to the log instead of being
@@ -60,7 +60,7 @@ export async function notify({ subject, lines, replyTo }) {
   try {
     await getTransport().sendMail({
       from: process.env.MAIL_FROM || 'no-reply@ochsner.bg',
-      to: process.env.NOTIFY_EMAIL || 'office@ochsner.bg',
+      to: process.env.NOTIFY_EMAIL || 'office@omnia-contractors.com',
       replyTo: replyTo || undefined,
       subject,
       text: body

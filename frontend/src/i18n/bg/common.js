@@ -78,16 +78,16 @@ export const nav = {
   }
 }
 
-/** Phone and email are still to be confirmed by the client before launch. */
+/** Emails are Omnia Contractors' inboxes — Omnia is the exclusive OCHSNER representative. */
 export const contactDetails = {
   companyName: 'ОКСНЕР България',
   phone: '+359 877 236 499',
   phoneHref: 'tel:+359877236499',
-  email: 'info@ochsner.bg',
-  emailHref: 'mailto:info@ochsner.bg',
+  email: 'office@omnia-contractors.com',
+  emailHref: 'mailto:office@omnia-contractors.com',
   /* Separate inbox for service/after-sales enquiries. */
-  serviceEmail: 'service@ochsner.bg',
-  serviceEmailHref: 'mailto:service@ochsner.bg',
+  serviceEmail: 'service@omnia-contractors.com',
+  serviceEmailHref: 'mailto:service@omnia-contractors.com',
   address: 'ул. „Панорама София“ 5, XS Tower, София 1766',
   addressNote: '',
   /* Keyless Google Maps embed. The pin is Omnia Contractors' listing — same

@@ -39,7 +39,7 @@ server:
 
 site:
   mail:
-    recipient: office@ochsner.bg
+    recipient: office@omnia-contractors.com
     from: no-reply@ochsner.bg
   cors:
     allowed-origins:
