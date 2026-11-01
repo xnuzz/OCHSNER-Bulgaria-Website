@@ -50,7 +50,7 @@ const faqItems = computed(() =>
 function applySeo() {
   if (!model.value) return
   useSeo({
-    title: `${model.value.name} | OCHSNER България`,
+    title: `${model.value.name} | Omnia Contractors`,
     description: model.value.tagline,
     path: `/produkti/${model.value.category}/${key.value}`
   })

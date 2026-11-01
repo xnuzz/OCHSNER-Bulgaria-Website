@@ -1,7 +1,5 @@
 export const common = {
-  brand: 'OCHSNER',
-  brandSuffix: 'България',
-  brandTagline: 'Официален представител',
+  brandTagline: 'Ексклузивен представител на OCHSNER',
 
   ctaPrimary: 'Заяви безплатна консултация',
   /* Shorter label for the header, where the full CTA wraps to two lines. */
@@ -78,9 +76,9 @@ export const nav = {
   }
 }
 
-/** Emails are Omnia Contractors' inboxes — Omnia is the exclusive OCHSNER representative. */
+/** The site is run by Omnia Contractors — the exclusive OCHSNER representative. */
 export const contactDetails = {
-  companyName: 'ОКСНЕР България',
+  companyName: 'Омния Контракторс ЕООД',
   phone: '+359 877 236 499',
   phoneHref: 'tel:+359877236499',
   email: 'office@omnia-contractors.com',
@@ -102,7 +100,7 @@ export const contactDetails = {
 
 export const footer = {
   about:
-    'Официален представител на OCHSNER за България. Консултация, доставка и сервиз на термопомпени системи.',
+    'Омния Контракторс — ексклузивен представител на OCHSNER за България. Консултация, доставка и сервиз на термопомпени системи.',
   navHeading: 'Навигация',
   contactHeading: 'Контакти',
   legalHeading: 'Правна информация',
@@ -125,7 +123,7 @@ export const footer = {
   terms: 'Общи условия',
   cookies: 'Бисквитки',
   legalNote:
-    'OCHSNER® е регистрирана марка на OCHSNER Wärmepumpen GmbH, Австрия. Този сайт се поддържа от местния представител за България.',
+    'OCHSNER® е регистрирана марка на OCHSNER Wärmepumpen GmbH, Австрия. Този сайт се поддържа от „Омния Контракторс“ ЕООД — ексклузивен представител на OCHSNER за България.',
   copyright: 'Всички права запазени.',
 
   /* Developer credit in the footer's bottom bar. UTM tags so BitPilot can see

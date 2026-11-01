@@ -1,6 +1,6 @@
 export const about = {
   meta: {
-    title: 'За нас — представител на OCHSNER | OCHSNER България',
+    title: 'За нас — представител на OCHSNER | Omnia Contractors',
     description:
       'Местният представител на OCHSNER за България: консултация, доставка и сервиз на термопомпени системи.'
   },
@@ -66,8 +66,8 @@ export const about = {
   services: {
     eyebrow: 'Услуги',
     title: 'Какво поемаме — от първия разговор до сервиза',
-    /* Client scope: OCHSNER България предлага само консултация, доставка и
-       сервиз. Проектиране и монтаж са дейност на Omnia и умишлено не се смесват. */
+    /* Client scope (Sept 2026): only консултация, доставка и сервиз are
+       advertised — проектиране и монтаж are deliberately left out. */
     items: [
       {
         title: 'Консултация',

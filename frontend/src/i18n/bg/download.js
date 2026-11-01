@@ -10,7 +10,7 @@
  */
 export const download = {
   meta: {
-    title: 'Център за изтегляне | OCHSNER България',
+    title: 'Център за изтегляне | Omnia Contractors',
     description:
       'Брошури на OCHSNER на български за разглеждане и изтегляне, и връзка към техническите документи в центъра за изтегляне на OCHSNER Австрия.'
   },

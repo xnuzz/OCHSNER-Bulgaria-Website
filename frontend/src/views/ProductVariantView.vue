@@ -41,7 +41,7 @@ const properties = computed(() => unit.value.props || [])
 function applySeo() {
   if (!unit.value) return
   useSeo({
-    title: `${unit.value.name} | OCHSNER България`,
+    title: `${unit.value.name} | Omnia Contractors`,
     description: unit.value.description,
     path: `/produkti/${series.value.category}/${unit.value.model}/${key.value}`
   })

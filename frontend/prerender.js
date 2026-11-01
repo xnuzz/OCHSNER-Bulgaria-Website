@@ -24,10 +24,9 @@ const json = (data) => JSON.stringify(data).replace(/</g, '\\u003c')
 const business = {
   '@context': 'https://schema.org',
   '@type': 'HVACBusiness',
-  name: 'OCHSNER България',
+  name: 'Omnia Contractors',
   alternateName: contactDetails.companyName,
   url: `${SITE_URL}/`,
-  logo: `${SITE_URL}/ochsner-icon-512.png`,
   image: `${SITE_URL}/og-image.jpg`,
   telephone: contactDetails.phone.replace(/\s/g, ''),
   email: contactDetails.email,

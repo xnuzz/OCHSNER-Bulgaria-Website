@@ -60,7 +60,7 @@ const faqItems = computed(() =>
 function applySeo() {
   if (!content.value) return
   useSeo({
-    title: `${content.value.title} | OCHSNER България`,
+    title: `${content.value.title} | Omnia Contractors`,
     description: content.value.lead,
     path: `/produkti/${slug.value}`
   })

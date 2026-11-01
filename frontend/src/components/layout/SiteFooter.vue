@@ -4,7 +4,7 @@ import BitPilotCredit from './BitPilotCredit.vue'
 import AppIcon from '@/components/ui/AppIcon.vue'
 import { useI18n } from '@/i18n'
 
-const { common, nav, footer, contactDetails, categories } = useI18n()
+const { nav, footer, contactDetails, categories } = useI18n()
 
 /* Every category from every page: crawlers reach the whole range in one hop. */
 const productLinks = Object.entries(categories).map(([slug, c]) => ({ slug, label: c.title }))
@@ -26,11 +26,7 @@ const year = new Date().getFullYear()
     <div class="container footer__grid">
       <div class="footer__brand">
         <RouterLink :to="{ name: 'home' }" class="footer__logo">
-          <BrandMark />
-          <span>
-            <strong>{{ common.brand }}</strong>
-            <span class="footer__logo-sub">{{ common.brandSuffix }}</span>
-          </span>
+          <BrandMark invert />
         </RouterLink>
         <p class="footer__about">{{ footer.about }}</p>
       </div>
@@ -110,29 +106,8 @@ const year = new Date().getFullYear()
   gap: var(--sp-6);
 }
 
-/* Stacked: the OCHSNER + Omnia lockup is too wide to share a row with the name. */
 .footer__logo {
-  display: inline-flex;
-  flex-direction: column;
-  align-items: flex-start;
-  gap: var(--sp-3);
-  color: #fff;
-  text-decoration: none;
-  font-family: var(--font-heading);
-}
-
-.footer__logo strong {
-  display: block;
-  font-size: 1.1rem;
-  letter-spacing: 0.06em;
-}
-
-.footer__logo-sub {
-  display: block;
-  font-size: 0.7rem;
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
-  color: var(--c-primary-300);
+  display: inline-block;
 }
 
 .footer__about {

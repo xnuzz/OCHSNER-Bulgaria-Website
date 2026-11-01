@@ -312,8 +312,7 @@ const { leavingFor, confirmLeave, cancelLeave } = useExternalLink()
   align-items: center;
   text-decoration: none;
   color: var(--c-ink);
-  /* The lockup is an SVG with no intrinsic width, so as a flex item it would
-     otherwise be shrunk to zero by the nav beside it. */
+  /* Keep the logo at its natural size beside the nav. */
   flex: 0 0 auto;
   /* Below the desktop breakpoint there is no centred nav to balance against,
      so the wordmark still pushes the toggle to the far edge. */

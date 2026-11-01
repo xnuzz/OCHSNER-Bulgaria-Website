@@ -1,6 +1,6 @@
 export const products = {
   meta: {
-    title: 'Продукти — термопомпи OCHSNER | OCHSNER България',
+    title: 'Продукти — термопомпи OCHSNER | Omnia Contractors',
     description:
       'Термопомпи въздух-вода, земя-вода, вода-вода и за битова гореща вода. Предимства, приложение и техническа документация.'
   },
